@@ -342,7 +342,7 @@ function head(title, cssPath) {
     '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
     '<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">\n' +
-    '<link rel="stylesheet" href="' + cssPath + '?v=2"/>\n</head>\n';
+    '<link rel="stylesheet" href="' + cssPath + '?v=3"/>\n</head>\n';
 }
 function topbar(homePrefix) {
   const h = homePrefix;
@@ -372,7 +372,7 @@ function footer() {
     'Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>\n';
 }
 function scripts(prefix) {
-  return '<script src="' + prefix + 'assets/js/data.js?v=2"></script>\n<script src="' + prefix + 'assets/js/app.js?v=2"></script>\n</body>\n</html>\n';
+  return '<script src="' + prefix + 'assets/js/data.js?v=3"></script>\n<script src="' + prefix + 'assets/js/app.js?v=3"></script>\n</body>\n</html>\n';
 }
 function ytBtnSmall(yt) {
   return '<a class="yt-btn yt-btn-sm" href="' + esc(yt.url) + '" target="_blank" rel="noopener" title="' + esc(yt.title) + ' — ' + esc(yt.channel) + '">' + PLAY_SVG + 'Watch</a>';
@@ -722,6 +722,9 @@ const CSS_ADD = [
 '.code-block pre{margin:0}',
 '.lesson-page .reader-body h4{scroll-margin-top:80px}',
 '.sub-index a{scroll-margin-top:80px}',
+'/* Anchor targets must land below the sticky 58px topbar, not under it */',
+'html{scroll-padding-top:78px}',
+'#dashboard,#lessons,#how,#mastery,#review,#timeline{scroll-margin-top:78px}',
 '',
 '/* Quiz + interview (wired to assets/js/app.js: .quiz-answer/.interview-answer + .open) */',
 '.quiz-answer,.interview-answer{display:none;font-size:14.5px;color:var(--muted);margin:10px 0 2px}',

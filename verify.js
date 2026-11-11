@@ -253,9 +253,9 @@ let navOk = true, navIssues = [];
 const samplePages = ['index.html', 'modules/d.html', 'lessons/d-1.html', 'lessons/8-4.html'];
 for (const f of samplePages) {
   const t = fs.readFileSync(path.join(ROOT, f), 'utf8');
-  if (t.indexOf('assets/css/style.css?v=2') === -1 && t.indexOf('../assets/css/style.css?v=2') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on style.css'); }
-  if (t.indexOf('assets/js/data.js?v=2') === -1 && t.indexOf('../assets/js/data.js?v=2') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on data.js'); }
-  if (t.indexOf('assets/js/app.js?v=2') === -1 && t.indexOf('../assets/js/app.js?v=2') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on app.js'); }
+  if (t.indexOf('assets/css/style.css?v=3') === -1 && t.indexOf('../assets/css/style.css?v=3') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on style.css'); }
+  if (t.indexOf('assets/js/data.js?v=3') === -1 && t.indexOf('../assets/js/data.js?v=3') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on data.js'); }
+  if (t.indexOf('assets/js/app.js?v=3') === -1 && t.indexOf('../assets/js/app.js?v=3') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on app.js'); }
   if (t.indexOf('>How to study</a>') !== -1 || t.indexOf('>Schedule</a>') !== -1 || t.indexOf('>Mastery check</a>') !== -1) { navOk = false; navIssues.push(f + ' still has a removed nav link'); }
   if (t.indexOf('aria-expanded="false">Show lessons') === -1 && f === 'index.html') { navOk = false; navIssues.push('index module cards not collapsed by default'); }
 }
@@ -264,7 +264,10 @@ if (cssTxt.indexOf('max-width:1100px') === -1) { navOk = false; navIssues.push('
 if (cssTxt.indexOf('.nav{flex-wrap:nowrap}') === -1 || cssTxt.indexOf('.brand{white-space:nowrap') === -1) { navOk = false; navIssues.push('style.css missing no-wrap navbar hardening'); }
 if (appTxt.indexOf('isModCollapsed(mod, true)') === -1) { navOk = false; navIssues.push('app.js module cards do not default collapsed'); }
 if (appTxt.indexOf('innerWidth > 1100') === -1) { navOk = false; navIssues.push('app.js resize handler still uses 860'); }
-check(navOk, 'navbar fix: ?v=2 on all assets, slim nav, 1100px breakpoint, cards collapsed by default' + (navIssues.length ? ' — ' + navIssues.join(' | ') : ''));
+check(navOk, 'navbar fix: ?v=3 on all assets, slim nav, 1100px breakpoint, cards collapsed by default' + (navIssues.length ? ' — ' + navIssues.join(' | ') : ''));
+
+/* ---- Anchor offset: sections must land below the sticky topbar ---- */
+check(cssTxt.indexOf('scroll-padding-top:78px') !== -1 && cssTxt.indexOf('#dashboard,#lessons,#how,#mastery,#review,#timeline{scroll-margin-top:78px}') !== -1, 'anchor offset: scroll-padding + scroll-margin 78px on all home sections');
 
 /* ---- HTTP 200 sweep ---- */
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript' };

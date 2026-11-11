@@ -276,6 +276,9 @@ input,select,textarea{font-size:16px}
 .code-block pre{margin:0}
 .lesson-page .reader-body h4{scroll-margin-top:80px}
 .sub-index a{scroll-margin-top:80px}
+/* Anchor targets must land below the sticky 58px topbar, not under it */
+html{scroll-padding-top:78px}
+#dashboard,#lessons,#how,#mastery,#review,#timeline{scroll-margin-top:78px}
 
 /* Quiz + interview (wired to assets/js/app.js: .quiz-answer/.interview-answer + .open) */
 .quiz-answer,.interview-answer{display:none;font-size:14.5px;color:var(--muted);margin:10px 0 2px}
