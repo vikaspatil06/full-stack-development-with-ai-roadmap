@@ -342,7 +342,7 @@ function head(title, cssPath) {
     '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
     '<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">\n' +
-    '<link rel="stylesheet" href="' + cssPath + '"/>\n</head>\n';
+    '<link rel="stylesheet" href="' + cssPath + '?v=2"/>\n</head>\n';
 }
 function topbar(homePrefix) {
   const h = homePrefix;
@@ -363,9 +363,7 @@ function topbar(homePrefix) {
     '<a href="' + h + 'modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a>' +
     '<a href="' + h + 'modules/m7.html" role="menuitem">M7 — Android</a>' +
     '<a href="' + h + 'modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a>' +
-    '</div></div>' +
-    '<a href="' + h + 'index.html#how">How to study</a><a href="' + h + 'index.html#timeline">Schedule</a>' +
-    '<a href="' + h + 'index.html#mastery">Mastery check</a>\n' +
+    '</div></div>\n' +
     '</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>\n';
 }
 function footer() {
@@ -374,7 +372,7 @@ function footer() {
     'Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>\n';
 }
 function scripts(prefix) {
-  return '<script src="' + prefix + 'assets/js/data.js"></script>\n<script src="' + prefix + 'assets/js/app.js"></script>\n</body>\n</html>\n';
+  return '<script src="' + prefix + 'assets/js/data.js?v=2"></script>\n<script src="' + prefix + 'assets/js/app.js?v=2"></script>\n</body>\n</html>\n';
 }
 function ytBtnSmall(yt) {
   return '<a class="yt-btn yt-btn-sm" href="' + esc(yt.url) + '" target="_blank" rel="noopener" title="' + esc(yt.title) + ' — ' + esc(yt.channel) + '">' + PLAY_SVG + 'Watch</a>';
@@ -400,7 +398,7 @@ function moduleCard(m, prefix) {
     '<div class="meta"><span>' + esc(m.meta[0]) + '</span><span>' + esc(m.meta[1]) + '</span><span>' + lessons.length + ' lessons</span></div>\n' +
     '</div></div>\n' +
     '<div class="mod-progress"><div class="progress-bar"><div class="progress-fill"></div></div><span data-module-count>0 / ' + lessons.length + ' done</span></div>\n' +
-    '<div class="mod-toggle-row"><button class="mod-toggle" type="button" aria-expanded="true">Hide lessons ▾</button></div>\n' +
+    '<div class="mod-toggle-row"><button class="mod-toggle" type="button" aria-expanded="false">Show lessons ▸</button></div>\n' +
     '<div class="lesson-list">\n';
   for (const L of lessons) s += lessonRow(L, prefix, false);
   s += '</div></article>\n';
@@ -643,7 +641,7 @@ let css = styleMatch[1];
 css = css.replace(/^\s*\n/, '');
 const CSS_ADD = [
 '',
-'/* ---- Multi-page additions (93-lesson build, Nov 2026) ----',
+'/* ---- Multi-page additions (93-lesson build, Nov 2026) ---- */',
 '.brand{color:var(--text)}',
 '.xp-badge{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;padding:8px 14px;border:1px solid rgba(255,255,255,.45);border-radius:999px;background:linear-gradient(135deg,#fcd34d,#f59e0b 55%,#f97316);color:#1c1005;white-space:nowrap;flex:0 0 auto;box-shadow:0 4px 16px rgba(245,158,11,.35),inset 0 1px 0 rgba(255,255,255,.5);letter-spacing:.01em}',
 '.xp-badge .xp-ico{font-size:14px;line-height:1}',
@@ -659,12 +657,20 @@ const CSS_ADD = [
 '.xp-level-bar{height:8px;background:rgba(255,255,255,.12);border-radius:999px;overflow:hidden;margin-top:8px}',
 '.xp-level-fill{height:100%;background:linear-gradient(90deg,#fcd34d,#f59e0b);width:0%;transition:width .3s;border-radius:999px}',
 '@media(max-width:700px){.topbar-right{margin-left:auto}}',
-'/* ---- Responsive navbar + mobile polish (Nov 2026) ----',
+'/* ---- Responsive navbar + mobile polish (Nov 2026) ---- */',
 '.nav-toggle{display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font-size:20px;line-height:1;flex:0 0 auto}',
 '.brand-text-short{display:none}',
 'html,body{overflow-x:clip}',
 'input,select,textarea{font-size:16px}',
-'@media(max-width:860px){',
+'/* ---- Navbar: never wrap, never spill (Nov 2026 fix) ---- */',
+'.topbar-inner{flex-wrap:nowrap}',
+'.brand{white-space:nowrap;flex-shrink:0}',
+'.brand-text{white-space:nowrap}',
+'.nav{flex-wrap:nowrap}',
+'.nav a{white-space:nowrap}',
+'.nav-drop-btn{white-space:nowrap}',
+'.nav-drop-menu a{white-space:nowrap}',
+'@media(max-width:1100px){',
 '  .topbar{position:sticky}',
 '  .topbar-inner{flex-wrap:nowrap;height:58px;padding-top:0;padding-bottom:0}',
 '  .nav-toggle{display:inline-flex}',
@@ -759,7 +765,7 @@ const CSS_ADD = [
 '.reader-foot .nav-btn.prev{margin-left:0}',
 '.reader-foot .mark-btn{margin-right:4px}',
 '',
-'/* ---- Compact layout (Nov 2026): denser, still readable ----',
+'/* ---- Compact layout (Nov 2026): denser, still readable ---- */',
 '.hero{padding:26px 0 16px}',
 '.hero-grid{gap:20px}',
 'h1{font-size:38px}',
@@ -782,7 +788,7 @@ const CSS_ADD = [
 '.dash-stats{gap:10px}',
 '@media(max-width:640px){.hero{padding:20px 0 12px}.reader-body{padding:16px}.module-head{padding:12px 14px 8px}.lesson-row{padding:9px 14px}}',
 '',
-'/* ---- Nav Modules dropdown ----',
+'/* ---- Nav Modules dropdown ---- */',
 '.nav-drop{position:relative;display:inline-flex}',
 '.nav-drop-btn{color:var(--muted);font-size:13.5px;font-weight:700;padding:9px 10px;border-radius:999px;min-height:36px;display:inline-flex;align-items:center;background:none;border:none;cursor:pointer;font-family:inherit}',
 '.nav-drop-btn:hover{background:var(--bg2);color:var(--text)}',
@@ -790,17 +796,17 @@ const CSS_ADD = [
 '.nav-drop.open .nav-drop-menu{display:block}',
 '.nav-drop-menu a{display:block;padding:10px 12px;border-radius:9px;font-size:13.5px;color:var(--muted);font-weight:700}',
 '.nav-drop-menu a:hover{background:var(--bg2);color:var(--text)}',
-'@media(max-width:860px){.nav-drop{display:block;width:100%}.nav-drop-btn{width:100%;justify-content:space-between;padding:13px 14px;font-size:15px;min-height:48px}.nav-drop-menu{position:static;min-width:0;box-shadow:none;border:none;background:transparent;padding:0 0 0 12px}.nav-drop-menu a{padding:11px 12px;font-size:14px}}',
+'@media(max-width:1100px){.nav-drop{display:block;width:100%}.nav-drop-btn{width:100%;justify-content:space-between;padding:13px 14px;font-size:15px;min-height:48px}.nav-drop-menu{position:static;min-width:0;box-shadow:none;border:none;background:transparent;padding:0 0 0 12px}.nav-drop-menu a{padding:11px 12px;font-size:14px}}',
 '',
-'/* ---- Module collapse toggle + filter select (mobile) ----',
+'/* ---- Module collapse toggle + filter select (mobile) ---- */',
 '.mod-toggle-row{padding:0 18px 10px}',
 '.mod-toggle{background:var(--bg2);border:1px solid var(--line);color:var(--text);font-weight:800;font-size:12.5px;padding:7px 12px;border-radius:999px;cursor:pointer}',
 '.mod-toggle:hover{border-color:var(--teal);color:var(--teal)}',
 '.filter-select-wrap{display:none;margin:10px 0;font-size:13.5px;font-weight:800;color:var(--muted)}',
 '.filter-select-wrap select{margin-left:6px;background:var(--bg2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:14px;font-weight:700}',
-'@media(max-width:860px){.filters{display:none}.filter-select-wrap{display:block}}',
+'@media(max-width:1100px){.filters{display:none}.filter-select-wrap{display:block}}',
 '',
-'/* ---- DSA dashboard box + Jump-to dropdown ----',
+'/* ---- DSA dashboard box + Jump-to dropdown ---- */',
 '.dsa-box{margin-top:12px;background:linear-gradient(160deg,#1a1030,#120a24);border:1px solid #3b2a6b;border-radius:14px;padding:12px 14px}',
 '.dsa-box-head{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:800}',
 '.dsa-box-head span:last-child{color:var(--faint)}',
@@ -809,14 +815,14 @@ const CSS_ADD = [
 '.jump-row{display:flex;align-items:center;gap:10px;padding:0 20px 14px;font-size:13.5px;font-weight:800;color:var(--muted);flex-wrap:wrap}',
 '.jump-row select{flex:1;min-width:220px;background:var(--bg2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:14px;font-weight:700}',
 '',
-'/* ---- Lesson accordions ----',
+'/* ---- Lesson accordions ---- */',
 '.lesson-sec{cursor:pointer;display:flex;align-items:center;gap:8px;user-select:none}',
 '.lesson-sec:focus-visible{outline:2px solid var(--teal);outline-offset:4px;border-radius:6px}',
 '.acc-chev{margin-left:auto;font-size:15px;color:var(--faint);transition:transform .2s;flex:0 0 auto}',
 '.lesson-sec.closed .acc-chev{transform:rotate(-90deg)}',
 '.acc-body{overflow:hidden}',
 '',
-'/* ---- Flashcards ----',
+'/* ---- Flashcards ---- */',
 '.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;margin:10px 0}',
 '.flashcard{perspective:800px;min-height:132px;cursor:pointer}',
 '.fc-inner{position:relative;width:100%;height:100%;min-height:132px;transition:transform .45s;transform-style:preserve-3d}',
@@ -830,7 +836,7 @@ const CSS_ADD = [
 '.fc-hint{font-size:11.5px;color:var(--faint);margin-top:auto}',
 '.fc-shuffle{margin-top:4px}',
 '',
-'/* ---- Quiz scoring + runner + review star ----',
+'/* ---- Quiz scoring + runner + review star ---- */',
 '.quiz-score{display:none;font-weight:800;font-size:14.5px;margin:12px 0 0;padding:10px 14px;border-radius:12px;background:var(--bg2);border:1px solid var(--line)}',
 '.quiz-score.show{display:block}',
 '.qbtn.missed{background:#7f1d1d;border-color:#7f1d1d;color:#fff}',

@@ -154,8 +154,8 @@
       var toggle = card.querySelector('.mod-toggle'); if (!toggle) return;
       var list = card.querySelector('.lesson-list');
       var lessons = (window.FSAI ? FSAI.lessons.filter(function (l) { return l.module === mod; }) : []);
-      var allDone = lessons.length > 0 && lessons.every(function (l) { return PROG.isDone(l.id); });
-      var collapsed = PROG.isModCollapsed(mod, allDone);
+      /* Collapsed by default: a stored user choice wins, otherwise start closed. */
+      var collapsed = PROG.isModCollapsed(mod, true);
       var apply = function () {
         if (list) list.style.display = collapsed ? 'none' : '';
         var prog = card.querySelector('.mod-progress'); if (prog) prog.style.display = collapsed ? 'none' : '';
@@ -498,7 +498,7 @@
     }
   });
 
-  /* ---------- Responsive navbar (hamburger, <=860px) + Modules dropdown ---------- */
+  /* ---------- Responsive navbar (hamburger, <=1100px) + Modules dropdown ---------- */
   function initNav() {
     var btn = document.getElementById('navToggle'), bar = document.querySelector('.topbar'), nav = document.getElementById('siteNav');
     if (!btn || !bar || !nav) return;
@@ -507,7 +507,7 @@
     nav.addEventListener('click', function (e) { if (e.target.closest('a') && !e.target.closest('.nav-drop-btn')) setOpen(false); });
     document.addEventListener('click', function (e) { if (bar.classList.contains('nav-open') && !bar.contains(e.target)) setOpen(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { setOpen(false); setDrop(false); } });
-    window.addEventListener('resize', function () { if (window.innerWidth > 860) setOpen(false); });
+    window.addEventListener('resize', function () { if (window.innerWidth > 1100) setOpen(false); });
     /* Modules dropdown: click/Enter/Space toggles, Esc closes, outside click closes */
     var dropBtn = document.getElementById('modDropBtn'), drop = document.querySelector('.nav-drop');
     var setDrop = function (open) {

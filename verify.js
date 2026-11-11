@@ -233,6 +233,39 @@ for (const f of files) {
 }
 check(absOk, 'no leading-/ absolute href/src paths in built files');
 
+/* ---- Navbar fix (Nov 2026): cache-busting, slim nav, collapsed-by-default ---- */
+const cssTxt = fs.readFileSync(path.join(ROOT, 'assets/css/style.css'), 'utf8');
+/* CSS must be parseable: balanced comments + braces, or whole rule blocks
+   silently vanish (Nov 2026: 10 unclosed /* headers ate the navbar, XP
+   badge, dropdown and filter rules — the exact bug Vikas screenshotted). */
+let cssOk = true, cssIssues = [];
+const opens = (cssTxt.match(/\/\*/g) || []).length, closes = (cssTxt.match(/\*\//g) || []).length;
+if (opens !== closes) { cssOk = false; cssIssues.push('comment imbalance: ' + opens + ' /* vs ' + closes + ' */'); }
+let depth = 0;
+for (const ch of cssTxt) { if (ch === '{') depth++; else if (ch === '}') depth--; }
+if (depth !== 0) { cssOk = false; cssIssues.push('brace imbalance: depth ' + depth); }
+for (const rule of ['.xp-badge{', '.nav-toggle{display:none', '.nav-drop-menu{display:none', '.filter-select-wrap{display:none', '@media(max-width:1100px)']) {
+  if (cssTxt.indexOf(rule) === -1) { cssOk = false; cssIssues.push('missing rule: ' + rule); }
+}
+check(cssOk, 'style.css parses: balanced comments/braces, navbar/XP/dropdown/filter rules present' + (cssIssues.length ? ' — ' + cssIssues.join(' | ') : ''));
+const appTxt = fs.readFileSync(path.join(ROOT, 'assets/js/app.js'), 'utf8');
+let navOk = true, navIssues = [];
+const samplePages = ['index.html', 'modules/d.html', 'lessons/d-1.html', 'lessons/8-4.html'];
+for (const f of samplePages) {
+  const t = fs.readFileSync(path.join(ROOT, f), 'utf8');
+  if (t.indexOf('assets/css/style.css?v=2') === -1 && t.indexOf('../assets/css/style.css?v=2') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on style.css'); }
+  if (t.indexOf('assets/js/data.js?v=2') === -1 && t.indexOf('../assets/js/data.js?v=2') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on data.js'); }
+  if (t.indexOf('assets/js/app.js?v=2') === -1 && t.indexOf('../assets/js/app.js?v=2') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on app.js'); }
+  if (t.indexOf('>How to study</a>') !== -1 || t.indexOf('>Schedule</a>') !== -1 || t.indexOf('>Mastery check</a>') !== -1) { navOk = false; navIssues.push(f + ' still has a removed nav link'); }
+  if (t.indexOf('aria-expanded="false">Show lessons') === -1 && f === 'index.html') { navOk = false; navIssues.push('index module cards not collapsed by default'); }
+}
+if (cssTxt.indexOf('max-width:860px') !== -1) { navOk = false; navIssues.push('style.css still has an 860px breakpoint'); }
+if (cssTxt.indexOf('max-width:1100px') === -1) { navOk = false; navIssues.push('style.css missing 1100px breakpoint'); }
+if (cssTxt.indexOf('.nav{flex-wrap:nowrap}') === -1 || cssTxt.indexOf('.brand{white-space:nowrap') === -1) { navOk = false; navIssues.push('style.css missing no-wrap navbar hardening'); }
+if (appTxt.indexOf('isModCollapsed(mod, true)') === -1) { navOk = false; navIssues.push('app.js module cards do not default collapsed'); }
+if (appTxt.indexOf('innerWidth > 1100') === -1) { navOk = false; navIssues.push('app.js resize handler still uses 860'); }
+check(navOk, 'navbar fix: ?v=2 on all assets, slim nav, 1100px breakpoint, cards collapsed by default' + (navIssues.length ? ' — ' + navIssues.join(' | ') : ''));
+
 /* ---- HTTP 200 sweep ---- */
 const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript' };
 const server = http.createServer(function (req, res) {
