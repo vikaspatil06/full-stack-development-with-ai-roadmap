@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson D.2 — Arrays &amp; Two Pointers — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="D.2">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.2</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson D.2 • DSA — Data Structures &amp; Algorithms • 50 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Arrays &amp; Two Pointers</h2>
+<p class="goal">One pass, two indices, zero extra space</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=Fu7LD_mIo00" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Episode 3 –Master DSA Patterns with 2 Pointers Technique</b><span>takeUforward</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Arrays are contiguous memory</a></li>
+<li><a href="#sub-2">2. The two-pointer pattern</a></li>
+<li><a href="#sub-3">3. Prefix sums and the one-pass mindset</a></li>
+<li><a href="#sub-4">4. Off-by-one errors and bounds</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can solve array problems with two pointers and sliding windows, explain when an in-place pass beats extra memory, and avoid the off-by-one errors that sink array rounds.</div>
+<h4 id="sub-1">1. Arrays are contiguous memory</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Fu7LD_mIo00" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>An array stores elements side by side, so indexing is O(1) — the address is just base plus index times element size. The price is that inserting or deleting in the middle shifts everything after it, costing O(n). That single fact drives most array design: read-heavy, index-heavy work loves arrays, while frequent middle insertions want a linked list instead. In interviews, assume the array is the default structure and ask whether sorting it first unlocks a cheaper pattern.</p><h4 id="sub-2">2. The two-pointer pattern</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Fu7LD_mIo00" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Two pointers turn many O(n²) pair problems into O(n). The opposite-ends variant works on sorted input: one pointer at each end, moving inward based on whether the current sum is too small or too large. The same-direction variant has a slow pointer marking the boundary of the processed region and a fast pointer scanning ahead — the shape of every remove-duplicates problem. The recognition cue is a pair or a partition; the precondition is usually sorted input, so sorting is often step one.</p><h4 id="sub-3">3. Prefix sums and the one-pass mindset</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Fu7LD_mIo00" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A prefix-sum array answers any range-sum query in O(1) after one O(n) pass, and the running-sum variant answers subarray problems without storing anything extra. Kadane's algorithm is the same idea for maximum subarray: carry the best sum ending here, reset it when it goes negative. Whenever a brute force recomputes a sum or a scan from scratch inside a loop, ask what running value would make that work free.</p><h4 id="sub-4">4. Off-by-one errors and bounds</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Fu7LD_mIo00" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Most array failures are boundary failures: a loop that runs one step too far, a pointer that crosses its partner, or a window that never shrinks. Defend yourself with invariants: state out loud what each pointer means before the loop, and test the empty array, the single element, and the all-equal array. If your loop condition is while left &lt; right, know exactly what equality means for your answer, and trace two tiny examples by hand before trusting it.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>def two_sum_sorted(nums, target):
+    left, right = 0, len(nums) - 1
+    while left &lt; right:
+        total = nums[left] + nums[right]
+        if total == target:
+            return [left + 1, right + 1]
+        if total &lt; target:
+            left += 1
+        else:
+            right -= 1
+    return []
+
+# Sorted input lets two pointers find the pair in O(n), O(1) space.</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Solve Two Sum II - Input Array Is Sorted, Container With Most Water, 3Sum, Trapping Rain Water and Remove Duplicates from Sorted Array. For each, first write the brute force and its complexity, then the two-pointer or prefix-sum version — log both in your mistake log.</div>
+<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
+<p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Solve Problems on Arrays</a></p>
+<p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
+<ul>
+<li><a href="https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/" target="_blank" rel="noopener">Two Sum II - Input Array Is Sorted</a></li>
+<li><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank" rel="noopener">Container With Most Water</a></li>
+<li><a href="https://leetcode.com/problems/3sum/" target="_blank" rel="noopener">3Sum</a></li>
+<li><a href="https://leetcode.com/problems/trapping-rain-water/" target="_blank" rel="noopener">Trapping Rain Water</a></li>
+<li><a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/" target="_blank" rel="noopener">Remove Duplicates from Sorted Array</a></li>
+</ul></div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">When does the opposite-ends two-pointer pattern apply?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">When the input is sorted and you need a pair satisfying a condition — the pointers move inward based on whether the current pair is too small or too large.</p></div>
+<div class="quiz-q"><p class="qq">Why is Kadane's algorithm O(n) instead of O(n²)?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">It carries the best subarray sum ending at the current index forward, resetting when negative, so each element is processed once instead of restarting a scan at every index.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">You sorted the array to use two pointers, but the problem asks for original indices. What now?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Keep the original indices alongside the values — sort pairs of (value, index) — or use a hash map, which preserves indices at the cost of O(n) extra space.</p></div>
+<div class="interview-q"><p class="iq">How do you avoid off-by-one errors in two-pointer code?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">State the invariant for each pointer before the loop, decide what left == right means, and trace the empty, single-element and two-element cases by hand.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="d-1.html">← Lesson D.1</a>
+<a class="nav-btn next" href="d-3.html">Lesson D.3 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

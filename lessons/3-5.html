@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="3.5">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m3.html">Backend — Node.js &amp; Express, Properly</a> &nbsp;›&nbsp; Lesson 3.5</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 3.5 • Backend — Node.js &amp; Express, Properly • 35 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 3.5 • Backend — Node.js &amp; Express, Properly • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>Auth &amp; JWT — Sessions, Tokens, and Protected Routes</h2>
 <p class="goal">Proving who you are, statelessly</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>JWT Authentication in Express.js | Login &amp; Protected Route</b><span>YouTube</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. Authentication vs authorisation</a></li>
 <li><a href="#sub-2">2. How a JWT works</a></li>
@@ -38,7 +39,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain how JWTs work, protect an Express route with token verification, and explain why Skillzify uses Firebase Auth instead of hand-rolled sessions.</div>
 <h4 id="sub-1">1. Authentication vs authorisation</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Authentication proves who you are; authorisation decides what you may do. A login checks credentials and issues proof; a protected route checks that proof and the rules. Confusing the two is how apps end up letting any logged-in user read anyone else's data — the exact bug Skillzify's Firestore rules exist to prevent.</p><h4 id="sub-2">2. How a JWT works</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A JSON Web Token has three parts: a header naming the algorithm, a payload with claims like the user id and expiry, and a signature made by hashing the first two parts with a server secret. The server verifies the signature on every request — no database lookup, no session store. Anyone can read the payload, so it must never contain secrets; only the server can forge a valid signature.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Passwords and tokens, done right</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Passwords are never stored in plain text — they are hashed with a slow algorithm like bcrypt, so a leaked database does not leak logins. Tokens expire (minutes to hours) and are refreshed, limiting the damage if one is stolen. And the signing secret lives in an environment variable, never in code or git.</p><h4 id="sub-4">4. Why Skillzify uses Firebase Auth</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Building auth correctly is a security speciality: hashing, tokens, refresh, reset flows, brute-force protection. Firebase Auth provides all of it, including Google sign-in, and the server verifies Firebase ID tokens instead of issuing its own. Hand-rolled auth is a learning exercise; production auth is a solved problem you buy, not one you reinvent.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>const jwt = require("jsonwebtoken");
 const SECRET = process.env.JWT_SECRET;
 
@@ -52,26 +58,33 @@ function auth(req, res, next) {
   }
 }
 app.get("/api/me", auth, (req, res) =&gt; res.json({ uid: req.user.uid }));</pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Build a tiny Express app: a /login route that checks a hardcoded user and issues a JWT expiring in 15 minutes, and a /api/me route protected by the auth middleware. Test with curl: no token, a bad token, and a valid token.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Build a tiny Express app: a /login route that checks a hardcoded user and issues a JWT expiring in 15 minutes, and a /api/me route protected by the auth middleware. Test with curl: no token, a bad token, and a valid token.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">Why must a JWT payload never contain a password or secret?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">The payload is only base64-encoded, not encrypted — anyone holding the token can read it. Only the signature is secret-protected.</p></div>
 <div class="quiz-q"><p class="qq">What does jwt.verify do that simply decoding the token does not?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">It checks the signature against the server secret and the expiry, proving the token was issued by the server and is still valid.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Explain JWT authentication end to end.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Login verifies credentials and issues a signed token; the client sends it as a Bearer header; the server verifies signature and expiry per request, with no session store.</p></div>
 <div class="interview-q"><p class="iq">Why is Firebase Auth a better choice than hand-rolled JWT auth for Skillzify?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">It provides hashing, token refresh, reset flows, brute-force protection and social login, maintained by specialists — hand-rolled auth invites subtle security bugs.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -80,7 +93,7 @@ app.get("/api/me", auth, (req, res) =&gt; res.json({ uid: req.user.uid }));</pre
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

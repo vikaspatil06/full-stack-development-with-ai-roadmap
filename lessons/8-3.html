@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="8.3">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m8.html">DevOps, Cloud &amp; Shipping Like a Professional</a> &nbsp;›&nbsp; Lesson 8.3</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 8.3 • DevOps, Cloud &amp; Shipping Like a Professional • 45 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 8.3 • DevOps, Cloud &amp; Shipping Like a Professional • 45 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>GitHub Actions CI</h2>
 <p class="goal">Reading build-apk.yml line by line</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=K4FKwdNMDyI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>CI/CD With GitHub Actions Tutorial: Build, Test and Deploy Automatically</b><span>CodeFlow Daily</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. Anatomy of a workflow</a></li>
 <li><a href="#sub-2">2. The supporting cast</a></li>
@@ -48,7 +49,12 @@
 <h4 id="sub-3">3. Reading failures like a professional</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=K4FKwdNMDyI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
 <p>Open the failed step, find the <i>first</i> real error (the rest is cascade), reproduce locally with the same command, fix, push. Skillzify's CI history includes a run of failures caused by mixing Gradle DSL dialects — the lesson generalises: most CI failures are environment or config, not your feature code.</p>
 <div class="callout why"><b>CI is a promise</b>"Works on my machine" is not a build. If Actions can't build it from a cold checkout, it doesn't ship — that discipline is what makes the green check meaningful in interviews and teams.</div>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>name: Build APK
 on: { push: { branches: [ main ] } }
 jobs:
@@ -59,26 +65,33 @@ jobs:
       - uses: actions/setup-java@v4
         with: { java-version: "17", distribution: "temurin" }
       - run: cd android && ./gradlew assembleArm64Debug</code></pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Add a workflow to a scratch repo that runs on push: checkout, set up Node 20, npm install, and a placeholder test step. Then annotate Skillzify's build-apk.yml — one comment per line in your own words — in a local copy.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Add a workflow to a scratch repo that runs on push: checkout, set up Node 20, npm install, and a placeholder test step. Then annotate Skillzify's build-apk.yml — one comment per line in your own words — in a local copy.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">What do on, jobs and steps mean in a workflow file?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">on = the triggering event; jobs = isolated runner machines that execute work; steps = the ordered commands/actions inside a job.</p></div>
 <div class="quiz-q"><p class="qq">Your CI fails but the code works locally. First three suspects?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">Environment differences (versions, OS), missing env vars/secrets, and config/DSl mistakes — in that order, before suspecting feature code.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Explain your project's CI pipeline.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">On push to main, Actions checks out the repo, sets up JDK 17, builds the arm64 debug APK with Gradle; CodeQL scans weekly and Dependabot watches dependencies. Green build from a clean runner is the ship gate.</p></div>
 <div class="interview-q"><p class="iq">Where do CI secrets live and how are they used?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">In repository/organisation secret settings, injected as environment variables at runtime and masked in logs — never in the workflow file or the repo.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -87,7 +100,7 @@ jobs:
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

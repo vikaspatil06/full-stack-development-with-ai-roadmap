@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="5.6">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m5.html">AI Engineering — From Gemini Calls to RAG Systems ★</a> &nbsp;›&nbsp; Lesson 5.6</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 5.6 • AI Engineering — From Gemini Calls to RAG Systems ★ • 30 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 5.6 • AI Engineering — From Gemini Calls to RAG Systems ★ • 30 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>Function &amp; Tool Calling</h2>
 <p class="goal">Give the model hands: declare tools, run them, return the result</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=ttcX0UeCiTY" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>Tool Calling Explained | Tool calling without LangChain | Practical production ready demo | 2026</b><span>CodeWithAbby</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. The model does not run code — it asks you to</a></li>
 <li><a href="#sub-2">2. The loop, step by step</a></li>
@@ -37,7 +38,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can declare a function tool for Gemini, handle the model's functionCall response, execute the real function, feed the result back, and explain the loop that makes agents work.</div>
 <h4 id="sub-1">1. The model does not run code — it asks you to</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=ttcX0UeCiTY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Tool calling is the most misunderstood LLM feature. The model never executes your function. It reads the tool declaration — name, description, parameters — decides the user's request needs that tool, and returns a structured function call: which function, with which arguments. Your code runs the function against the real world, then sends the result back to the model, which writes the final answer. The model is the brain that decides; your server is the hands that act.</p><h4 id="sub-2">2. The loop, step by step</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=ttcX0UeCiTY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>One turn becomes a loop: send the prompt plus tool declarations; if the reply contains a function call, execute it and append the result as a function-response message; send the conversation back and repeat until the model answers in plain text. Skillzify's tutor could offer a getLessonProgress tool — the learner asks where they stand, the model calls the tool, your server reads Firestore, and the model turns the raw numbers into a human answer. The tool's description is its documentation to the model: vague descriptions produce wrong calls.</p><h4 id="sub-3">3. Trust boundaries matter</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=ttcX0UeCiTY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Tools that read are safe to expose broadly; tools that write need gates. A tool that marks a lesson complete or changes XP must validate the caller and the arguments server-side, because the model can be tricked by prompt injection in user input into calling tools with attacker-chosen arguments. Treat every function call like an API request from an untrusted client: validate, authorise, then execute.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>One declaration, one executor, one loop — that pattern scales from one tool to twenty, and it is the entire machinery behind AI agents.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>// Declare the tool, then run the loop
 const tools = [{ functionDeclarations: [{ name: "getLessonProgress",
   description: "Return the learner's completed lessons, XP and streak.",
@@ -52,26 +58,33 @@ if (call) {
   chat.push({ role: "function", parts: [{ functionResponse: { name: call.name, response: data } }] });
   const final = await model.generateContent({ contents: chat, tools });
 }</code></pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Add a getLessonProgress tool to the Skillzify tutor backend: declare it, implement the executor against Firestore, and wire the two-turn loop. Test with the prompt 'How am I doing this week?' and verify the final answer uses real numbers from your database, not invented ones. Then add a second read-only tool of your own choosing.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Add a getLessonProgress tool to the Skillzify tutor backend: declare it, implement the executor against Firestore, and wire the two-turn loop. Test with the prompt 'How am I doing this week?' and verify the final answer uses real numbers from your database, not invented ones. Then add a second read-only tool of your own choosing.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">Who actually executes a function the model calls?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">Your server code. The model only returns a structured call request; you run the function and send the result back for the final answer.</p></div>
 <div class="quiz-q"><p class="qq">Why do write tools need server-side validation even though the model chose the arguments?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">Arguments can be influenced by prompt injection in user input, so every call must be validated and authorised like any untrusted API request.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Explain the tool-calling loop in one minute.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Declare tools with schemas, send prompt plus declarations, execute any returned function call, append the result, repeat until the model answers in text.</p></div>
 <div class="interview-q"><p class="iq">What makes a good tool description?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Precise purpose, when to use it, what each parameter means and its constraints — the description is the model's only documentation, so vagueness causes wrong calls.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -80,7 +93,7 @@ if (call) {
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

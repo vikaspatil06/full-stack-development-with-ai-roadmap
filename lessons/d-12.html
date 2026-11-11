@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson D.12 — Interview Simulation — Patterns, Mock Rounds &amp; Mistake Log — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="D.12">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.12</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson D.12 • DSA — Data Structures &amp; Algorithms • 55 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Interview Simulation — Patterns, Mock Rounds &amp; Mistake Log</h2>
+<p class="goal">Talk, code, test — under the clock</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=qskEJ6X0wR0" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Amazon Coding Interview With a Former Tech Lead</b><span>CodeCrack</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. The 45-minute anatomy of an interview round</a></li>
+<li><a href="#sub-2">2. Thinking aloud and the pattern-first reflex</a></li>
+<li><a href="#sub-3">3. The mistake log and spaced re-solve</a></li>
+<li><a href="#sub-4">4. Contests, mocks, and the final two weeks</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can run a full 45-minute mock interview round, diagnose your own failures with a mistake log, and walk into a Summer 2027 internship interview with a practiced pattern-first routine.</div>
+<h4 id="sub-1">1. The 45-minute anatomy of an interview round</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=qskEJ6X0wR0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A real round has a rhythm: five minutes clarifying the problem and confirming constraints, ten minutes on a brute force with its complexity, fifteen minutes optimising to the target pattern, ten minutes coding cleanly, and five minutes testing. The most common failure is coding in the first five minutes — it skips the thinking the interviewer is actually grading. Practice the rhythm with a timer, not just the problems. If you cannot state the brute force and its complexity before coding, you are not ready to code.</p><h4 id="sub-2">2. Thinking aloud and the pattern-first reflex</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=qskEJ6X0wR0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Interviewers grade your thinking, not just your code, so narrate the recognition step: what pattern does this resemble, and why? Pair sums mean two pointers or a hash map; substrings mean sliding window; trees mean recursion; shortest paths mean BFS; optimisation over choices means DP. Build the reflex by naming the pattern before writing a line — in practice and in mocks. When you are stuck, say so out loud and name what you have tried; silence reads as giving up, while a stated dead end reads as problem-solving.</p><h4 id="sub-3">3. The mistake log and spaced re-solve</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=qskEJ6X0wR0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Every failed or 45-plus-minute problem goes in the log with three lines: the pattern, what went wrong, and a re-solve date. Re-solve after 3 days, then after 7 days, without looking at the old solution — if you cannot reproduce it, the pattern is not learned and the cycle repeats. The log is also your revision list for the final week: problems you failed twice are the ones most likely to appear in some form, and re-solving them cold is the highest-value revision there is.</p><h4 id="sub-4">4. Contests, mocks, and the final two weeks</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=qskEJ6X0wR0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Do the LeetCode Weekly Contest every Sunday: four problems under real time pressure, with no pausing and no editorials until the timer ends. Pair it with one full mock per week — a friend or a recorded self-interview, 45 minutes, talking aloud. In the final two weeks, stop learning new patterns; re-solve your mistake log, redo the core five per pattern, and rest the day before the interview. One rest day per week throughout the plan is not laziness — it is when the patterns consolidate.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>def two_sum(nums, target):
+    seen = {}
+    for i, x in enumerate(nums):
+        need = target - x
+        if need in seen:
+            return [seen[need], i]
+        seen[x] = i
+    return []
+
+assert two_sum([2, 7, 11, 15], 9) == [0, 1]
+assert two_sum([3, 3], 6) == [0, 1]
+
+# Brute force O(n^2) -&gt; hash map O(n). Test before you call it done.</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Run a full mock week: one unseen Medium per pattern — Longest Substring Without Repeating Characters (sliding window), Container With Most Water (two pointers), Number of Islands (BFS), Coin Change (DP) and LRU Cache (design) — 45 minutes each, talking aloud, timed. Log every failure with pattern, cause and a 3-day re-solve date, and do the Sunday LeetCode Weekly Contest under real conditions.</div>
+<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
+<p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Learn the basics</a></p>
+<p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
+<ul>
+<li><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank" rel="noopener">Longest Substring Without Repeating Characters</a></li>
+<li><a href="https://leetcode.com/problems/container-with-most-water/" target="_blank" rel="noopener">Container With Most Water</a></li>
+<li><a href="https://leetcode.com/problems/number-of-islands/" target="_blank" rel="noopener">Number of Islands</a></li>
+<li><a href="https://leetcode.com/problems/coin-change/" target="_blank" rel="noopener">Coin Change</a></li>
+<li><a href="https://leetcode.com/problems/lru-cache/" target="_blank" rel="noopener">LRU Cache</a></li>
+</ul></div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">What is the five-part structure of a 45-minute interview round?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Clarify (5 min), brute force with complexity (10), optimise to the pattern (15), code cleanly (10), test with edge cases (5).</p></div>
+<div class="quiz-q"><p class="qq">How does the spaced re-solve rule work?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">Re-solve a failed problem after 3 days, then after 7 days, without looking at the old solution. If you cannot reproduce it, the cycle repeats.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">You are stuck 15 minutes into a problem. What do you do?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Say so out loud, restate what the pattern should be, try the brute force to buy a working solution, and ask the interviewer a clarifying question — silence is the only wrong move.</p></div>
+<div class="interview-q"><p class="iq">How do you test your solution before telling the interviewer you are done?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Walk through the empty input, a single element, duplicates, and the boundary case, then trace one small example by hand and check the complexity aloud.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="d-11.html">← Lesson D.11</a>
+<a class="nav-btn next" href="0-1.html">Lesson 0.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

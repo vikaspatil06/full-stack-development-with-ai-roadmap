@@ -13,24 +13,25 @@
 </head>
 <body data-page="lesson" data-lesson="0.2">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m0.html">Foundations — How the Web Actually Works</a> &nbsp;›&nbsp; Lesson 0.2</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 0.2 • Foundations — How the Web Actually Works • 30 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 0.2 • Foundations — How the Web Actually Works • 30 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>HTTP &amp; DNS Deep — Requests, Responses, Status Codes</h2>
 <p class="goal">What actually travels across the wire</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>What Happens When You Type a URL? (DNS, TCP, TLS, HTTP Explained)</b><span>BrightShell</span></p>
 <p class="shared-note">Shared with Lesson 0.1 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. DNS: names to numbers</a></li>
 <li><a href="#sub-2">2. HTTP requests and responses</a></li>
@@ -39,7 +40,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain DNS resolution, read an HTTP request and response, use status codes correctly, and debug a failed Skillzify API call in the Network tab.</div>
 <h4 id="sub-1">1. DNS: names to numbers</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Computers talk to IP addresses, humans use names. DNS is the lookup system that turns skillzify-v2-staging.onrender.com into an IP. The browser checks its cache, then the OS cache, then asks a resolver, which walks from the root servers down to the authoritative server for the domain. A slow first visit is often DNS, not your code — and caching at each level is why repeat visits are fast.</p><h4 id="sub-2">2. HTTP requests and responses</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Every web interaction is a request with a method, a path, headers and an optional body, answered by a response with a status code, headers and a body. GET reads, POST creates, PUT and PATCH update, DELETE removes. Headers carry metadata: Content-Type says the body is JSON, Authorization carries a token, Cache-Control says how long to keep a copy.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Status codes are a language</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>2xx means success, 3xx means redirect, 4xx means the client made a mistake (400 bad input, 401 unauthenticated, 403 forbidden, 404 not found, 429 too many requests), and 5xx means the server failed. Skillzify's API returns 429 when the rate limit fires and 400 when the question is empty — the frontend reads the code and shows the right message instead of guessing.</p><h4 id="sub-4">4. Debugging in the Network tab</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Open DevTools, click Network, reload, and every request appears with its status, size and timing. Click one to see its headers and body. When a feature breaks, this tab tells you in seconds whether the problem is the request, the response, or the code that renders it.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>POST /api/tutor HTTP/1.1
 Host: skillzify-v2-staging.onrender.com
 Content-Type: application/json
@@ -51,26 +57,33 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {"reply": "A closure is..."}</pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>With Skillzify running locally, open the Network tab, trigger the AI tutor, and inspect the request: method, URL, request body, status code and response body. Then change the question to an empty string and record the status code the server returns.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>With Skillzify running locally, open the Network tab, trigger the AI tutor, and inspect the request: method, URL, request body, status code and response body. Then change the question to an empty string and record the status code the server returns.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">What is the difference between a 401 and a 403?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">401 means unauthenticated — no valid credentials were presented. 403 means authenticated but forbidden — the identity is known and still not allowed.</p></div>
 <div class="quiz-q"><p class="qq">Why does fetch not reject on a 500 response?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">fetch only rejects on network-level failures. An HTTP error status still resolves, so code must check res.ok or res.status itself.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Walk me through DNS resolution for a URL you type.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Browser cache, then OS cache, then the resolver queries root, TLD and authoritative servers, returning the IP; the result is cached at each level.</p></div>
 <div class="interview-q"><p class="iq">What does a 429 status code mean, and how should a client handle it?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Too many requests — the client hit a rate limit. It should back off, wait, and retry later, ideally respecting a Retry-After header.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -79,7 +92,7 @@ Content-Type: application/json
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

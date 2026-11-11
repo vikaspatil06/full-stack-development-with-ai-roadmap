@@ -13,24 +13,25 @@
 </head>
 <body data-page="lesson" data-lesson="5.4">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m5.html">AI Engineering — From Gemini Calls to RAG Systems ★</a> &nbsp;›&nbsp; Lesson 5.4</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 5.4 • AI Engineering — From Gemini Calls to RAG Systems ★ • 30 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 5.4 • AI Engineering — From Gemini Calls to RAG Systems ★ • 30 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>Structured Output &amp; Streaming</h2>
 <p class="goal">Make the model return JSON you can trust, and show it arriving live</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=nk_rP3Y2_r8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>Build an AI Chatbot Using Gemini API with HTML, CSS &amp; JavaScript | Step-by-Step Tutorial</b><span>NextGenCoder</span></p>
 <p class="shared-note">Shared with Lesson 5.3 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. Structured output: a contract, not a hope</a></li>
 <li><a href="#sub-2">2. Streaming: show work as it arrives</a></li>
@@ -38,7 +39,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can force Gemini to return valid JSON matching a schema, stream a response token by token to the UI, and handle the partial-JSON problem that streaming creates.</div>
 <h4 id="sub-1">1. Structured output: a contract, not a hope</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=nk_rP3Y2_r8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Asking a model to reply in JSON with a polite instruction works until it does not — one day it adds a chatty sentence before the brace and your JSON.parse throws. Structured output turns the format into a contract: you declare a response schema, set the MIME type to JSON, and the model is constrained to produce only valid JSON matching that schema. Skillzify's quiz generator uses this to get exactly three questions, each with four options and one correct index — fields the frontend can render without defensive parsing gymnastics.</p><h4 id="sub-2">2. Streaming: show work as it arrives</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=nk_rP3Y2_r8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A normal API call waits for the full reply, which can take seconds of dead silence. Streaming returns the response in chunks as tokens are generated, so the UI can render words as they appear — the typing effect users expect from AI chat. Under the hood it is server-sent events: the server forwards chunks, the client appends them. The cost is complexity: your UI now has three states — streaming, done, and failed halfway — and each needs handling.</p><h4 id="sub-3">3. The partial-JSON problem</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=nk_rP3Y2_r8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Streaming and structured output collide: while streaming, the JSON is incomplete, so you cannot parse it until the final chunk. The standard solution is to stream the raw text for display and parse only the completed string, or to design the schema so each field can render progressively. Never render a half-parsed object as if it were final — a question with two options and no answer key is worse than a loading spinner.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Streaming uses generateContentStream and iterates the stream, appending each chunk's text. Same schema, same guarantee — only the delivery changes.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>// Structured output: schema-enforced JSON from Gemini
 const result = await model.generateContent({
   contents: [{ role: "user", parts: [{ text: quizPrompt }] }],
@@ -56,26 +62,33 @@ const result = await model.generateContent({
   }
 });
 const quiz = JSON.parse(result.response.text()); // guaranteed valid JSON</code></pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Build a quiz-question generator endpoint that returns structured JSON with the schema above for any lesson topic. Call it once normally and once with streaming, logging the time to first chunk versus time to complete response. Then deliberately break the schema by removing a required field and confirm the model still returns valid JSON matching the new schema.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Build a quiz-question generator endpoint that returns structured JSON with the schema above for any lesson topic. Call it once normally and once with streaming, logging the time to first chunk versus time to complete response. Then deliberately break the schema by removing a required field and confirm the model still returns valid JSON matching the new schema.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">Why is a response schema better than asking for JSON in the prompt text?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">The schema constrains generation itself, so the output is guaranteed valid JSON in the declared shape. A prompt instruction is a suggestion the model can ignore or decorate.</p></div>
 <div class="quiz-q"><p class="qq">Why can you not parse streamed JSON until the stream finishes?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">Mid-stream the JSON is incomplete and invalid. You stream raw text for display and parse only the completed string.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">When would you choose streaming over a single response?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">For long, user-facing text where perceived latency matters — chat, explanations — because first tokens arrive in under a second. For machine-consumed JSON, a single call is simpler.</p></div>
 <div class="interview-q"><p class="iq">How do you handle a streamed response that fails halfway?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Keep the partial text visible with a clear incomplete state, offer retry, and never persist or act on the partial structured result as if it were complete.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -84,7 +97,7 @@ const quiz = JSON.parse(result.response.text()); // guaranteed valid JSON</code>
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

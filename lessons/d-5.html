@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson D.5 — Linked Lists — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="D.5">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.5</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson D.5 • DSA — Data Structures &amp; Algorithms • 50 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Linked Lists</h2>
+<p class="goal">Pointers, not indexes — draw the arrows first</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=Nq7ok-OyEpg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>L1. Introduction to LinkedList | Traversal | Length | Search an Element</b><span>takeUforward</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Nodes and pointers: why lists exist</a></li>
+<li><a href="#sub-2">2. The dummy node trick</a></li>
+<li><a href="#sub-3">3. Fast and slow pointers</a></li>
+<li><a href="#sub-4">4. Reversal: the interview rite of passage</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can manipulate linked lists with dummy nodes and fast/slow pointers, reverse a list in place, and explain exactly where each pointer points at every step.</div>
+<h4 id="sub-1">1. Nodes and pointers: why lists exist</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Nq7ok-OyEpg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A linked list is a chain of nodes, each holding a value and a pointer to the next node. Unlike an array, a list can grow and shrink by rewiring one pointer in O(1), but reaching the tenth node means walking nine pointers — random access is O(n). That trade-off is the whole story: lists win when you insert and delete at known positions, arrays win when you index. In interviews the list is rarely the end goal; it is the stage where pointer discipline is tested.</p><h4 id="sub-2">2. The dummy node trick</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Nq7ok-OyEpg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Most linked-list bugs live at the head: deleting the first node, merging from an empty list, or building a new list from scratch all need special cases. A dummy node sitting before the real head removes them — you always have a previous node, and the answer is dummy.next at the end. This one trick simplifies merge, remove-nth, and partition problems so much that reaching for it should be automatic. When a problem builds or rewrites a list, start with a dummy.</p><h4 id="sub-3">3. Fast and slow pointers</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Nq7ok-OyEpg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Two pointers moving at different speeds through a list detect structure that one pointer cannot see. A fast pointer moving two steps per slow pointer's one catches up exactly when there is a cycle, and when the fast pointer reaches the end, the slow pointer sits at the middle. The same idea finds the nth node from the end: advance fast by n, then move both together. The pattern is always the same — create a gap or a speed difference, then let the pointers meet.</p><h4 id="sub-4">4. Reversal: the interview rite of passage</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Nq7ok-OyEpg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Reversing a list in place is the most-asked linked-list operation because it tests whether you can hold three pointers in your head: previous, current, and next. The loop saves next, flips current.next to previous, then advances both — and the classic bug is losing next before the flip, which severs the list. Draw the arrows on paper before you type a line. If you can reverse a list cold, you can do almost any pointer surgery an interview will ask for.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>def reverse_list(head):
+    prev, curr = None, head
+    while curr:
+        nxt = curr.next
+        curr.next = prev
+        prev = curr
+        curr = nxt
+    return prev
+
+# Three pointers, one flip per step: O(n) time, O(1) space.</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Solve Reverse Linked List, Merge Two Sorted Lists, Linked List Cycle, Remove Nth Node From End of List and Reorder List. Draw the pointer state on paper for every problem before coding, and log any attempt where you lost a node by overwriting a pointer too early.</div>
+<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
+<p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Learn LinkedList</a></p>
+<p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
+<ul>
+<li><a href="https://leetcode.com/problems/reverse-linked-list/" target="_blank" rel="noopener">Reverse Linked List</a></li>
+<li><a href="https://leetcode.com/problems/merge-two-sorted-lists/" target="_blank" rel="noopener">Merge Two Sorted Lists</a></li>
+<li><a href="https://leetcode.com/problems/linked-list-cycle/" target="_blank" rel="noopener">Linked List Cycle</a></li>
+<li><a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/" target="_blank" rel="noopener">Remove Nth Node From End of List</a></li>
+<li><a href="https://leetcode.com/problems/reorder-list/" target="_blank" rel="noopener">Reorder List</a></li>
+</ul></div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why does a dummy node simplify linked-list code?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">It guarantees a previous node always exists, so head deletion, empty-list merges and building a new list need no special case — the answer is dummy.next.</p></div>
+<div class="quiz-q"><p class="qq">How do fast and slow pointers detect a cycle?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">The fast pointer moves two steps per slow step, so if there is a cycle it must eventually lap the slow pointer and meet it; on an acyclic list it reaches the end.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Reverse a linked list — and narrate what each pointer holds at each step.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Keep prev, curr and next. Save next, point curr.next at prev, advance prev to curr and curr to next. The list is never lost because next is saved before the flip.</p></div>
+<div class="interview-q"><p class="iq">Why would you choose a linked list over an array?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">When insertions and deletions at known positions dominate, since rewiring one pointer is O(1) while an array shifts O(n) elements — at the cost of O(n) random access.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="d-4.html">← Lesson D.4</a>
+<a class="nav-btn next" href="d-6.html">Lesson D.6 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

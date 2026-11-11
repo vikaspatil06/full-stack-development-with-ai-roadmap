@@ -1,7 +1,7 @@
 /* Verify the built site. Run: node verify.js [port]
    Checks: all pages exist + HTTP 200, every lesson page's red Watch button
-   carries exactly its resolved YouTube URL, prev/next chain covers all 93
-   in order with no dead links/dups, data.js has 93 lessons with
+   carries exactly its resolved YouTube URL, prev/next chain covers all 105
+   in order with no dead links/dups, data.js has 105 lessons with
    titles/subtopics, no stale counts, required element IDs present. */
 'use strict';
 const fs = require('fs');
@@ -41,6 +41,8 @@ addYt(JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'youtube-links-part3-6-
 const ytOrigNew = {};
 for (const oldId of Object.keys(RENUMBER)) ytOrigNew[RENUMBER[oldId]] = ytByNew[oldId];
 const expected = Object.assign({}, ytOrigNew);
+const ytDsa = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'youtube-links-dsa.json'), 'utf8'));
+for (const v of ytDsa) expected[v.id] = v.youtube_url;
 for (const L of batchA.lessons.concat(batchB.lessons)) {
   if (['4.9', '5.10', '8.8'].indexOf(L.id) !== -1) continue;
   if (L.youtube_url) expected[L.id] = L.youtube_url;
@@ -59,14 +61,14 @@ for (const L of batchA.lessons.concat(batchB.lessons)) {
   }
 }
 
-const ORDER = ['B', 'M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8'];
+const ORDER = ['B', 'D', 'M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8'];
 const lessonIds = Object.keys(expected).sort(function (a, b) {
-  const ka = ORDER.indexOf(a.indexOf('B.') === 0 ? 'B' : 'M' + a.split('.')[0]);
-  const kb = ORDER.indexOf(b.indexOf('B.') === 0 ? 'B' : 'M' + b.split('.')[0]);
+  const ka = ORDER.indexOf(a.indexOf('B.') === 0 ? 'B' : a.indexOf('D.') === 0 ? 'D' : 'M' + a.split('.')[0]);
+  const kb = ORDER.indexOf(b.indexOf('B.') === 0 ? 'B' : b.indexOf('D.') === 0 ? 'D' : 'M' + b.split('.')[0]);
   if (ka !== kb) return ka - kb;
   return parseInt(a.split('.')[1], 10) - parseInt(b.split('.')[1], 10);
 });
-check(lessonIds.length === 93, 'expected URL map has 93 lessons (got ' + lessonIds.length + ')');
+check(lessonIds.length === 105, 'expected URL map has 105 lessons (got ' + lessonIds.length + ')');
 function fileFor(id) { return id.replace('.', '-').toLowerCase() + '.html'; }
 
 /* ---- file-level checks (no server needed) ---- */
@@ -88,7 +90,7 @@ for (const id of lessonIds) {
   if (m[1] === expected[id]) ytOk++;
   else ytBad.push(id + ': button=' + m[1] + ' expected=' + expected[id]);
 }
-check(ytOk === 93, 'red Watch button URL matches resolved URL for ' + ytOk + '/93' + (ytBad.length ? ' — ' + ytBad.slice(0, 5).join(' | ') : ''));
+check(ytOk === 105, 'red Watch button URL matches resolved URL for ' + ytOk + '/105' + (ytBad.length ? ' — ' + ytBad.slice(0, 5).join(' | ') : ''));
 
 /* prev/next chain */
 let chainOk = true, chainIssues = [];
@@ -106,68 +108,74 @@ for (let i = 0; i < lessonIds.length; i++) {
   if (!nextId && nextM) { chainOk = false; chainIssues.push(id + ' should have no next link'); }
   chainFiles.push(fileFor(id));
 }
-check(chainOk, 'prev/next chain covers all 93 in order, no dead links, no duplicates' + (chainIssues.length ? ' — ' + chainIssues.slice(0, 5).join(' | ') : ''));
-check(new Set(chainFiles).size === 93, '93 unique lesson files in chain');
+check(chainOk, 'prev/next chain covers all 105 in order, no dead links, no duplicates' + (chainIssues.length ? ' — ' + chainIssues.slice(0, 5).join(' | ') : ''));
+check(new Set(chainFiles).size === 105, '105 unique lesson files in chain');
 
 /* data.js validation */
 const sandbox = { window: {} };
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(path.join(ROOT, 'assets', 'js', 'data.js'), 'utf8'), sandbox);
 const FSAI = sandbox.window.FSAI;
-check(FSAI && FSAI.total === 93, 'data.js total is 93');
-check(FSAI.lessons.length === 93, 'data.js has 93 lessons');
-check(FSAI.modules.length === 10, 'data.js has 10 modules');
+check(FSAI && FSAI.total === 105, 'data.js total is 105');
+check(FSAI.lessons.length === 105, 'data.js has 105 lessons');
+check(FSAI.modules.length === 11, 'data.js has 11 modules');
 let dataBad = [];
 for (const L of FSAI.lessons) {
   if (!L.title || !L.sub || !L.url || !L.yt || !L.yt.url) dataBad.push(L.id + ': missing fields');
   if (!L.subtopics || L.subtopics.length < 3) dataBad.push(L.id + ': subtopics < 3');
   if (expected[L.id] && L.yt.url !== expected[L.id]) dataBad.push(L.id + ': data.js yt mismatch');
+  if (L.module === 'D' && (!L.cards || L.cards.length < 4 || !L.striver || !L.leetcode || L.leetcode.length < 3)) dataBad.push(L.id + ': DSA cards/striver/leetcode missing');
 }
 check(dataBad.length === 0, 'data.js lessons all have title/sub/url/yt/subtopics(>=3)' + (dataBad.length ? ' — ' + dataBad.slice(0, 5).join(' | ') : ''));
 const dataOrder = FSAI.lessons.map(function (l) { return l.id; });
-check(JSON.stringify(dataOrder) === JSON.stringify(lessonIds), 'data.js lesson order matches B -> M8 chain');
+check(JSON.stringify(dataOrder) === JSON.stringify(lessonIds), 'data.js lesson order matches B -> D -> M8 chain');
 
 /* stale counts */
-const stalePats = ['37 lessons', '47 lessons', '9 modules', '~20 weeks', '20 weeks', 'mid-Apr 2027'];
+const stalePats = ['37 lessons', '47 lessons', '93 lessons', '9 modules', '10 modules', '~20 weeks', '20 weeks', '25 weeks', 'mid-Apr 2027', '20 May 2027'];
 let staleHits = [];
 for (const f of files) {
   if (f === 'README.md') continue;
   const txt = fs.readFileSync(path.join(ROOT, f), 'utf8');
   for (const p of stalePats) if (txt.indexOf(p) !== -1) staleHits.push(f + ': "' + p + '"');
 }
-check(staleHits.length === 0, 'no stale counts (37/47 lessons, 9 modules, ~20/20 weeks) in built pages' + (staleHits.length ? ' — ' + staleHits.join(' | ') : ''));
+check(staleHits.length === 0, 'no stale counts (37/47/93 lessons, 9/10 modules, ~20/20/25 weeks) in built pages' + (staleHits.length ? ' — ' + staleHits.join(' | ') : ''));
 
 /* required IDs per app.js */
 const home = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-for (const id of ['ringFg', 'ringPct', 'statLessons', 'statXp', 'statStreak', 'statQuiz', 'progText', 'progFill', 'nextUp', 'searchInput', 'searchResults', 'noResults']) {
+for (const id of ['ringFg', 'ringPct', 'statLessons', 'statXp', 'statStreak', 'statQuiz', 'progText', 'progFill', 'nextUp', 'searchInput', 'searchResults', 'noResults', 'dsaProgFill', 'dsaProgText', 'dsaToday', 'reviewList', 'filterSelect', 'xpLevelName', 'xpLevelText', 'xpLevelFill']) {
   check(home.indexOf('id="' + id + '"') !== -1, 'home has #' + id);
 }
 check(home.indexOf('data-page="home"') !== -1, 'home body[data-page=home]');
-check((home.match(/data-module-progress/g) || []).length === 10, 'home has 10 module progress blocks');
+check((home.match(/data-module-progress/g) || []).length === 11, 'home has 11 module progress blocks');
+check(home.indexOf('data-filter="dsa"') !== -1, 'home has DSA filter');
+check(home.indexOf('id="modDropBtn"') !== -1, 'home has Modules dropdown button');
 let modOk = true;
 for (const k of ORDER) {
   const t = fs.readFileSync(path.join(ROOT, 'modules', k.toLowerCase() + '.html'), 'utf8');
-  for (const id of ['modProgFill', 'modProgText', 'startNextBtn', 'masteryCount']) {
+  for (const id of ['modProgFill', 'modProgText', 'startNextBtn', 'masteryCount', 'jumpSelect']) {
     if (t.indexOf('id="' + id + '"') === -1) { modOk = false; console.log('FAIL module ' + k + ' missing #' + id); }
   }
   if (t.indexOf('data-module="' + k + '"') === -1) { modOk = false; console.log('FAIL module ' + k + ' missing data-module'); }
   if ((t.match(/class="mastery-check"/g) || []).length !== 3) { modOk = false; console.log('FAIL module ' + k + ' mastery-check count != 3'); }
 }
-check(modOk, 'all 10 module pages have modProgFill/modProgText/startNextBtn/masteryCount + 3 mastery checks');
+check(modOk, 'all 11 module pages have modProgFill/modProgText/startNextBtn/masteryCount/jumpSelect + 3 mastery checks');
 let lesOk = true, lesIssues = [];
 for (const id of lessonIds) {
   const t = fs.readFileSync(path.join(ROOT, 'lessons', fileFor(id)), 'utf8');
-  for (const need of ['id="completeBtn"', 'id="lessonNotes"', 'id="notesSaved"', 'data-page="lesson"', 'id="watch"', 'id="read"', 'id="code"', 'id="practice"', 'id="check"', 'id="interview"', 'id="notes"']) {
+  for (const need of ['id="completeBtn"', 'id="lessonNotes"', 'id="notesSaved"', 'data-page="lesson"', 'id="watch"', 'id="read"', 'id="code"', 'id="practice"', 'id="check"', 'id="interview"', 'id="notes"', 'id="flashcards"', 'id="quizScore"', 'id="quizRetry"', 'id="reviewStar"', 'id="flashcards-sec"']) {
     if (t.indexOf(need) === -1) { lesOk = false; lesIssues.push(id + ' missing ' + need); }
   }
   const quiz = (t.match(/class="quiz-reveal qbtn"/g) || []).length;
   const knew = (t.match(/class="quiz-knew qbtn"/g) || []).length;
+  const missed = (t.match(/class="quiz-missed qbtn"/g) || []).length;
   const ans = (t.match(/class="quiz-answer"/g) || []).length;
   const iv = (t.match(/class="interview-reveal qbtn"/g) || []).length;
-  if (quiz !== 2 || knew !== 2 || ans !== 2 || iv !== 2) { lesOk = false; lesIssues.push(id + ' quiz/interview counts: reveal=' + quiz + ' knew=' + knew + ' ans=' + ans + ' iv=' + iv); }
+  if (quiz !== 2 || knew !== 2 || missed !== 2 || ans !== 2 || iv !== 2) { lesOk = false; lesIssues.push(id + ' quiz/interview counts: reveal=' + quiz + ' knew=' + knew + ' missed=' + missed + ' ans=' + ans + ' iv=' + iv); }
   if ((t.match(/class="sub-yt"/g) || []).length < 3) { lesOk = false; lesIssues.push(id + ' subtopic yt-ref links < 3'); }
+  if ((t.match(/data-acc="/g) || []).length !== 8) { lesOk = false; lesIssues.push(id + ' accordion sections != 8'); }
+  if (id.indexOf('D.') === 0 && t.indexOf('dsa-practice') === -1) { lesOk = false; lesIssues.push(id + ' missing DSA practice box'); }
 }
-check(lesOk, 'all 93 lesson pages have required IDs + 2 quiz + 2 interview blocks + >=3 subtopic yt refs' + (lesIssues.length ? ' — ' + lesIssues.slice(0, 5).join(' | ') : ''));
+check(lesOk, 'all 105 lesson pages have required IDs + 2 quiz (knew+missed) + 2 interview + flashcards + review star + 8 accordions' + (lesIssues.length ? ' — ' + lesIssues.slice(0, 5).join(' | ') : ''));
 
 /* original content preservation: every original goal/task/check text appears in its new page */
 let presOk = true, presIssues = [];
@@ -247,7 +255,7 @@ server.listen(PORT, function () {
       res.resume();
       res.on('end', function () {
         if (++done === urls.length) {
-          check(bad.length === 0, 'HTTP 200 for ' + urls.length + ' URLs (index + 10 modules + 93 lessons + 3 assets)' + (bad.length ? ' — ' + bad.join(', ') : ''));
+          check(bad.length === 0, 'HTTP 200 for ' + urls.length + ' URLs (index + 11 modules + 105 lessons + 3 assets)' + (bad.length ? ' — ' + bad.join(', ') : ''));
           server.close();
           console.log(failures === 0 ? '\nALL CHECKS PASSED' : '\n' + failures + ' CHECK(S) FAILED');
           process.exit(failures === 0 ? 0 : 1);

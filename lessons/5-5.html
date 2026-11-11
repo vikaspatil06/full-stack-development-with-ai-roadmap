@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="5.5">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m5.html">AI Engineering — From Gemini Calls to RAG Systems ★</a> &nbsp;›&nbsp; Lesson 5.5</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 5.5 • AI Engineering — From Gemini Calls to RAG Systems ★ • 45 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 5.5 • AI Engineering — From Gemini Calls to RAG Systems ★ • 45 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>Prompt Engineering Patterns</h2>
 <p class="goal">Few-shot, roles, and Skillzify's 15 modes as case studies</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=U6nxdHQkhzI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>Master Prompt Engineering in 9 Minutes | AI Builder Series EP 02</b><span>AI Builder</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. The anatomy of a prompt that works</a></li>
 <li><a href="#sub-2">2. Patterns hiding in Skillzify's 15 modes</a></li>
@@ -49,32 +50,44 @@
 <h4 id="sub-3">3. Chain-of-thought, used carefully</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=U6nxdHQkhzI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
 <p>Asking the model to reason step by step before answering improves hard problems — but the reasoning is also billable output and latency. Use it where accuracy pays (grading, debugging), skip it for lookups and formatting.</p>
 <div class="callout why"><b>Prompts are code</b>Version them, change one variable at a time, and keep a small set of test inputs you re-run after every prompt edit (that's the seed of Lesson 5.6's evals). A prompt changed on vibes regresses silently.</div>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>ROLE:      You are a patient Python tutor for beginners.
 TASK:      Explain the error in the learner's code.
 RULES:     Give a hint first. Never output the full corrected code.
            Use at most 120 words. End with one question.
 EXAMPLE:   Error: NameError ... → "Hint: Python is case-sensitive..."</code></pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Write the full prompt for a new mode: 'Interview Drill' — model asks one Python interview question, waits, then grades the learner's answer against a 3-point rubric in the prompt and returns JSON {score, feedback}. Include role, rules, one few-shot grading example, and delimited learner input.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Write the full prompt for a new mode: 'Interview Drill' — model asks one Python interview question, waits, then grades the learner's answer against a 3-point rubric in the prompt and returns JSON {score, feedback}. Include role, rules, one few-shot grading example, and delimited learner input.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">What is few-shot prompting and why is it so effective for format consistency?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">Including a few input→output examples in the prompt; the model pattern-matches the demonstrated format far more reliably than it follows format descriptions.</p></div>
 <div class="quiz-q"><p class="qq">Why does Skillzify's Ask AI mode forbid giving the final answer?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">Because the product is learning, not answers — the restraint is the feature. The rule lives in the prompt because the model would otherwise helpfully solve it.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">How do you make an LLM feature's output consistent?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Constrain the format (ideally structured JSON), pin it with few-shot examples, low temperature for factual modes, validate output server-side, and regression-test prompts against a fixed input set.</p></div>
 <div class="interview-q"><p class="iq">What is prompt injection and one mitigation?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">User input that tries to override the system instructions. Mitigate with clear delimiters, instruction hierarchy (system rules restated), output validation, and never letting model output directly trigger privileged actions.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -83,7 +96,7 @@ EXAMPLE:   Error: NameError ... → "Hint: Python is case-sensitive..."</code></
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

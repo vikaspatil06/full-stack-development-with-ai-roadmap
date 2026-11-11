@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="1.3">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m1.html">JavaScript Deep + Modern Frontend</a> &nbsp;›&nbsp; Lesson 1.3</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 1.3 • JavaScript Deep + Modern Frontend • 30 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 1.3 • JavaScript Deep + Modern Frontend • 30 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>this &amp; Prototypes — How JavaScript Objects Really Work</h2>
 <p class="goal">The prototype chain, demystified</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>Learn JavaScript - Full Course for Beginners</b><span>freeCodeCamp.org</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. this depends on the call, not the definition</a></li>
 <li><a href="#sub-2">2. Prototypes: shared behaviour</a></li>
@@ -38,7 +39,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can predict what this refers to in any call, explain the prototype chain, and read class syntax as sugar over prototypes.</div>
 <h4 id="sub-1">1. this depends on the call, not the definition</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>In JavaScript, this is set by how a function is called. Called as a method, this is the object before the dot. Called plainly, this is undefined in strict mode. Called with new, this is the fresh object being built. Arrow functions are the exception: they inherit this from the surrounding scope and cannot be rebound. Most this bugs come from passing a method as a callback and losing its object.</p><h4 id="sub-2">2. Prototypes: shared behaviour</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Every object has a hidden link to a prototype object. When you read a property the object lacks, JavaScript walks up the prototype chain until it finds it. Methods live on the prototype, not on each instance, so a thousand lesson objects share one set of methods instead of each carrying copies.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Classes are sugar</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>The class keyword writes the same prototype machinery with cleaner syntax: methods go on the prototype automatically, and extends sets up the chain. Skillzify's vanilla code mostly uses factory functions and plain objects instead, but interviewers and libraries assume you can read class syntax fluently.</p><h4 id="sub-4">4. When this goes wrong</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Event handlers, timers and array callbacks all change the call site, so this changes too. The fixes are an arrow function that captures the outer this, bind to lock it, or avoiding this entirely by using closures and plain data — the approach Skillzify's modules mostly take.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>function Lesson(id, title) {
   this.id = id;
   this.title = title;
@@ -49,26 +55,33 @@ Lesson.prototype.summary = function () {
 const l = new Lesson("b-1", "Intro");
 console.log(l.summary());   // "b-1: Intro"
 console.log(l.hasOwnProperty("summary")); // false — it lives on the prototype</pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Build a Lesson constructor with a prototype method summary and a prototype property xp defaulting to 20. Create two instances, override xp on one, and show the other still reads 20 — proving the prototype is shared, not copied.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Build a Lesson constructor with a prototype method summary and a prototype property xp defaulting to 20. Create two instances, override xp on one, and show the other still reads 20 — proving the prototype is shared, not copied.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">What decides the value of this inside a function?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">How the function is called: as a method it is the object before the dot; plainly it is undefined in strict mode; with new it is the new object; arrows inherit it.</p></div>
 <div class="quiz-q"><p class="qq">Where do methods live when you use a constructor function?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">On the constructor's prototype object, shared by all instances. hasOwnProperty on an instance returns false for them.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Explain the prototype chain in one minute.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Objects link to a prototype; a missing property is looked up the chain until found or the chain ends at null. Methods live on prototypes so instances share them.</p></div>
 <div class="interview-q"><p class="iq">Why does passing obj.method as a callback break this?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">The call site changes, so this is no longer obj. Fix it with an arrow wrapper, bind, or by not relying on this.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -77,7 +90,7 @@ console.log(l.hasOwnProperty("summary")); // false — it lives on the prototype
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

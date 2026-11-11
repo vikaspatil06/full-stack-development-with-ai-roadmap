@@ -1,5 +1,5 @@
 window.FSAI = {
-  "total": 93,
+  "total": 105,
   "modules": [
     {
       "id": "B",
@@ -12,6 +12,18 @@ window.FSAI = {
       ],
       "track": "basics",
       "count": 10
+    },
+    {
+      "id": "D",
+      "badge": "D",
+      "title": "DSA — Data Structures & Algorithms",
+      "desc": "The interview filter. Patterns, not memorization: complexity, arrays, strings, recursion, linked lists, stacks, trees, heaps, graphs and DP — on Striver’s A2Z sheet with LeetCode practice, a mistake log, spaced re-solves and a Sunday contest. Runs daily alongside the full-stack track.",
+      "meta": [
+        "Weeks 1–12 • 27 Nov – 18 Feb",
+        "Spine: Striver A2Z • Practice: LeetCode"
+      ],
+      "track": "dsa",
+      "count": 12
     },
     {
       "id": "M0",
@@ -142,7 +154,10 @@ window.FSAI = {
         "2. The essential tags",
         "3. Nesting and attributes",
         "4. Why this matters for Skillzify"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.2",
@@ -163,7 +178,10 @@ window.FSAI = {
         "2. Forms collect user input",
         "3. Semantic layout",
         "4. Built-in validation"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.3",
@@ -184,7 +202,10 @@ window.FSAI = {
         "2. Colours and fonts",
         "3. The box model",
         "4. Specificity and the cascade"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.4",
@@ -205,7 +226,10 @@ window.FSAI = {
         "2. Grid: layout in two dimensions",
         "3. Positioning",
         "4. Responsive basics"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.5",
@@ -226,7 +250,10 @@ window.FSAI = {
         "2. Data types",
         "3. Operators",
         "4. The console is your lab"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.6",
@@ -247,7 +274,10 @@ window.FSAI = {
         "2. Loops repeat work",
         "3. Functions package behaviour",
         "4. Arrays and objects"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.7",
@@ -268,7 +298,10 @@ window.FSAI = {
         "2. Print and input",
         "3. Variables and types",
         "4. Dynamic typing, with discipline"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.8",
@@ -289,7 +322,10 @@ window.FSAI = {
         "2. Functions",
         "3. Lists",
         "4. Dicts"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.9",
@@ -310,7 +346,10 @@ window.FSAI = {
         "2. The core workflow",
         "3. Commit messages are documentation",
         "4. Never commit secrets"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "B.10",
@@ -331,6 +370,885 @@ window.FSAI = {
         "2. The integrated terminal",
         "3. Extensions that earn their place",
         "4. Running code locally, the habit"
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
+    },
+    {
+      "id": "D.1",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Time & Space Complexity + Big-O",
+      "sub": "Count operations before you write code",
+      "mins": 45,
+      "track": "dsa",
+      "url": "lessons/d-1.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=FPu9Uld7W-E",
+        "title": "Time and Space Complexity - Strivers A2Z DSA Course",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Big-O is about growth, not stopwatches",
+        "2. The classes you must recognise instantly",
+        "3. Counting loops and recursion",
+        "4. Space, trade-offs, and the interview habit"
+      ],
+      "cards": [
+        [
+          "Big-O",
+          "An upper bound on how a solution's cost grows with input size n, ignoring constants and lower-order terms."
+        ],
+        [
+          "O(log n)",
+          "Cost grows with the number of times you can halve n — the signature of binary search and balanced-tree operations."
+        ],
+        [
+          "O(n log n)",
+          "The cost of efficient comparison sorting, and the target complexity for most problems with n around 10⁵."
+        ],
+        [
+          "Amortised O(1)",
+          "Average cost per operation over many operations, even if single operations occasionally cost more — like appending to a dynamic array."
+        ],
+        [
+          "Recursion depth",
+          "The maximum number of nested calls on the stack; it sets the space cost of a recursive solution."
+        ],
+        [
+          "Time-space trade-off",
+          "Using extra memory, like a hash map, to buy faster time — or the reverse. Naming the trade is half the interview answer."
+        ]
+      ],
+      "striver": {
+        "section": "Learn the basics",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Two Sum",
+          "url": "https://leetcode.com/problems/two-sum/"
+        },
+        {
+          "title": "Valid Anagram",
+          "url": "https://leetcode.com/problems/valid-anagram/"
+        },
+        {
+          "title": "Maximum Subarray",
+          "url": "https://leetcode.com/problems/maximum-subarray/"
+        },
+        {
+          "title": "Best Time to Buy and Sell Stock",
+          "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/"
+        },
+        {
+          "title": "Contains Duplicate",
+          "url": "https://leetcode.com/problems/contains-duplicate/"
+        }
+      ]
+    },
+    {
+      "id": "D.2",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Arrays & Two Pointers",
+      "sub": "One pass, two indices, zero extra space",
+      "mins": 50,
+      "track": "dsa",
+      "url": "lessons/d-2.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=Fu7LD_mIo00",
+        "title": "Episode 3 –Master DSA Patterns with 2 Pointers Technique",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Arrays are contiguous memory",
+        "2. The two-pointer pattern",
+        "3. Prefix sums and the one-pass mindset",
+        "4. Off-by-one errors and bounds"
+      ],
+      "cards": [
+        [
+          "Two pointers",
+          "Using two indices that move through an array by a rule, turning pair and partition problems from O(n²) into O(n)."
+        ],
+        [
+          "Opposite ends",
+          "One pointer at each end of a sorted array, moving inward — the classic pair-sum pattern."
+        ],
+        [
+          "Prefix sum",
+          "A running total that answers any range sum in O(1) after one O(n) preprocessing pass."
+        ],
+        [
+          "Kadane's algorithm",
+          "Maximum subarray in O(n): keep the best sum ending here, reset to zero when it goes negative."
+        ],
+        [
+          "In-place",
+          "Solving without extra arrays, usually with two pointers — O(1) extra space, but it mutates the input."
+        ],
+        [
+          "Off-by-one",
+          "A boundary error where a loop runs one step too many or too few; the most common array bug in interviews."
+        ]
+      ],
+      "striver": {
+        "section": "Solve Problems on Arrays",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Two Sum II - Input Array Is Sorted",
+          "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+        },
+        {
+          "title": "Container With Most Water",
+          "url": "https://leetcode.com/problems/container-with-most-water/"
+        },
+        {
+          "title": "3Sum",
+          "url": "https://leetcode.com/problems/3sum/"
+        },
+        {
+          "title": "Trapping Rain Water",
+          "url": "https://leetcode.com/problems/trapping-rain-water/"
+        },
+        {
+          "title": "Remove Duplicates from Sorted Array",
+          "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/"
+        }
+      ]
+    },
+    {
+      "id": "D.3",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Strings & Hashing",
+      "sub": "Hash maps turn O(n²) into O(n)",
+      "mins": 50,
+      "track": "dsa",
+      "url": "lessons/d-3.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=vCRD36bG8xQ",
+        "title": "Strings | Lecture 12 | Java Placement Series",
+        "channel": "Apna College"
+      },
+      "subtopics": [
+        "1. Strings are immutable arrays of characters",
+        "2. Hashing: the frequency-map habit",
+        "3. Anagrams, grouping, and the two-sum trick",
+        "4. Sliding window on strings"
+      ],
+      "cards": [
+        [
+          "Frequency map",
+          "A hash map counting how often each key appears — the core tool for anagram, duplicate and complement problems."
+        ],
+        [
+          "Hash map",
+          "A key-value store with average O(1) insert and lookup; collisions can degrade it to O(n) in the worst case."
+        ],
+        [
+          "Sliding window",
+          "Two pointers marking a substring that grows and shrinks in one pass, giving O(n) solutions for substring problems."
+        ],
+        [
+          "Anagram signature",
+          "A canonical key for a string — sorted letters or a 26-count tuple — shared by all its anagrams."
+        ],
+        [
+          "String immutability",
+          "Strings cannot be changed in place; every edit creates a new string, so repeated concatenation is O(n²)."
+        ],
+        [
+          "Complement trick",
+          "For each value x, look up target − x in a map instead of scanning for a partner — the heart of Two Sum."
+        ]
+      ],
+      "striver": {
+        "section": "Strings",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Valid Anagram",
+          "url": "https://leetcode.com/problems/valid-anagram/"
+        },
+        {
+          "title": "Group Anagrams",
+          "url": "https://leetcode.com/problems/group-anagrams/"
+        },
+        {
+          "title": "Longest Substring Without Repeating Characters",
+          "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+        },
+        {
+          "title": "Longest Repeating Character Replacement",
+          "url": "https://leetcode.com/problems/longest-repeating-character-replacement/"
+        },
+        {
+          "title": "Minimum Window Substring",
+          "url": "https://leetcode.com/problems/minimum-window-substring/"
+        }
+      ]
+    },
+    {
+      "id": "D.4",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Recursion & Backtracking",
+      "sub": "Trust the recursion — define the base case, then the choice",
+      "mins": 50,
+      "track": "dsa",
+      "url": "lessons/d-4.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=yVdKa8dnKiE",
+        "title": "Re 1. Introduction to Recursion | Recursion Tree | Stack Space | Strivers A2Z DSA Course",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Recursion is a call stack, not magic",
+        "2. Backtracking: choose, explore, undo",
+        "3. The decision-tree mental model",
+        "4. Pruning and the complexity check"
+      ],
+      "cards": [
+        [
+          "Base case",
+          "The smallest input a recursive function answers directly, without another recursive call — it stops the recursion."
+        ],
+        [
+          "Call stack",
+          "The stack of active function calls; recursion depth equals stack depth, and each frame costs memory."
+        ],
+        [
+          "Backtracking",
+          "Depth-first search over choices with an undo step: choose, explore, then remove the choice before the next branch."
+        ],
+        [
+          "Decision tree",
+          "A tree where each level is one choice and each root-to-leaf path is one candidate answer; its leaf count is the complexity."
+        ],
+        [
+          "Pruning",
+          "Skipping branches that cannot lead to a valid answer, checked before recursing deeper."
+        ],
+        [
+          "Stack overflow",
+          "Exhausting the call stack, usually from a missing base case or recursion deeper than the stack allows."
+        ]
+      ],
+      "striver": {
+        "section": "Recursion",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Subsets",
+          "url": "https://leetcode.com/problems/subsets/"
+        },
+        {
+          "title": "Permutations",
+          "url": "https://leetcode.com/problems/permutations/"
+        },
+        {
+          "title": "Combination Sum",
+          "url": "https://leetcode.com/problems/combination-sum/"
+        },
+        {
+          "title": "Generate Parentheses",
+          "url": "https://leetcode.com/problems/generate-parentheses/"
+        },
+        {
+          "title": "Word Search",
+          "url": "https://leetcode.com/problems/word-search/"
+        }
+      ]
+    },
+    {
+      "id": "D.5",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Linked Lists",
+      "sub": "Pointers, not indexes — draw the arrows first",
+      "mins": 50,
+      "track": "dsa",
+      "url": "lessons/d-5.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=Nq7ok-OyEpg",
+        "title": "L1. Introduction to LinkedList | Traversal | Length | Search an Element",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Nodes and pointers: why lists exist",
+        "2. The dummy node trick",
+        "3. Fast and slow pointers",
+        "4. Reversal: the interview rite of passage"
+      ],
+      "cards": [
+        [
+          "Node",
+          "One element of a linked list: a value plus a pointer to the next node (and prev, in a doubly linked list)."
+        ],
+        [
+          "Dummy node",
+          "A throwaway node placed before the head so edge cases at the head disappear; the answer is dummy.next."
+        ],
+        [
+          "Fast and slow pointers",
+          "Two pointers moving at different speeds — used to find cycles, middles, and the nth node from the end."
+        ],
+        [
+          "Pointer surgery",
+          "Rewiring next pointers to insert, delete or reverse nodes without copying values."
+        ],
+        [
+          "Cycle detection",
+          "Floyd's algorithm: fast laps slow inside a cycle, so a meeting proves a cycle exists in O(n) time, O(1) space."
+        ],
+        [
+          "In-place reversal",
+          "Flipping next pointers one node at a time with three pointers, using O(1) extra space."
+        ]
+      ],
+      "striver": {
+        "section": "Learn LinkedList",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Reverse Linked List",
+          "url": "https://leetcode.com/problems/reverse-linked-list/"
+        },
+        {
+          "title": "Merge Two Sorted Lists",
+          "url": "https://leetcode.com/problems/merge-two-sorted-lists/"
+        },
+        {
+          "title": "Linked List Cycle",
+          "url": "https://leetcode.com/problems/linked-list-cycle/"
+        },
+        {
+          "title": "Remove Nth Node From End of List",
+          "url": "https://leetcode.com/problems/remove-nth-node-from-end-of-list/"
+        },
+        {
+          "title": "Reorder List",
+          "url": "https://leetcode.com/problems/reorder-list/"
+        }
+      ]
+    },
+    {
+      "id": "D.6",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Stacks & Queues",
+      "sub": "LIFO and FIFO — the order is the algorithm",
+      "mins": 45,
+      "track": "dsa",
+      "url": "lessons/d-6.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=tqQ5fTamIN4",
+        "title": "L1. Introduction to Stack and Queue | Implementation using Data Structures",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Stack: undo, matching, and nesting",
+        "2. The monotonic stack pattern",
+        "3. Queues and breadth-first thinking",
+        "4. Designing with stacks and queues"
+      ],
+      "cards": [
+        [
+          "Stack (LIFO)",
+          "Last-in-first-out: push and pop happen at the same end — the top. Used for nesting, undo and reversal."
+        ],
+        [
+          "Queue (FIFO)",
+          "First-in-first-out: enqueue at the back, dequeue from the front. Used for fair ordering and breadth-first search."
+        ],
+        [
+          "Monotonic stack",
+          "A stack kept in increasing or decreasing order by popping violators — solves next-greater-element problems in O(n)."
+        ],
+        [
+          "Deque",
+          "Double-ended queue: insert and remove at both ends in O(1). Powers sliding-window maximum."
+        ],
+        [
+          "Amortised O(1)",
+          "Average cost per operation over a sequence, even when single operations occasionally cost more — like transferring between two stacks."
+        ],
+        [
+          "Min Stack",
+          "A stack that also tracks the minimum so far, giving getMin in O(1) by storing the running minimum with each push."
+        ]
+      ],
+      "striver": {
+        "section": "Stack and Queues",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Valid Parentheses",
+          "url": "https://leetcode.com/problems/valid-parentheses/"
+        },
+        {
+          "title": "Min Stack",
+          "url": "https://leetcode.com/problems/min-stack/"
+        },
+        {
+          "title": "Evaluate Reverse Polish Notation",
+          "url": "https://leetcode.com/problems/evaluate-reverse-polish-notation/"
+        },
+        {
+          "title": "Daily Temperatures",
+          "url": "https://leetcode.com/problems/daily-temperatures/"
+        },
+        {
+          "title": "Implement Queue using Stacks",
+          "url": "https://leetcode.com/problems/implement-queue-using-stacks/"
+        }
+      ]
+    },
+    {
+      "id": "D.7",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Sorting & Searching (Binary Search)",
+      "sub": "Sorted input is a superpower — halve the search space",
+      "mins": 50,
+      "track": "dsa",
+      "url": "lessons/d-7.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=MHf6awe89xw",
+        "title": "BS-1. Binary Search Introduction | Real Life Example | Iterative | Recursive | Overflow Cases",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Sorting first is often the whole solution",
+        "2. The binary search invariant",
+        "3. Binary search on the answer",
+        "4. Rotated arrays and edge cases"
+      ],
+      "cards": [
+        [
+          "Binary search",
+          "Repeatedly halving a sorted range using the invariant that the target, if present, lies inside [lo, hi] — O(log n)."
+        ],
+        [
+          "Loop invariant",
+          "A statement that stays true before every iteration; the anchor that makes binary search correct and its loop terminate."
+        ],
+        [
+          "Binary search on answer",
+          "Searching a range of candidate answers with a monotonic feasibility check, instead of searching an array."
+        ],
+        [
+          "Stable sort",
+          "A sort that keeps equal elements in their original relative order — merge sort is stable, quicksort is not."
+        ],
+        [
+          "Counting sort",
+          "Sorting by counting frequencies when values are bounded: O(n + k) time, but needs O(k) extra space."
+        ],
+        [
+          "Rotated sorted array",
+          "A sorted array cut and swapped; one half is always sorted, which keeps binary search at O(log n)."
+        ]
+      ],
+      "striver": {
+        "section": "Binary Search",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Binary Search",
+          "url": "https://leetcode.com/problems/binary-search/"
+        },
+        {
+          "title": "Search in Rotated Sorted Array",
+          "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/"
+        },
+        {
+          "title": "Find Minimum in Rotated Sorted Array",
+          "url": "https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/"
+        },
+        {
+          "title": "Find First and Last Position of Element in Sorted Array",
+          "url": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/"
+        },
+        {
+          "title": "Koko Eating Bananas",
+          "url": "https://leetcode.com/problems/koko-eating-bananas/"
+        }
+      ]
+    },
+    {
+      "id": "D.8",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Trees & BST",
+      "sub": "Recursion on a branching structure",
+      "mins": 50,
+      "track": "dsa",
+      "url": "lessons/d-8.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=_ANrF3FJm7I",
+        "title": "L1. Introduction to Trees | Types of Trees",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Trees are recursive data",
+        "2. Traversals: four orders, one idea",
+        "3. The BST property is a search superpower",
+        "4. Depth, diameter, and lowest common ancestors"
+      ],
+      "cards": [
+        [
+          "Binary tree",
+          "A tree where each node has at most a left and a right child; every subtree is itself a tree."
+        ],
+        [
+          "BST property",
+          "Left descendants are smaller and right descendants larger than the node — this makes search O(h)."
+        ],
+        [
+          "Inorder traversal",
+          "Left, node, right — visits a BST's values in ascending sorted order."
+        ],
+        [
+          "Height vs depth",
+          "Height is the longest downward path from a node; depth is the distance from the root to the node."
+        ],
+        [
+          "Diameter",
+          "The longest path between any two nodes in a tree, which may pass through a node via both children."
+        ],
+        [
+          "Lowest common ancestor",
+          "The deepest node that is an ancestor of both targets — in a BST it is the first node where the targets split."
+        ]
+      ],
+      "striver": {
+        "section": "Binary Trees",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Invert Binary Tree",
+          "url": "https://leetcode.com/problems/invert-binary-tree/"
+        },
+        {
+          "title": "Maximum Depth of Binary Tree",
+          "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/"
+        },
+        {
+          "title": "Diameter of Binary Tree",
+          "url": "https://leetcode.com/problems/diameter-of-binary-tree/"
+        },
+        {
+          "title": "Lowest Common Ancestor of a Binary Search Tree",
+          "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/"
+        },
+        {
+          "title": "Validate Binary Search Tree",
+          "url": "https://leetcode.com/problems/validate-binary-search-tree/"
+        }
+      ]
+    },
+    {
+      "id": "D.9",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Heaps & Priority Queues",
+      "sub": "The top-k pattern — keep only what matters",
+      "mins": 45,
+      "track": "dsa",
+      "url": "lessons/d-9.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=Qf-TDPr0nYw",
+        "title": "Introduction to Heap Data Structure, Priority Queue, and Heapsort",
+        "channel": "Kunal Kushwaha"
+      },
+      "subtopics": [
+        "1. A heap is a partial order, not a sorted list",
+        "2. The top-k pattern",
+        "3. Merging and scheduling with heaps",
+        "4. Heap versus sort: choosing the tool"
+      ],
+      "cards": [
+        [
+          "Min-heap",
+          "A heap where every parent is smaller than its children, so the minimum is always on top; insert and pop cost O(log n)."
+        ],
+        [
+          "Max-heap",
+          "A heap where every parent is larger than its children, so the maximum is always on top."
+        ],
+        [
+          "Top-k pattern",
+          "Keep a heap of size k while scanning: push each element, pop the extreme when the heap overflows — O(n log k)."
+        ],
+        [
+          "Heapify",
+          "Building a heap from an array in O(n) by sifting down from the last parent upward."
+        ],
+        [
+          "Two-heap median",
+          "A max-heap for the lower half plus a min-heap for the upper half, kept balanced, yields the running median in O(log n) per insert."
+        ],
+        [
+          "Priority queue",
+          "A queue that always dequeues the highest-priority element first, usually implemented with a heap."
+        ]
+      ],
+      "striver": {
+        "section": "Heaps",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Kth Largest Element in an Array",
+          "url": "https://leetcode.com/problems/kth-largest-element-in-an-array/"
+        },
+        {
+          "title": "Top K Frequent Elements",
+          "url": "https://leetcode.com/problems/top-k-frequent-elements/"
+        },
+        {
+          "title": "Last Stone Weight",
+          "url": "https://leetcode.com/problems/last-stone-weight/"
+        },
+        {
+          "title": "K Closest Points to Origin",
+          "url": "https://leetcode.com/problems/k-closest-points-to-origin/"
+        },
+        {
+          "title": "Find Median from Data Stream",
+          "url": "https://leetcode.com/problems/find-median-from-data-stream/"
+        }
+      ]
+    },
+    {
+      "id": "D.10",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Graphs (BFS/DFS)",
+      "sub": "Nodes, edges, visited set — every graph problem is a traversal",
+      "mins": 50,
+      "track": "dsa",
+      "url": "lessons/d-10.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=M3_pLsDdeuU",
+        "title": "G-1. Introduction to Graph | Types | Different Conventions Used",
+        "channel": "takeUforward"
+      },
+      "subtopics": [
+        "1. Modelling: everything is a graph if you look right",
+        "2. DFS versus BFS: depth or breadth",
+        "3. The visited set: the one bug that loops forever",
+        "4. Classic patterns: islands, topo sort, multi-source BFS"
+      ],
+      "cards": [
+        [
+          "Adjacency list",
+          "A map from each node to its neighbours — the standard graph representation, O(V + E) in space."
+        ],
+        [
+          "BFS",
+          "Breadth-first search with a queue: visits level by level, finds shortest paths in unweighted graphs."
+        ],
+        [
+          "DFS",
+          "Depth-first search with a stack or recursion: dives down one path first; natural for cycles and topo sort."
+        ],
+        [
+          "Visited set",
+          "The record of nodes already processed; without it, cycles make a traversal loop forever."
+        ],
+        [
+          "Topological sort",
+          "An ordering of nodes so every prerequisite comes before its dependent; impossible when the graph has a cycle."
+        ],
+        [
+          "Multi-source BFS",
+          "Starting BFS from all sources at once, so the level number measures distance from the nearest source."
+        ]
+      ],
+      "striver": {
+        "section": "Graphs",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Number of Islands",
+          "url": "https://leetcode.com/problems/number-of-islands/"
+        },
+        {
+          "title": "Clone Graph",
+          "url": "https://leetcode.com/problems/clone-graph/"
+        },
+        {
+          "title": "Course Schedule",
+          "url": "https://leetcode.com/problems/course-schedule/"
+        },
+        {
+          "title": "Pacific Atlantic Water Flow",
+          "url": "https://leetcode.com/problems/pacific-atlantic-water-flow/"
+        },
+        {
+          "title": "Rotting Oranges",
+          "url": "https://leetcode.com/problems/rotting-oranges/"
+        }
+      ]
+    },
+    {
+      "id": "D.11",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Dynamic Programming",
+      "sub": "States, choices, recurrence — DP is recursion with memory",
+      "mins": 55,
+      "track": "dsa",
+      "url": "lessons/d-11.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=oBt53YbR9Kk",
+        "title": "Dynamic Programming - Learn to Solve Algorithmic Problems & Coding Challenges",
+        "channel": "freeCodeCamp.org"
+      },
+      "subtopics": [
+        "1. Recognising DP: overlapping subproblems, optimal substructure",
+        "2. The five-step method",
+        "3. Memoisation versus tabulation",
+        "4. The classic pattern families"
+      ],
+      "cards": [
+        [
+          "State",
+          "The parameters that fully describe a subproblem, e.g. dp[i] = ways to reach step i — the heart of any DP solution."
+        ],
+        [
+          "Recurrence",
+          "The formula expressing a state in terms of smaller states, e.g. dp[i] = dp[i−1] + dp[i−2]."
+        ],
+        [
+          "Memoisation",
+          "Top-down DP: cache recursive results so each subproblem is computed once."
+        ],
+        [
+          "Tabulation",
+          "Bottom-up DP: fill a table in increasing order, usually with less space and no recursion."
+        ],
+        [
+          "Optimal substructure",
+          "The property that an optimal solution is built from optimal solutions to its subproblems."
+        ],
+        [
+          "Space compression",
+          "Shrinking a DP table to the few previous values the recurrence actually reads, e.g. two variables instead of an array."
+        ]
+      ],
+      "striver": {
+        "section": "Dynamic Programming",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Climbing Stairs",
+          "url": "https://leetcode.com/problems/climbing-stairs/"
+        },
+        {
+          "title": "House Robber",
+          "url": "https://leetcode.com/problems/house-robber/"
+        },
+        {
+          "title": "Coin Change",
+          "url": "https://leetcode.com/problems/coin-change/"
+        },
+        {
+          "title": "Longest Increasing Subsequence",
+          "url": "https://leetcode.com/problems/longest-increasing-subsequence/"
+        },
+        {
+          "title": "Word Break",
+          "url": "https://leetcode.com/problems/word-break/"
+        }
+      ]
+    },
+    {
+      "id": "D.12",
+      "module": "D",
+      "moduleTitle": "DSA — Data Structures & Algorithms",
+      "title": "Interview Simulation — Patterns, Mock Rounds & Mistake Log",
+      "sub": "Talk, code, test — under the clock",
+      "mins": 55,
+      "track": "dsa",
+      "url": "lessons/d-12.html",
+      "yt": {
+        "url": "https://www.youtube.com/watch?v=qskEJ6X0wR0",
+        "title": "Amazon Coding Interview With a Former Tech Lead",
+        "channel": "CodeCrack"
+      },
+      "subtopics": [
+        "1. The 45-minute anatomy of an interview round",
+        "2. Thinking aloud and the pattern-first reflex",
+        "3. The mistake log and spaced re-solve",
+        "4. Contests, mocks, and the final two weeks"
+      ],
+      "cards": [
+        [
+          "Mock round",
+          "A timed 45-minute practice interview, talking aloud, with the same structure as the real thing."
+        ],
+        [
+          "Pattern-first reflex",
+          "Naming the pattern — two pointers, sliding window, BFS, DP — before writing any code."
+        ],
+        [
+          "Mistake log",
+          "A record of every failed or slow problem: pattern, what went wrong, and a re-solve date."
+        ],
+        [
+          "Spaced re-solve",
+          "Re-solving a failed problem after 3 days and again after 7 days, without peeking at the old solution."
+        ],
+        [
+          "Brute force first",
+          "Stating and coding the naive solution with its complexity before optimising — it anchors the discussion and banks partial credit."
+        ],
+        [
+          "Weekly Contest",
+          "LeetCode's Sunday timed contest: four problems under real pressure, the closest simulation of interview conditions."
+        ]
+      ],
+      "striver": {
+        "section": "Learn the basics",
+        "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+      },
+      "leetcode": [
+        {
+          "title": "Longest Substring Without Repeating Characters",
+          "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+        },
+        {
+          "title": "Container With Most Water",
+          "url": "https://leetcode.com/problems/container-with-most-water/"
+        },
+        {
+          "title": "Number of Islands",
+          "url": "https://leetcode.com/problems/number-of-islands/"
+        },
+        {
+          "title": "Coin Change",
+          "url": "https://leetcode.com/problems/coin-change/"
+        },
+        {
+          "title": "LRU Cache",
+          "url": "https://leetcode.com/problems/lru-cache/"
+        }
       ]
     },
     {
@@ -351,7 +1269,10 @@ window.FSAI = {
         "1. The journey of one page load",
         "2. Why scripts go at the bottom",
         "3. Cache-busting: the ?v=29 trick"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.2",
@@ -372,7 +1293,10 @@ window.FSAI = {
         "2. HTTP requests and responses",
         "3. Status codes are a language",
         "4. Debugging in the Network tab"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.3",
@@ -393,7 +1317,10 @@ window.FSAI = {
         "2. What blocks rendering",
         "3. Layout thrashing and repaints",
         "4. Measuring, not guessing"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.4",
@@ -414,7 +1341,10 @@ window.FSAI = {
         "2. Semantic tags",
         "3. The head: two lines that matter most",
         "4. Empty divs that JavaScript fills"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.5",
@@ -434,7 +1364,10 @@ window.FSAI = {
         "1. Every element is a box",
         "2. Layout: Flexbox and Grid",
         "3. CSS variables: theming without duplication"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.6",
@@ -455,7 +1388,10 @@ window.FSAI = {
         "2. Fluid foundations",
         "3. Breakpoints are content decisions",
         "4. Touch and testing"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.7",
@@ -476,7 +1412,10 @@ window.FSAI = {
         "2. Client-side validation is UX, not security",
         "3. Server-side validation is the gate",
         "4. Accessible errors"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.8",
@@ -497,7 +1436,10 @@ window.FSAI = {
         "2. Keyframes: full choreography",
         "3. Animate the cheap properties",
         "4. Respect reduced motion"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.9",
@@ -518,7 +1460,10 @@ window.FSAI = {
         "2. Semantic HTML does most of the work",
         "3. ARIA fills the gaps",
         "4. Contrast, focus and testing"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "0.10",
@@ -539,7 +1484,10 @@ window.FSAI = {
         "2. The DOM is JavaScript's handle on the page",
         "3. localStorage: the browser's tiny notebook",
         "4. app.js: four jobs, wrapped safely"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.1",
@@ -559,7 +1507,10 @@ window.FSAI = {
         "1. Destructuring: unpack in one line",
         "2. Spread and rest: copy and merge without mutation",
         "3. Template literals and array methods"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.2",
@@ -580,7 +1531,10 @@ window.FSAI = {
         "2. A closure is a function plus its birthplace",
         "3. Private state without classes",
         "4. The classic closure trap"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.3",
@@ -601,7 +1555,10 @@ window.FSAI = {
         "2. Prototypes: shared behaviour",
         "3. Classes are sugar",
         "4. When this goes wrong"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.4",
@@ -621,7 +1578,10 @@ window.FSAI = {
         "1. JavaScript waits without freezing",
         "2. async/await: promises that read like normal code",
         "3. Race conditions"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.5",
@@ -642,7 +1602,10 @@ window.FSAI = {
         "2. Microtasks beat macrotasks",
         "3. Blocking is a choice",
         "4. Async/await is syntax, not magic"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.6",
@@ -663,7 +1626,10 @@ window.FSAI = {
         "2. Delegation: one listener, endless children",
         "3. Controlling the flow",
         "4. Listeners and memory"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.7",
@@ -683,7 +1649,10 @@ window.FSAI = {
         "1. The core idea: render from data, never hand-write DOM",
         "2. Content as code",
         "3. Derived state: mastery and review scheduling"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.8",
@@ -704,7 +1673,10 @@ window.FSAI = {
         "2. try/catch/finally",
         "3. Debugging with breakpoints",
         "4. A debugging method"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "1.9",
@@ -725,7 +1697,10 @@ window.FSAI = {
         "2. State with useState, effects with useEffect",
         "3. What React removes — and what it costs",
         "4. Next.js, at concept level"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.1",
@@ -745,7 +1720,10 @@ window.FSAI = {
         "1. Pick the container by the question you ask",
         "2. Comprehensions: loops that read as sentences",
         "3. Functions as pipelines"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.2",
@@ -766,7 +1744,10 @@ window.FSAI = {
         "2. Dicts: lookup by key",
         "3. Sets: uniqueness and membership",
         "4. Tuples: fixed records"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.3",
@@ -786,7 +1767,10 @@ window.FSAI = {
         "1. A class bundles data with the behaviour that owns it",
         "2. The honest rules of OOP",
         "3. When NOT to use a class"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.4",
@@ -807,7 +1791,10 @@ window.FSAI = {
         "2. Polymorphism: one call, many behaviours",
         "3. super and method resolution",
         "4. Composition over inheritance"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.5",
@@ -828,7 +1815,10 @@ window.FSAI = {
         "2. When not to use them",
         "3. Decorators wrap functions",
         "4. Where you will meet them"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.6",
@@ -848,7 +1838,10 @@ window.FSAI = {
         "1. Generators: values on demand",
         "2. JSON and files: Python's border with every other system",
         "3. Trace the real pipeline: code → flowchart"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.7",
@@ -869,7 +1862,10 @@ window.FSAI = {
         "2. Text, lines and structured data",
         "3. Paths with pathlib",
         "4. Large files stream, small files load"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.8",
@@ -890,7 +1886,10 @@ window.FSAI = {
         "2. try/except/else/finally",
         "3. EAFP: easier to ask forgiveness",
         "4. Raising useful errors"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.9",
@@ -911,7 +1910,10 @@ window.FSAI = {
         "2. Pytest in five minutes",
         "3. Parametrize the cases",
         "4. What to test, and what not to"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "2.10",
@@ -931,7 +1933,10 @@ window.FSAI = {
         "1. NumPy: lists with superpowers",
         "2. Embeddings are just arrays",
         "3. Pandas: tables with labels"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.1",
@@ -951,7 +1956,10 @@ window.FSAI = {
         "1. Node: JavaScript outside the browser",
         "2. The event loop: one thread, no waiting around",
         "3. npm and package.json: the project's contract"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.2",
@@ -971,7 +1979,10 @@ window.FSAI = {
         "1. The request/response cycle",
         "2. Middleware: the chain every request walks",
         "3. Static + API in one server"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.3",
@@ -992,7 +2003,10 @@ window.FSAI = {
         "2. Built-in and third-party middleware",
         "3. Order is the whole game",
         "4. Error middleware has four arguments"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.4",
@@ -1012,7 +2026,10 @@ window.FSAI = {
         "1. REST in practice",
         "2. One error shape, everywhere",
         "3. Validation: the server trusts nobody"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.5",
@@ -1033,7 +2050,10 @@ window.FSAI = {
         "2. How a JWT works",
         "3. Passwords and tokens, done right",
         "4. Why Skillzify uses Firebase Auth"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.6",
@@ -1053,7 +2073,10 @@ window.FSAI = {
         "1. Two different problems, two different tools",
         "2. Secrets live on the server. Full stop.",
         "3. Know the honest limits"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.7",
@@ -1074,7 +2097,10 @@ window.FSAI = {
         "2. One error handler, everywhere",
         "3. Logging that helps at 2am",
         "4. Graceful degradation"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.8",
@@ -1095,7 +2121,10 @@ window.FSAI = {
         "2. A request is method, URL, headers, body",
         "3. What to check on every endpoint",
         "4. From manual to automated"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "3.9",
@@ -1116,7 +2145,10 @@ window.FSAI = {
         "2. GraphQL: the client asks for exactly what it needs",
         "3. The real trade-offs",
         "4. The interview answer"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.1",
@@ -1136,7 +2168,10 @@ window.FSAI = {
         "1. What Firebase Auth actually does",
         "2. Auth state is a stream, not a snapshot",
         "3. The public API key paradox"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.2",
@@ -1156,7 +2191,10 @@ window.FSAI = {
         "1. The mental model: documents in collections",
         "2. One document per user: Skillzify's core decision",
         "3. Design rules of thumb"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.3",
@@ -1176,7 +2214,10 @@ window.FSAI = {
         "1. Queries are built from filters, order and limits",
         "2. The composite index rule",
         "3. What queries cannot do"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.4",
@@ -1196,7 +2237,10 @@ window.FSAI = {
         "1. The problem: two devices, one document, offline gaps",
         "2. The fix: merge per field, by meaning",
         "3. The general method"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.5",
@@ -1216,7 +2260,10 @@ window.FSAI = {
         "1. Turning the cache on",
         "2. Writes queue, they do not fail",
         "3. Knowing what is cached and what is confirmed"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.6",
@@ -1236,7 +2283,10 @@ window.FSAI = {
         "1. Rules decide every request, allow or deny",
         "2. Validate the shape, not just the identity",
         "3. Rules are not filters"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.7",
@@ -1256,7 +2306,10 @@ window.FSAI = {
         "1. Embed or subcollection: the one question",
         "2. Denormalise on purpose",
         "3. Counters and hot documents"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.8",
@@ -1276,7 +2329,10 @@ window.FSAI = {
         "1. Joins stitch tables at read time",
         "2. Aggregates answer questions about groups",
         "3. The same schema, two shapes"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "4.9",
@@ -1296,7 +2352,10 @@ window.FSAI = {
         "1. Rules are the real backend security",
         "2. The same world in SQL",
         "3. Choosing, honestly"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.1",
@@ -1316,7 +2375,10 @@ window.FSAI = {
         "1. A model predicts the next token. That's the whole trick.",
         "2. The context window",
         "3. Temperature and friends"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.2",
@@ -1336,7 +2398,10 @@ window.FSAI = {
         "1. What a token actually is",
         "2. The context window is a hard wall",
         "3. Counting before you send"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.3",
@@ -1356,7 +2421,10 @@ window.FSAI = {
         "1. The shape of a call",
         "2. Streaming: answer as it's written",
         "3. Structured output: JSON you can trust (mostly)"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.4",
@@ -1376,7 +2444,10 @@ window.FSAI = {
         "1. Structured output: a contract, not a hope",
         "2. Streaming: show work as it arrives",
         "3. The partial-JSON problem"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.5",
@@ -1396,7 +2467,10 @@ window.FSAI = {
         "1. The anatomy of a prompt that works",
         "2. Patterns hiding in Skillzify's 15 modes",
         "3. Chain-of-thought, used carefully"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.6",
@@ -1416,7 +2490,10 @@ window.FSAI = {
         "1. The model does not run code — it asks you to",
         "2. The loop, step by step",
         "3. Trust boundaries matter"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.7",
@@ -1436,7 +2513,10 @@ window.FSAI = {
         "1. Embeddings: meaning as numbers",
         "2. The RAG pipeline",
         "3. RAG vs fine-tuning vs long prompt — the decision"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.8",
@@ -1456,7 +2536,10 @@ window.FSAI = {
         "1. Embeddings turn meaning into geometry",
         "2. Chunking decides retrieval quality",
         "3. Prompt caching: pay once for repeated context"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.9",
@@ -1476,7 +2559,10 @@ window.FSAI = {
         "1. Everything fails; design the order of falling back",
         "2. Key rotation: quota as a pool",
         "3. Cost estimation: arithmetic before architecture"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "5.10",
@@ -1496,7 +2582,10 @@ window.FSAI = {
         "1. Guardrails: fences at the borders",
         "2. Evals: a test suite for behaviour",
         "3. The loop that makes AI products good"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.1",
@@ -1516,7 +2605,10 @@ window.FSAI = {
         "1. WebAssembly: a second language for the web",
         "2. Pyodide: CPython compiled to WASM",
         "3. The honest comparison: browser vs server execution"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.2",
@@ -1536,7 +2628,10 @@ window.FSAI = {
         "1. Pyodide is CPython compiled to WebAssembly",
         "2. Run it in a Worker, never on the main thread",
         "3. The bridge: stdout, packages, and data"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.3",
@@ -1556,7 +2651,10 @@ window.FSAI = {
         "1. A textarea is not an editor",
         "2. Editor state as a feature surface",
         "3. Version honesty: CM5 vs CM6"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.4",
@@ -1576,7 +2674,10 @@ window.FSAI = {
         "1. CodeMirror 6 is a box of composable extensions",
         "2. Language support is a data package",
         "3. Linting: your own diagnostics, live"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.5",
@@ -1596,7 +2697,10 @@ window.FSAI = {
         "1. Diagrams you can diff",
         "2. Skillzify's three-stage pipeline",
         "3. When text-diagrams are the wrong tool"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.6",
@@ -1616,7 +2720,10 @@ window.FSAI = {
         "1. Subgraphs group ideas, styles direct the eye",
         "2. Diagrams can be interactive",
         "3. Render failures are a product problem"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.7",
@@ -1636,7 +2743,10 @@ window.FSAI = {
         "1. Breakpoints beat console.log",
         "2. The call stack tells you how you got here",
         "3. The Network tab debugs the backend you cannot see"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "6.8",
@@ -1656,7 +2766,10 @@ window.FSAI = {
         "1. Measure, then optimise — never the reverse",
         "2. The usual suspects",
         "3. Lighthouse and real-user metrics"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.1",
@@ -1676,7 +2789,10 @@ window.FSAI = {
         "1. The familiar 80%",
         "2. Null safety: the type system refuses the classic crash",
         "3. Where Kotlin differs in spirit"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.2",
@@ -1696,7 +2812,10 @@ window.FSAI = {
         "1. A coroutine is a lightweight thread you can pause",
         "2. Dispatchers decide where work runs",
         "3. Structured concurrency: children cannot outlive their parent"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.3",
@@ -1716,7 +2835,10 @@ window.FSAI = {
         "1. Composables: functions that describe UI",
         "2. State and recomposition",
         "3. Material 3 theming"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.4",
@@ -1736,7 +2858,10 @@ window.FSAI = {
         "1. State is a value plus a change notification",
         "2. State hoisting: state lives above the composable that uses it",
         "3. Lists: LazyColumn, keys, and recomposition scope"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.5",
@@ -1756,7 +2881,10 @@ window.FSAI = {
         "1. ViewModel: state with a longer life than the screen",
         "2. Navigation Compose: routes for screens",
         "3. Coroutines: async without callback pyramids"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.6",
@@ -1776,7 +2904,10 @@ window.FSAI = {
         "1. Navigation is a graph of routes",
         "2. Deep links: the outside world enters at any screen",
         "3. The back stack is a user promise"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.7",
@@ -1796,7 +2927,10 @@ window.FSAI = {
         "1. Three pieces: entity, DAO, database",
         "2. Coroutines and Flow are the API",
         "3. Migrations: never wipe user data"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.8",
@@ -1817,7 +2951,10 @@ window.FSAI = {
         "2. The merge rules are a protocol, not a preference",
         "3. Chaquopy: Python inside Android",
         "4. The build system, without fear"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "7.9",
@@ -1837,7 +2974,10 @@ window.FSAI = {
         "1. Release builds are a different artefact",
         "2. The listing is a product page",
         "3. Test tracks before production"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.1",
@@ -1857,7 +2997,10 @@ window.FSAI = {
         "1. Git is a graph, not a folder backup",
         "2. The daily workflow",
         "3. Merge vs rebase"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.2",
@@ -1877,7 +3020,10 @@ window.FSAI = {
         "1. The three strategies, honestly compared",
         "2. The pull request is the unit of review",
         "3. Merge conflicts are normal, not emergencies"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.3",
@@ -1897,7 +3043,10 @@ window.FSAI = {
         "1. Anatomy of a workflow",
         "2. The supporting cast",
         "3. Reading failures like a professional"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.4",
@@ -1917,7 +3066,10 @@ window.FSAI = {
         "1. A workflow is a recipe that runs on every push",
         "2. Caching and matrices: speed and coverage",
         "3. Secrets, artefacts, and the deploy gate"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.5",
@@ -1937,7 +3089,10 @@ window.FSAI = {
         "1. Image versus container: the recipe and the meal",
         "2. The Dockerfile: layer by layer",
         "3. Volumes and Compose: data that outlives the container"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.6",
@@ -1957,7 +3112,10 @@ window.FSAI = {
         "1. Three models, three bargains",
         "2. Skillzify's real topology",
         "3. Environments and configuration"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.7",
@@ -1977,7 +3135,10 @@ window.FSAI = {
         "1. What Render actually runs",
         "2. Health checks and logs are your eyes",
         "3. The free tier's honest limits"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.8",
@@ -1997,7 +3158,10 @@ window.FSAI = {
         "1. Secrets hygiene, the full doctrine",
         "2. SECURITY.md and private reporting",
         "3. Analytics without self-deception"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     },
     {
       "id": "8.9",
@@ -2017,7 +3181,10 @@ window.FSAI = {
         "1. Monitoring answers: is it up, and is it healthy?",
         "2. Analytics funnels find the broken step",
         "3. The incident runbook"
-      ]
+      ],
+      "cards": null,
+      "striver": null,
+      "leetcode": null
     }
   ]
 };

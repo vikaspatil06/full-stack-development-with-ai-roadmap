@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="1.6">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m1.html">JavaScript Deep + Modern Frontend</a> &nbsp;›&nbsp; Lesson 1.6</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 1.6 • JavaScript Deep + Modern Frontend • 30 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 1.6 • JavaScript Deep + Modern Frontend • 30 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>DOM Events &amp; Delegation — Listening Smart</h2>
 <p class="goal">Bubbling, capturing, and one listener for a thousand elements</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>Learn JavaScript - Full Course for Beginners</b><span>freeCodeCamp.org</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. Events travel in three phases</a></li>
 <li><a href="#sub-2">2. Delegation: one listener, endless children</a></li>
@@ -38,32 +39,44 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain event bubbling, use delegation to handle dynamic lists with a single listener, and stop memory leaks from orphaned listeners.</div>
 <h4 id="sub-1">1. Events travel in three phases</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When a user clicks a button inside a card inside a page, the event travels down from the window to the target (capturing), fires at the target, then bubbles back up through every ancestor. addEventListener listens on the bubbling phase by default. Understanding this journey is the key to everything else in this lesson, because it means ancestors can hear events from descendants.</p><h4 id="sub-2">2. Delegation: one listener, endless children</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Instead of attaching a listener to every lesson card, attach one to their shared parent and check event.target to see which child was actually clicked. New cards added later work automatically, because the parent was already listening. Skillzify's Learn page renders 250 lessons from data — delegation is the only sane way to wire them all.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Controlling the flow</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>stopPropagation halts the journey so ancestors never hear the event; preventDefault stops the browser's default action, like following a link or submitting a form. Use both sparingly — stopping propagation can break other features listening higher up, and preventing defaults on the wrong element breaks accessibility.</p><h4 id="sub-4">4. Listeners and memory</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Every listener holds a reference to its element. Remove an element without removing its listeners and the memory can linger. Delegation avoids this almost entirely: one listener on a long-lived parent, no per-item cleanup, and dynamic content that just works.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>document.getElementById("lessonList").addEventListener("click", function (e) {
   const card = e.target.closest(".lesson-card");
   if (!card) return;               // click was not on a card
   openLesson(card.dataset.id);     // one listener serves all cards
 });</pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Build a list of 20 items rendered from an array with a single delegated click listener that logs the clicked item's id. Add 5 more items dynamically and confirm they work without adding any listeners. Then add a button inside one item that uses stopPropagation.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Build a list of 20 items rendered from an array with a single delegated click listener that logs the clicked item's id. Add 5 more items dynamically and confirm they work without adding any listeners. Then add a button inside one item that uses stopPropagation.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">Why does event delegation work for elements added after the listener was attached?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">The listener lives on the parent, and events from new children still bubble up to it — the parent never needed to know the children existed.</p></div>
 <div class="quiz-q"><p class="qq">What does e.target.closest do, and why is it useful here?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">It walks up from the clicked element to the nearest ancestor matching the selector, so clicks on a card's inner text or icon still resolve to the card.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Explain event bubbling and capturing.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Capturing travels from window down to the target; bubbling travels back up through ancestors. Listeners default to bubbling.</p></div>
 <div class="interview-q"><p class="iq">When would you use stopPropagation, and what is the risk?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">To keep an event from reaching ancestors, e.g. a button inside a card. The risk is silently breaking other features that listen higher up.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -72,7 +85,7 @@
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson D.7 — Sorting &amp; Searching (Binary Search) — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="D.7">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.7</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson D.7 • DSA — Data Structures &amp; Algorithms • 50 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Sorting &amp; Searching (Binary Search)</h2>
+<p class="goal">Sorted input is a superpower — halve the search space</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=MHf6awe89xw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>BS-1. Binary Search Introduction | Real Life Example | Iterative | Recursive | Overflow Cases</b><span>takeUforward</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Sorting first is often the whole solution</a></li>
+<li><a href="#sub-2">2. The binary search invariant</a></li>
+<li><a href="#sub-3">3. Binary search on the answer</a></li>
+<li><a href="#sub-4">4. Rotated arrays and edge cases</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can write a correct binary search from its invariant, apply it to rotated arrays and to search-the-answer problems, and choose the right sort for the job.</div>
+<h4 id="sub-1">1. Sorting first is often the whole solution</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=MHf6awe89xw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Comparison sorting costs O(n log n), and paying it once can unlock linear patterns everywhere else: two pointers need sorted input, duplicates become adjacent, and binary search becomes possible. That is why so many interview solutions start with a sort — the O(n log n) is cheap compared with the O(n²) it replaces. Know your sorts: merge sort is stable and always O(n log n), quicksort is fast in practice but O(n²) worst case, and counting sort is O(n + k) when values are bounded.</p><h4 id="sub-2">2. The binary search invariant</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=MHf6awe89xw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Binary search works on any sorted input, and the correct way to write it is from its invariant: the answer, if it exists, is always inside [lo, hi]. Each step compares the middle element and discards the half that cannot contain the answer, halving the range until lo passes hi. The classic bugs — infinite loops and missed elements — all come from updating lo and hi inconsistently with the invariant. Write the invariant as a comment, use lo = mid + 1 and hi = mid − 1, and the loop terminates.</p><h4 id="sub-3">3. Binary search on the answer</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=MHf6awe89xw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>The most powerful form of binary search does not search an array at all: it searches a range of possible answers. In Koko Eating Bananas, the answer is a speed between 1 and the maximum pile; a feasibility check — can Koko finish at this speed — is monotonic, so binary search finds the smallest feasible speed. The recognition cue is a question asking for the minimum or maximum value satisfying a yes-or-no condition that flips once as the value grows.</p><h4 id="sub-4">4. Rotated arrays and edge cases</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=MHf6awe89xw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A rotated sorted array is still searchable in O(log n) because one half is always sorted: compare the middle element with the ends to find which half is ordered, then check whether the target lies inside it. The same invariant thinking applies, but the branch logic doubles, so tracing a three-element example is essential. Always test the unrotated case, the single-element case, and the target at both ends — these are where rotated-array solutions silently fail.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>def binary_search(nums, target):
+    lo, hi = 0, len(nums) - 1
+    while lo &lt;= hi:
+        mid = (lo + hi) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[mid] &lt; target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
+
+# Invariant: the target, if present, is in [lo, hi]. O(log n) time.</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Solve Binary Search, Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array, Find First and Last Position of Element in Sorted Array and Koko Eating Bananas. Write the loop invariant as a comment in each solution before you run it.</div>
+<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
+<p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Binary Search</a></p>
+<p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
+<ul>
+<li><a href="https://leetcode.com/problems/binary-search/" target="_blank" rel="noopener">Binary Search</a></li>
+<li><a href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank" rel="noopener">Search in Rotated Sorted Array</a></li>
+<li><a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/" target="_blank" rel="noopener">Find Minimum in Rotated Sorted Array</a></li>
+<li><a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/" target="_blank" rel="noopener">Find First and Last Position of Element in Sorted Array</a></li>
+<li><a href="https://leetcode.com/problems/koko-eating-bananas/" target="_blank" rel="noopener">Koko Eating Bananas</a></li>
+</ul></div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">What is the loop invariant of binary search, and why does it prevent infinite loops?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">The target, if present, is always within [lo, hi]. Each step shrinks that range by at least half, so the loop must terminate.</p></div>
+<div class="quiz-q"><p class="qq">When can you binary-search an answer that is not in any array?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">When the question asks for a minimum or maximum value and the feasibility check is monotonic — feasible answers stay feasible as the value grows, so the boundary is searchable.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Why is merge sort stable and quicksort not, and when does it matter?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Merge sort preserves the order of equal elements; quicksort's swaps do not. Stability matters when sorting by one key after another, like sorting records by date then by name.</p></div>
+<div class="interview-q"><p class="iq">How do you find the minimum in a rotated sorted array in O(log n)?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Compare mid with the right end: if nums[mid] is greater, the minimum is in the right half; otherwise it is in the left half including mid. Repeat until one element remains.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="d-6.html">← Lesson D.6</a>
+<a class="nav-btn next" href="d-8.html">Lesson D.8 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

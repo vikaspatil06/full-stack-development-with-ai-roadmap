@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="4.8">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m4.html">Data &amp; Auth — Firebase, plus SQL</a> &nbsp;›&nbsp; Lesson 4.8</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson 4.8 • Data &amp; Auth — Firebase, plus SQL • 30 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson 4.8 • Data &amp; Auth — Firebase, plus SQL • 30 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>SQL Joins &amp; Aggregates</h2>
 <p class="goal">The two ideas that make relational databases worth learning</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=Hl4NZB1XR9c" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>SQL Basics Tutorial for Beginners</b><span>TechTFQ</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. Joins stitch tables at read time</a></li>
 <li><a href="#sub-2">2. Aggregates answer questions about groups</a></li>
@@ -37,7 +38,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can write INNER and LEFT JOINs, use GROUP BY with COUNT, SUM and AVG, filter groups with HAVING, and translate a Skillzify Firestore model into tables with foreign keys.</div>
 <h4 id="sub-1">1. Joins stitch tables at read time</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Hl4NZB1XR9c" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>SQL stores data normalised — one fact in one place — and reassembles it when you ask. An INNER JOIN returns only rows that match on both sides: lessons joined to their completions give you only lessons someone finished. A LEFT JOIN keeps every row from the left table even when there is no match, so you can list all lessons with a completion count that is zero for untouched ones. That difference is the single most-tested SQL idea, and it maps directly to a question Firestore cannot answer at all: show me everything, including the things with no activity.</p><h4 id="sub-2">2. Aggregates answer questions about groups</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Hl4NZB1XR9c" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>COUNT, SUM and AVG collapse many rows into one number, and GROUP BY runs them per group instead of for the whole table: total XP per user, average quiz score per section, lessons completed per day. WHERE filters rows before grouping; HAVING filters groups after — users with more than 100 XP, sections averaging below 50 percent. Mixing those two up is the classic aggregate mistake, and interviewers ask it precisely because it reveals whether you understand the order SQL executes in.</p><h4 id="sub-3">3. The same schema, two shapes</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Hl4NZB1XR9c" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Skillzify's users/{uid} document becomes a users table plus a completions table with a foreign key back to the user, and an exercises table keyed by user and exercise. Nothing is duplicated: the display name lives in one row. The price is that every read is now a join, and every new question needs a new query — the exact trade-off Firestore made in the opposite direction. Neither shape is correct in general; the right one follows from your read patterns.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Read the second query out loud: lessons are the left side, completions may or may not exist, and COUNT of the joined key is zero when nothing matched — that is the LEFT JOIN doing its job.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>-- Average quiz score per section, only for sections with 5+ attempts
 SELECT section, AVG(score) AS avg_score, COUNT(*) AS attempts
 FROM quiz_attempts
@@ -50,26 +56,33 @@ SELECT l.title, COUNT(c.user_id) AS completions
 FROM lessons l
 LEFT JOIN completions c ON c.lesson_id = l.id
 GROUP BY l.id, l.title;</code></pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Create two SQLite tables — lessons(id, title, section) and completions(user_id, lesson_id) — with 6 lessons and 8 completion rows. Write three queries: lessons never completed by anyone (LEFT JOIN with a null check), completions per section, and sections averaging fewer than 2 completions per lesson. Check each result by hand against the raw rows.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Create two SQLite tables — lessons(id, title, section) and completions(user_id, lesson_id) — with 6 lessons and 8 completion rows. Write three queries: lessons never completed by anyone (LEFT JOIN with a null check), completions per section, and sections averaging fewer than 2 completions per lesson. Check each result by hand against the raw rows.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">What is the difference between INNER JOIN and LEFT JOIN?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">INNER JOIN keeps only rows with a match on both sides; LEFT JOIN keeps every row from the left table and fills unmatched columns with null.</p></div>
 <div class="quiz-q"><p class="qq">WHERE vs HAVING — which filters groups, and why does the order matter?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">HAVING filters groups after GROUP BY and aggregation; WHERE filters individual rows before grouping, so it cannot use aggregate results.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Why does SQL normalise while Firestore denormalises?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">SQL is built for ad-hoc questions answered at read time with joins, so one copy of each fact is best. Firestore is built for planned reads with no joins, so data is duplicated to make each read cheap.</p></div>
 <div class="interview-q"><p class="iq">A query is slow on a large table. What do you check first?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Whether the filtered and joined columns are indexed, and the query plan — a missing index turns a lookup into a full table scan.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -78,7 +91,7 @@ GROUP BY l.id, l.title;</code></pre></div>
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

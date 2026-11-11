@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson D.9 — Heaps &amp; Priority Queues — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="D.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson D.9 • DSA — Data Structures &amp; Algorithms • 45 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Heaps &amp; Priority Queues</h2>
+<p class="goal">The top-k pattern — keep only what matters</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=Qf-TDPr0nYw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Introduction to Heap Data Structure, Priority Queue, and Heapsort</b><span>Kunal Kushwaha</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. A heap is a partial order, not a sorted list</a></li>
+<li><a href="#sub-2">2. The top-k pattern</a></li>
+<li><a href="#sub-3">3. Merging and scheduling with heaps</a></li>
+<li><a href="#sub-4">4. Heap versus sort: choosing the tool</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can use min-heaps and max-heaps for top-k, merge and scheduling problems, and explain exactly when a heap beats a full sort.</div>
+<h4 id="sub-1">1. A heap is a partial order, not a sorted list</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Qf-TDPr0nYw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A heap is a binary tree where every parent is smaller than its children (min-heap) or larger (max-heap), stored compactly in an array. Only the top element is guaranteed — the rest is unordered. That partial order is the point: inserting and removing the top both cost O(log n), while building a heap from n elements costs O(n). If a problem only ever needs the smallest or largest element, a heap gives it without paying for a full sort.</p><h4 id="sub-2">2. The top-k pattern</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Qf-TDPr0nYw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Top-k problems are the heap's home ground. To find the k largest elements, keep a min-heap of size k: push each element, and whenever the heap exceeds k, pop the smallest. At the end the heap holds exactly the k largest, in O(n log k) time and O(k) space. The same shape solves Top K Frequent Elements — count frequencies first, then heap by count — and K Closest Points, where the heap is ordered by distance. The cue is the word top or closest combined with a large n.</p><h4 id="sub-3">3. Merging and scheduling with heaps</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Qf-TDPr0nYw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When several sorted streams must merge, a heap holding one current element from each stream always yields the next smallest in O(log k) per element — the engine of Merge K Sorted Lists. Scheduling problems use the same idea: always process the available job with the earliest deadline or shortest duration, which a heap supplies on demand. Whenever the next step is always the extreme of a changing set, a heap is the structure doing the choosing.</p><h4 id="sub-4">4. Heap versus sort: choosing the tool</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Qf-TDPr0nYw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Sorting costs O(n log n) once and then answers every order question in O(1); a heap costs O(n log k) for top-k and O(log n) per update, but shines when data arrives over time or k is much smaller than n. For a stream where the kth largest is asked repeatedly, a min-heap of size k answers in O(1) after each insertion. The interview move is to name both options and their costs, then pick by whether the data is static or streaming and whether k is small.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>import heapq
+
+def kth_largest(nums, k):
+    heap = []
+    for x in nums:
+        heapq.heappush(heap, x)
+        if len(heap) &gt; k:
+            heapq.heappop(heap)
+    return heap[0]
+
+# Min-heap of size k keeps only the k largest: O(n log k) time.</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Solve Kth Largest Element in an Array, Top K Frequent Elements, Last Stone Weight, K Closest Points to Origin and Find Median from Data Stream. For Find Median, implement the two-heap version and trace it on paper for the stream 1, 5, 2.</div>
+<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
+<p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Heaps</a></p>
+<p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
+<ul>
+<li><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank" rel="noopener">Kth Largest Element in an Array</a></li>
+<li><a href="https://leetcode.com/problems/top-k-frequent-elements/" target="_blank" rel="noopener">Top K Frequent Elements</a></li>
+<li><a href="https://leetcode.com/problems/last-stone-weight/" target="_blank" rel="noopener">Last Stone Weight</a></li>
+<li><a href="https://leetcode.com/problems/k-closest-points-to-origin/" target="_blank" rel="noopener">K Closest Points to Origin</a></li>
+<li><a href="https://leetcode.com/problems/find-median-from-data-stream/" target="_blank" rel="noopener">Find Median from Data Stream</a></li>
+</ul></div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why is building a heap O(n) instead of O(n log n)?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Most nodes sit near the leaves with tiny sift-down distances; summing the work over all levels gives O(n), not n times log n.</p></div>
+<div class="quiz-q"><p class="qq">Why does the top-k pattern use a min-heap to find the k largest?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">A min-heap of size k keeps the smallest of the k largest on top, so each new element is compared against exactly the threshold it must beat.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">How do you find the median of a streaming sequence?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Keep a max-heap for the lower half and a min-heap for the upper half, balanced so their sizes differ by at most one. The median is a top element or the average of both.</p></div>
+<div class="interview-q"><p class="iq">When is a heap worse than just sorting?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">When you need the fully sorted order, or when all elements are static and queried many times — a one-time O(n log n) sort then answers everything in O(1).</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="d-8.html">← Lesson D.8</a>
+<a class="nav-btn next" href="d-10.html">Lesson D.10 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

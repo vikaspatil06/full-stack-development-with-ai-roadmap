@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="B.1">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/b.html">Basics — Start From Zero</a> &nbsp;›&nbsp; Lesson B.1</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson B.1 • Basics — Start From Zero • 25 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson B.1 • Basics — Start From Zero • 25 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>HTML Base — Tags, Headings, Links, Images, Lists</h2>
 <p class="goal">The skeleton of every web page</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=7umKNqO0-mc" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>HTML Explained: How Web Pages Are Built</b><span>Create WP Site</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. HTML is structure, not looks</a></li>
 <li><a href="#sub-2">2. The essential tags</a></li>
@@ -38,7 +39,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can write a valid HTML page from scratch using headings, paragraphs, links, images and lists, and explain what the browser does with each tag.</div>
 <h4 id="sub-1">1. HTML is structure, not looks</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7umKNqO0-mc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>HTML (HyperText Markup Language) describes <b>what things are</b>, not how they look. A heading is a heading, a paragraph is a paragraph, and a link is a link. Colour and layout belong to CSS, behaviour belongs to JavaScript. Every Skillzify page starts as plain HTML text that the browser turns into a tree of elements called the DOM.</p><h4 id="sub-2">2. The essential tags</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7umKNqO0-mc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Most pages use a small set of tags. Headings run from <code>h1</code> (the page title, used once) down to <code>h6</code>. Paragraphs use <code>p</code>. Links use <code>a</code> with an <code>href</code> attribute. Images use <code>img</code> with <code>src</code> and <code>alt</code> text that screen readers read aloud. Lists come in two kinds: <code>ul</code> for unordered bullets and <code>ol</code> for numbered steps, each holding <code>li</code> items.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Nesting and attributes</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7umKNqO0-mc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Tags nest inside each other like boxes inside boxes, and every opening tag needs its closing tag. Attributes add information: <code>href</code> tells a link where to go, <code>src</code> tells an image what to load. A page that validates cleanly renders predictably in every browser, which is why Skillzify keeps its markup simple and consistent across all 17 pages.</p><h4 id="sub-4">4. Why this matters for Skillzify</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7umKNqO0-mc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Skillzify lessons, exercises and reference entries are all HTML at heart. When you can read raw HTML fluently, you can debug any page by viewing its source instead of guessing what went wrong.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
 &lt;head&gt;&lt;title&gt;Skillzify Mini&lt;/title&gt;&lt;/head&gt;
@@ -49,26 +55,33 @@
   &lt;ul&gt;&lt;li&gt;Variables&lt;/li&gt;&lt;li&gt;Loops&lt;/li&gt;&lt;li&gt;Functions&lt;/li&gt;&lt;/ul&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Build a one-page profile for yourself: one h1, two h2 sections, three paragraphs, a link to your GitHub, one image with alt text, and a 5-item unordered list of skills. Open it in the browser and check it with the W3C validator.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Build a one-page profile for yourself: one h1, two h2 sections, three paragraphs, a link to your GitHub, one image with alt text, and a 5-item unordered list of skills. Open it in the browser and check it with the W3C validator.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">Why should a page have exactly one h1?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">The h1 is the page title. Screen readers and search engines use it to understand the page topic; multiple h1s blur that meaning.</p></div>
 <div class="quiz-q"><p class="qq">What is alt text on an image actually for?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">It describes the image for screen readers and shows when the image fails to load. It is accessibility, not decoration.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Explain the difference between a block element and an inline element.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Block elements like p and h1 start on a new line and take full width; inline elements like a and strong flow inside a line of text.</p></div>
 <div class="interview-q"><p class="iq">What does DOCTYPE do?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">It tells the browser to render the page in standards mode instead of quirks mode, so layout rules behave consistently.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -77,7 +90,7 @@
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>

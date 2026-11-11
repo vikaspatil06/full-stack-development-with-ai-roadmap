@@ -13,23 +13,24 @@
 </head>
 <body data-page="lesson" data-lesson="B.4">
 <header class="topbar"><div class="topbar-inner">
-<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
-<nav class="nav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
-<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/b.html">Basics — Start From Zero</a> &nbsp;›&nbsp; Lesson B.4</p>
 <article class="reader lesson-page">
-<div class="reader-top"><span class="reader-crumb">Lesson B.4 • Basics — Start From Zero • 35 min</span></div>
+<div class="reader-top"><span class="reader-crumb">Lesson B.4 • Basics — Start From Zero • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
 <div class="reader-body">
 <h2>CSS Base 2 — Flexbox, Grid, Positioning, Responsive Basics</h2>
 <p class="goal">Layout that adapts to any screen</p>
-<h3 class="lesson-sec" id="watch">1 · Watch</h3>
-<div class="watch-box">
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
 <a class="yt-btn" href="https://www.youtube.com/watch?v=zkpqLDRUWac" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
 <p class="watch-meta"><b>Build a Responsive Portfolio Website | CSS Flexbox, Grid &amp; Responsive Design (Part 3)</b><span>Paul Adamu</span></p>
-</div>
-<h3 class="lesson-sec" id="read">2 · Read</h3>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <ol class="sub-index">
 <li><a href="#sub-1">1. Flexbox: layout along one axis</a></li>
 <li><a href="#sub-2">2. Grid: layout in two dimensions</a></li>
@@ -38,7 +39,12 @@
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can lay out a page with Flexbox and Grid, position elements deliberately, and make a layout collapse cleanly on a phone with media queries.</div>
 <h4 id="sub-1">1. Flexbox: layout along one axis</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zkpqLDRUWac" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Flexbox arranges items in a row or a column. Set <code>display: flex</code> on the parent, then control spacing with <code>justify-content</code> along the main axis, <code>align-items</code> across it, and <code>gap</code> for even spacing. It is the right tool for nav bars, rows of cards, and centring one element inside another — the three layouts beginners fight with most.</p><h4 id="sub-2">2. Grid: layout in two dimensions</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zkpqLDRUWac" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Grid handles rows and columns together. <code>grid-template-columns: repeat(3, 1fr)</code> makes three equal columns; <code>gap</code> spaces them. Skillzify uses Grid for its lesson cards and Flexbox inside each card. Rule of thumb: one axis, Flexbox; two axes, Grid.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Positioning</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zkpqLDRUWac" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Static is the default flow. Relative nudges an element from its normal spot. Absolute positions it against the nearest positioned ancestor, which is how badges and copy buttons sit inside code blocks. Fixed pins it to the viewport. Sticky, used for Skillzify's top bar, scrolls normally until it hits the top, then stays put.</p><h4 id="sub-4">4. Responsive basics</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zkpqLDRUWac" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Media queries change the layout at a width breakpoint: three columns become one below 820px. Combine that with fluid widths like <code>width: min(1140px, 92%)</code> and images that never exceed their container, and one page works from a phone to a monitor without a separate mobile site. A handy habit is to design the mobile layout in a narrow browser window first, then widen it and add breakpoints only when the design starts to strain.</p>
-<h3 class="lesson-sec" id="code">3 · Code</h3>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
 <div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>.grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -48,26 +54,33 @@
   .grid { grid-template-columns: 1fr; }
 }
 .nav { position: sticky; top: 0; z-index: 30; }</pre></div>
-<h3 class="lesson-sec" id="practice">4 · Practice</h3>
-<div class="callout build"><b>Your task</b>Rebuild your profile page layout: a sticky nav with Flexbox, a 3-column Grid of skill cards, and a media query that collapses the grid to one column under 700px. Resize the browser window and confirm the collapse happens.</div>
-<h3 class="lesson-sec" id="check">5 · Check</h3>
-<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Rebuild your profile page layout: a sticky nav with Flexbox, a 3-column Grid of skill cards, and a media query that collapses the grid to one column under 700px. Resize the browser window and confirm the collapse happens.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
 <div class="quiz-q"><p class="qq">When do you reach for Grid instead of Flexbox?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
 <p class="quiz-answer">When the layout needs rows and columns at once, like a card grid. Flexbox is for a single row or column.</p></div>
 <div class="quiz-q"><p class="qq">What does position: sticky do that fixed does not?</p>
-<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">Sticky scrolls with the page until it reaches its threshold, then sticks; fixed is pinned to the viewport from the start and never scrolls.</p></div>
-<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <div class="interview-q"><p class="iq">Explain the difference between justify-content and align-items.</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Justify-content aligns along the main axis (row direction by default); align-items aligns across the cross axis. Swap them mentally when flex-direction changes.</p></div>
 <div class="interview-q"><p class="iq">How would you make a page responsive without a framework?</p>
 <button class="interview-reveal qbtn">Reveal model answer</button>
 <p class="interview-answer">Fluid widths, flexible images, Grid/Flexbox layouts, and media queries that reflow the layout at breakpoints — mobile-first if possible.</p></div>
-<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
 <textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
-<p><span class="saved-note" id="notesSaved"></span></p>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
 </div>
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
@@ -76,7 +89,7 @@
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
 <script src="../assets/js/data.js"></script>
 <script src="../assets/js/app.js"></script>
 </body>
