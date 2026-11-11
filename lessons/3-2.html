@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 3.2 — Express: Routing &amp; Middleware — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="3.2">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m3.html">Backend — Node.js &amp; Express, Properly</a> &nbsp;›&nbsp; Lesson 3.2</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 3.2 • Backend — Node.js &amp; Express, Properly • 45 min</span></div>
+<div class="reader-body">
+<h2>Express: Routing &amp; Middleware</h2>
+<p class="goal">How server.js turns URLs into responses</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=z0AmQRibsVk" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Express.js &amp; Middleware Architecture Masterclass (From Raw HTTP to Scalable APIs)</b><span>Express.js Masterclass</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. The request/response cycle</a></li>
+<li><a href="#sub-2">2. Middleware: the chain every request walks</a></li>
+<li><a href="#sub-3">3. Static + API in one server</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can build an Express app with routes and static hosting, explain the middleware chain, and trace one request through Skillzify's server.js end to end.</div>
+<h4 id="sub-1">1. The request/response cycle</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=z0AmQRibsVk" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Every Express app is a function: request in, response out. A <b>route</b> matches a method + path and runs a handler:</p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<h4 id="sub-2">2. Middleware: the chain every request walks</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=z0AmQRibsVk" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p><code>app.use</code> registers <b>middleware</b> — functions that run in order before the route handler, each receiving <code>(req, res, next)</code>. JSON parsing, logging, auth checks and rate limiting are all middleware. Forget <code>next()</code> and the request hangs forever; Skillzify's server composes its protections exactly this way.</p>
+<h4 id="sub-3">3. Static + API in one server</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=z0AmQRibsVk" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p><code>express.static</code> serves Skillzify's 17 HTML pages and assets, while <code>POST /api/*</code> routes handle AI calls. One process, two jobs — simple to deploy on Render, and the browser only ever talks to the API for things that need secrets or shared limits (Module 3.4).</p>
+<div class="callout why"><b>Status codes are a contract</b>200 success, 400 the client sent something invalid, 401/403 auth problems, 429 rate limited, 500 your bug. Frontend code branches on these — inventing your own shapes per route makes the client a mess.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>const express = require("express");
+const app = express();
+
+app.use(express.json());                 // parse JSON bodies
+app.use(express.static("public"));       // serve the website files
+
+app.post("/api/echo", (req, res) => {
+  const { text } = req.body;
+  if (typeof text !== "string" || !text.trim())
+    return res.status(400).json({ error: "text is required" });
+  res.json({ echo: text.trim() });
+});
+
+app.listen(process.env.PORT || 3000);</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Build a mini server: express.static serving one HTML page, express.json(), and POST /api/echo with the validation above. Add a logging middleware that prints method + path + timestamp for every request, and prove order by hitting both routes.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">What happens if a middleware never calls next() and never sends a response?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">The request hangs until timeout — the chain stops and no handler runs.</p></div>
+<div class="quiz-q"><p class="qq">Why does express.json() need to be registered before the routes that read req.body?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Middleware runs in registration order; the body must be parsed before any handler tries to use it.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Walk me through a request hitting your Express server.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">It enters the middleware chain in registration order (parsing, logging, limits), matches a route by method+path, the handler validates input, does its work, and sends a JSON response with the right status code.</p></div>
+<div class="interview-q"><p class="iq">What is middleware, in one sentence?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">A function in the request pipeline that can inspect or modify req/res and decides whether the request continues to the next stage.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="3-1.html">← Lesson 3.1</a>
+<a class="nav-btn next" href="3-3.html">Lesson 3.3 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

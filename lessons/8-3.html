@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 8.3 — GitHub Actions CI — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="8.3">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m8.html">DevOps, Cloud &amp; Shipping Like a Professional</a> &nbsp;›&nbsp; Lesson 8.3</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 8.3 • DevOps, Cloud &amp; Shipping Like a Professional • 45 min</span></div>
+<div class="reader-body">
+<h2>GitHub Actions CI</h2>
+<p class="goal">Reading build-apk.yml line by line</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=K4FKwdNMDyI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>CI/CD With GitHub Actions Tutorial: Build, Test and Deploy Automatically</b><span>CodeFlow Daily</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Anatomy of a workflow</a></li>
+<li><a href="#sub-2">2. The supporting cast</a></li>
+<li><a href="#sub-3">3. Reading failures like a professional</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can read and write a GitHub Actions workflow — triggers, jobs, steps, secrets — and explain Skillzify's APK pipeline and its CodeQL/Dependabot companions.</div>
+<h4 id="sub-1">1. Anatomy of a workflow</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=K4FKwdNMDyI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p><code>on</code> is the trigger, <code>jobs</code> are machines, <code>steps</code> are commands or reusable actions. Skillzify's real workflow follows exactly this shape: JDK 17, Gradle 8.10.2, assemble the arm64 debug APK on every push to main. Green check = the app builds from a clean machine, which is the only build result that counts.</p>
+<h4 id="sub-2">2. The supporting cast</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=K4FKwdNMDyI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<ul>
+<li><b>CodeQL</b> — static security analysis on push/PR + weekly, across JS/TS, Python and Java/Kotlin in Skillzify's setup.</li>
+<li><b>Dependabot</b> — watches dependencies and opens PRs for updates/vulnerabilities. Skillzify runs alerts + dependency graph with auto security updates deliberately off — a human reviews each bump.</li>
+<li><b>Secrets</b> — CI credentials live in repo settings, injected as env vars, masked in logs. Same doctrine as Lesson 3.4, second home.</li>
+</ul>
+<h4 id="sub-3">3. Reading failures like a professional</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=K4FKwdNMDyI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Open the failed step, find the <i>first</i> real error (the rest is cascade), reproduce locally with the same command, fix, push. Skillzify's CI history includes a run of failures caused by mixing Gradle DSL dialects — the lesson generalises: most CI failures are environment or config, not your feature code.</p>
+<div class="callout why"><b>CI is a promise</b>"Works on my machine" is not a build. If Actions can't build it from a cold checkout, it doesn't ship — that discipline is what makes the green check meaningful in interviews and teams.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>name: Build APK
+on: { push: { branches: [ main ] } }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { java-version: "17", distribution: "temurin" }
+      - run: cd android && ./gradlew assembleArm64Debug</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Add a workflow to a scratch repo that runs on push: checkout, set up Node 20, npm install, and a placeholder test step. Then annotate Skillzify's build-apk.yml — one comment per line in your own words — in a local copy.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">What do on, jobs and steps mean in a workflow file?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">on = the triggering event; jobs = isolated runner machines that execute work; steps = the ordered commands/actions inside a job.</p></div>
+<div class="quiz-q"><p class="qq">Your CI fails but the code works locally. First three suspects?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Environment differences (versions, OS), missing env vars/secrets, and config/DSl mistakes — in that order, before suspecting feature code.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Explain your project's CI pipeline.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">On push to main, Actions checks out the repo, sets up JDK 17, builds the arm64 debug APK with Gradle; CodeQL scans weekly and Dependabot watches dependencies. Green build from a clean runner is the ship gate.</p></div>
+<div class="interview-q"><p class="iq">Where do CI secrets live and how are they used?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">In repository/organisation secret settings, injected as environment variables at runtime and masked in logs — never in the workflow file or the repo.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="8-2.html">← Lesson 8.2</a>
+<a class="nav-btn next" href="8-4.html">Lesson 8.4 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 3.6 — Protecting Your API: Rate Limits, Caps &amp; Secrets — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="3.6">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m3.html">Backend — Node.js &amp; Express, Properly</a> &nbsp;›&nbsp; Lesson 3.6</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 3.6 • Backend — Node.js &amp; Express, Properly • 45 min</span></div>
+<div class="reader-body">
+<h2>Protecting Your API: Rate Limits, Caps &amp; Secrets</h2>
+<p class="goal">The defensive layer inside Skillzify's server.js</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=KmpLRfzBGrE" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>9. How to Secure a Public REST API | Best Practices &amp; System Design Interview</b><span>Coding Vibes</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Two different problems, two different tools</a></li>
+<li><a href="#sub-2">2. Secrets live on the server. Full stop.</a></li>
+<li><a href="#sub-3">3. Know the honest limits</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain the difference between a rate limit and a daily cap, why API keys must never reach the browser, and how Skillzify layers all three defences.</div>
+<h4 id="sub-1">1. Two different problems, two different tools</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=KmpLRfzBGrE" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<ul>
+<li><b>Rate limit</b> — "30 requests per minute per IP" in Skillzify. Stops bursts: scripts, loops, abuse spikes. Window: seconds/minutes.</li>
+<li><b>Daily cap</b> — 50 AI calls/day signed-in, 10/day anonymous. Stops slow-drain cost abuse and keeps a free tier affordable. Window: a day, per user.</li>
+</ul>
+<p>A rate limit without a cap still lets a patient abuser spend your whole budget by midnight. A cap without a rate limit lets one script burn a user's day in four seconds. You need both.</p>
+<h4 id="sub-2">2. Secrets live on the server. Full stop.</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=KmpLRfzBGrE" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Anything shipped to a browser is public — view-source is not hacking. Skillzify's browser code calls <code>/api/*</code>; the <b>server</b> attaches the Gemini key, which lives only in Render environment variables (loaded locally from a gitignored <code>.env</code> via dotenv). Key rotation — several keys, server cycles through them — spreads quota so one key's limit doesn't take the product down.</p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<h4 id="sub-3">3. Know the honest limits</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=KmpLRfzBGrE" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify's own notes admit the gaps: caps held in server memory reset when the free-tier service restarts, and full persistence needs Firestore-backed counters (firebase-admin is already a dependency for exactly this). Naming your system's real limits — in the design, not after an incident — is senior-level honesty.</p>
+<div class="callout why"><b>The pattern to reuse everywhere</b>Validate → rate limit → cap → spend. In that order, cheapest check first, expensive resource last.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>// .env (never committed, never sent to the browser)
+GEMINI_API_KEYS=key1,key2,key3
+// server.js
+require("dotenv").config();
+const keys = process.env.GEMINI_API_KEYS.split(",");</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Add both defences to your Lesson 3.3 server: a simple in-memory rate limit (10 req/min per IP → 429) and a daily cap per user id (5/day → 429 with the standard error shape). Write down one way each can be bypassed and what the production fix would be.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Rate limit vs daily cap — what different abuse does each stop?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Rate limits stop bursts and scripts in short windows; daily caps stop slow, sustained cost drain across a day per user.</p></div>
+<div class="quiz-q"><p class="qq">A teammate suggests putting the Gemini key in the frontend 'just for the demo'. Your answer?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">No — anything in browser code is public. The key goes in server env vars; the browser calls your API, the server calls Gemini.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Your free AI feature is being abused. Walk me through your defences in order.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Server-side validation and size limits first, then per-IP rate limits for bursts, then per-user daily caps for cost, keys only in env vars with rotation, and monitoring on spend.</p></div>
+<div class="interview-q"><p class="iq">Why do caps belong on the server, not the client?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Client state is user-controlled — clearable, editable, scriptable. Server (ideally database-backed) counters are the only ones that bind.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="3-5.html">← Lesson 3.5</a>
+<a class="nav-btn next" href="3-7.html">Lesson 3.7 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

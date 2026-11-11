@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 6.3 — CodeMirror: Building a Real Code Editor — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="6.3">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m6.html">Product Tools — Editor, In-Browser Runtime &amp; Diagrams</a> &nbsp;›&nbsp; Lesson 6.3</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 6.3 • Product Tools — Editor, In-Browser Runtime &amp; Diagrams • 35 min</span></div>
+<div class="reader-body">
+<h2>CodeMirror: Building a Real Code Editor</h2>
+<p class="goal">Tokenising, highlighting and editor state</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>How to build a self-typing editor demo with Waku + CodeMirror</b><span>craftzdog</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. A textarea is not an editor</a></li>
+<li><a href="#sub-2">2. Editor state as a feature surface</a></li>
+<li><a href="#sub-3">3. Version honesty: CM5 vs CM6</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can embed CodeMirror, explain how syntax highlighting works, and read editor state to power features like Skillzify's Stuck? AI hints.</div>
+<h4 id="sub-1">1. A textarea is not an editor</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Learners need line numbers, syntax colours, bracket matching and sane tabs. CodeMirror provides that layer: it renders an editable surface and <b>tokenises</b> code — a Python mode scans the text and labels each piece (keyword, string, number, comment) so themes can colour them. Skillzify pins CodeMirror 5.65.16 with Python mode and selectable themes (Dracula, Nord, Monokai).</p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<h4 id="sub-2">2. Editor state as a feature surface</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Once code is data via <code>getValue()</code>, features compose: Run sends it to Pyodide (Lesson 6.1); the <b>Stuck?</b> button sends code + the current error to the AI hint route; exercise checks compare output. Every compiler feature is "editor state → some consumer".</p>
+<h4 id="sub-3">3. Version honesty: CM5 vs CM6</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify uses CodeMirror 5 — stable, simple, one global script. CodeMirror 6 is a ground-up rewrite (modular, better mobile/accessibility) at the cost of a build step and new APIs. Knowing what you run and why beats chasing the newest major.</p>
+<div class="callout why"><b>Mobile reality check</b>Code editing on phones is painful — small targets, autocorrect fighting code. Skillzify mitigates with sensible defaults, but when you test your runner (Lesson 6.1 task), test it on your own phone before calling it done.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>const editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+  mode: "python", theme: "dracula", lineNumbers: true, indentUnit: 4
+});
+// Read and write the learner's code as data:
+const code = editor.getValue();
+editor.setValue("# new exercise");</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Upgrade your Lesson 6.1 runner: replace the textarea with CodeMirror (Python mode, a dark theme, line numbers) and add a Stuck? button that logs {code, lastError} as JSON — the exact payload an AI hint route would receive.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">How does syntax highlighting actually work in CodeMirror?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">A language mode tokenises the text — labelling keywords, strings, comments — and the theme maps token types to colours. It's analysis, not stored formatting.</p></div>
+<div class="quiz-q"><p class="qq">Why is editor.getValue() such an important API for the product?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">It turns the learner's code into data any feature can consume: the Pyodide runner, exercise checks, and the AI Stuck? hint flow.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">What does a code editor library actually do beyond a textarea?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Tokenisation-driven highlighting, line numbers, indentation handling, bracket matching, and a state API (getValue/setValue) that features build on.</p></div>
+<div class="interview-q"><p class="iq">Your compiler needs an 'AI hint' feature. What data do you send?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">The current editor code and the latest error/output — enough context for a grounded hint — to my server route, which calls the model with a Socratic prompt.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="6-2.html">← Lesson 6.2</a>
+<a class="nav-btn next" href="6-4.html">Lesson 6.4 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

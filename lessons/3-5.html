@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 3.5 — Auth &amp; JWT — Sessions, Tokens, and Protected Routes — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="3.5">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m3.html">Backend — Node.js &amp; Express, Properly</a> &nbsp;›&nbsp; Lesson 3.5</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 3.5 • Backend — Node.js &amp; Express, Properly • 35 min</span></div>
+<div class="reader-body">
+<h2>Auth &amp; JWT — Sessions, Tokens, and Protected Routes</h2>
+<p class="goal">Proving who you are, statelessly</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>JWT Authentication in Express.js | Login &amp; Protected Route</b><span>YouTube</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Authentication vs authorisation</a></li>
+<li><a href="#sub-2">2. How a JWT works</a></li>
+<li><a href="#sub-3">3. Passwords and tokens, done right</a></li>
+<li><a href="#sub-4">4. Why Skillzify uses Firebase Auth</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain how JWTs work, protect an Express route with token verification, and explain why Skillzify uses Firebase Auth instead of hand-rolled sessions.</div>
+<h4 id="sub-1">1. Authentication vs authorisation</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Authentication proves who you are; authorisation decides what you may do. A login checks credentials and issues proof; a protected route checks that proof and the rules. Confusing the two is how apps end up letting any logged-in user read anyone else's data — the exact bug Skillzify's Firestore rules exist to prevent.</p><h4 id="sub-2">2. How a JWT works</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A JSON Web Token has three parts: a header naming the algorithm, a payload with claims like the user id and expiry, and a signature made by hashing the first two parts with a server secret. The server verifies the signature on every request — no database lookup, no session store. Anyone can read the payload, so it must never contain secrets; only the server can forge a valid signature.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Passwords and tokens, done right</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Passwords are never stored in plain text — they are hashed with a slow algorithm like bcrypt, so a leaked database does not leak logins. Tokens expire (minutes to hours) and are refreshed, limiting the damage if one is stolen. And the signing secret lives in an environment variable, never in code or git.</p><h4 id="sub-4">4. Why Skillzify uses Firebase Auth</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zbCu-Hm3LEc" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Building auth correctly is a security speciality: hashing, tokens, refresh, reset flows, brute-force protection. Firebase Auth provides all of it, including Google sign-in, and the server verifies Firebase ID tokens instead of issuing its own. Hand-rolled auth is a learning exercise; production auth is a solved problem you buy, not one you reinvent.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>const jwt = require("jsonwebtoken");
+const SECRET = process.env.JWT_SECRET;
+
+function auth(req, res, next) {
+  const token = (req.headers.authorization || "").replace("Bearer ", "");
+  try {
+    req.user = jwt.verify(token, SECRET);   // throws if invalid/expired
+    next();
+  } catch (err) {
+    res.status(401).json({ error: "Invalid or expired token" });
+  }
+}
+app.get("/api/me", auth, (req, res) =&gt; res.json({ uid: req.user.uid }));</pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Build a tiny Express app: a /login route that checks a hardcoded user and issues a JWT expiring in 15 minutes, and a /api/me route protected by the auth middleware. Test with curl: no token, a bad token, and a valid token.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why must a JWT payload never contain a password or secret?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">The payload is only base64-encoded, not encrypted — anyone holding the token can read it. Only the signature is secret-protected.</p></div>
+<div class="quiz-q"><p class="qq">What does jwt.verify do that simply decoding the token does not?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">It checks the signature against the server secret and the expiry, proving the token was issued by the server and is still valid.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Explain JWT authentication end to end.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Login verifies credentials and issues a signed token; the client sends it as a Bearer header; the server verifies signature and expiry per request, with no session store.</p></div>
+<div class="interview-q"><p class="iq">Why is Firebase Auth a better choice than hand-rolled JWT auth for Skillzify?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">It provides hashing, token refresh, reset flows, brute-force protection and social login, maintained by specialists — hand-rolled auth invites subtle security bugs.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="3-4.html">← Lesson 3.4</a>
+<a class="nav-btn next" href="3-6.html">Lesson 3.6 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

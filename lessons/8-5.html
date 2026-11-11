@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 8.5 — Docker Intro — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="8.5">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m8.html">DevOps, Cloud &amp; Shipping Like a Professional</a> &nbsp;›&nbsp; Lesson 8.5</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 8.5 • DevOps, Cloud &amp; Shipping Like a Professional • 30 min</span></div>
+<div class="reader-body">
+<h2>Docker Intro</h2>
+<p class="goal">Images, containers, volumes — the same app, everywhere</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=bgjw_UWfTws" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Docker Tutorial for Beginners: Images, Containers and Volumes Explained</b><span>YouTube</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Image versus container: the recipe and the meal</a></li>
+<li><a href="#sub-2">2. The Dockerfile: layer by layer</a></li>
+<li><a href="#sub-3">3. Volumes and Compose: data that outlives the container</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain images versus containers, write a Dockerfile for the Skillzify Node backend, persist data with a volume, and run the stack with Compose.</div>
+<h4 id="sub-1">1. Image versus container: the recipe and the meal</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=bgjw_UWfTws" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>An image is a frozen filesystem plus instructions — the recipe. A container is a running instance of an image — the meal. You can run many containers from one image, stop and delete them, and the image is unchanged. That separation is the whole point: the image captures everything the app needs — Node version, dependencies, environment — so the app runs identically on your laptop, in CI, and on a server. Works on my machine stops being a defence when the machine is the same everywhere.</p><h4 id="sub-2">2. The Dockerfile: layer by layer</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=bgjw_UWfTws" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A Dockerfile builds an image in layers, one instruction at a time, and Docker caches each layer. Order matters for speed: copy the package manifest and install dependencies first, so a code change does not reinstall everything — only the final layer, copying your code, rebuilds. The result for Skillzify's backend is a small image that starts with one command and listens on a port you choose at runtime, with secrets passed as environment variables, never baked into the image.</p><h4 id="sub-3">3. Volumes and Compose: data that outlives the container</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=bgjw_UWfTws" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Containers are disposable by design — delete one and its filesystem goes with it. A volume is storage that lives outside the container, so a database keeps its data across restarts and redeploys. Docker Compose ties it together: one YAML file describing the app, the database and their volumes and networks, started with a single command. For local development it replaces a page of setup instructions with docker compose up.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Never put a secret in a Dockerfile or an image layer — layers are history, and a deleted secret in a later layer is still retrievable from the earlier one.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code># Dockerfile for the Skillzify Node backend
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY server.js ./
+ENV NODE_ENV=production
+EXPOSE 3000
+CMD ["node", "server.js"]
+# Build: docker build -t skillzify-api .
+# Run:   docker run -p 3000:3000 -e GEMINI_API_KEY=... skillzify-api</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Containerise the Skillzify Node backend: write the Dockerfile above, build the image, run it with your Gemini key passed as an environment variable, and confirm the tutor endpoint answers. Then stop and delete the container and confirm the image is still there, ready to run again.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">What is the difference between an image and a container?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">An image is the frozen template; a container is a running instance of it. Many containers can run from one image, and deleting a container leaves the image unchanged.</p></div>
+<div class="quiz-q"><p class="qq">Why copy package.json and install before copying code in a Dockerfile?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Layer caching: dependencies install once and are reused until the manifest changes, so code edits only rebuild the final layer.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">When is Docker the wrong tool?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">For tiny static sites with no backend, or when the platform already handles the runtime — Render or a serverless function may be simpler than managing containers yourself.</p></div>
+<div class="interview-q"><p class="iq">A container restart wipes your database. What went wrong?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">The data lived in the container's filesystem instead of a volume. Volumes persist outside the container's lifecycle.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="8-4.html">← Lesson 8.4</a>
+<a class="nav-btn next" href="8-6.html">Lesson 8.6 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

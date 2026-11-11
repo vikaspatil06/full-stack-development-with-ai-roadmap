@@ -1,0 +1,1393 @@
+{
+  "MODULES": [
+    {
+      "id": 0,
+      "badge": "M0",
+      "cat": "frontend",
+      "title": "Foundations — How the Web Actually Works",
+      "desc": "HTTP, the browser rendering path, semantic HTML, the CSS box model, and JavaScript as behaviour. The base everything else stands on.",
+      "meta": [
+        "Weeks 1–2 • 27 Nov – 10 Dec",
+        "Files: index.html • style.css • app.js"
+      ],
+      "lessons": [
+        {
+          "id": "0.1",
+          "t": "How a Web Page Loads",
+          "sub": "From typing a URL to pixels on screen",
+          "mins": 25,
+          "goal": "By the end you can trace exactly what happens between pressing Enter on a Skillzify URL and seeing the homepage — and explain why Skillzify's scripts sit at the bottom of the page.",
+          "body": "<h4>1. The journey of one page load</h4>\n<p>When a browser opens <b>https://skillzify-v2-staging.onrender.com</b>, five things happen in order:</p>\n<ul>\n<li><b>DNS lookup</b> — the domain name is translated into the IP address of a Render server.</li>\n<li><b>HTTP request</b> — the browser asks that server for <code>index.html</code>. The server replies with the file's text. Nothing has been \"run\" yet — HTML is just text.</li>\n<li><b>Parsing</b> — the browser reads the HTML top to bottom and builds the <b>DOM</b> (Document Object Model): a live tree of elements it can draw and JavaScript can change.</li>\n<li><b>CSS is fetched and parsed</b> — a stylesheet link like <code>assets/css/style.css?v=29</code> triggers another request. The parsed rules become the <b>CSSOM</b>. DOM + CSSOM together decide what gets painted.</li>\n<li><b>JavaScript runs last</b> — scripts execute in the order they appear, and each one can read and modify the DOM.</li>\n</ul>\n<h4>2. Why scripts go at the bottom</h4>\n<p>A classic script <b>blocks parsing</b> while it downloads and runs. Put a script in the head and the browser stops building the page until it finishes. Skillzify puts all its scripts just before the closing body tag, so the learner sees the page first and the behaviour arrives a moment later.</p>\n<pre><code>&lt;!-- Skillzify index.html, end of body: order is a dependency chain --&gt;\n&lt;script src=\"assets/js/nav.js\"&gt;&lt;/script&gt;\n&lt;script src=\"assets/js/app.js?v=5\"&gt;&lt;/script&gt;\n&lt;script src=\"assets/js/auth.js?v=7\"&gt;&lt;/script&gt;\n&lt;script src=\"assets/js/sync.js?v=17\"&gt;&lt;/script&gt;</code></pre>\n<p>Order matters because later files use helpers from earlier ones: <code>auth.js</code> and <code>sync.js</code> call the toast and storage helpers that <code>app.js</code> defines. Swap the order and the page breaks with \"not a function\" errors.</p>\n<h4>3. Cache-busting: the ?v=29 trick</h4>\n<p>Browsers cache CSS and JS aggressively. If you fix a bug in <code>style.css</code> but the learner's browser keeps the old cached copy, your fix never arrives. Skillzify appends a version query — <code>style.css?v=29</code> — and bumps the number on every change. A new URL means a fresh download.</p>\n<div class=\"callout why\"><b>How Skillzify uses this</b>There is no build step and no framework. You can run the entire site locally with one command — <code>python3 -m http.server 8080</code> inside the project folder — because a page load really is just files being served.</div>",
+          "task": "Run Skillzify locally with python3 -m http.server 8080. Open DevTools → Network, reload, and find: the HTML document, style.css, and three JS files. Note the load order and which file is largest.",
+          "checks": [
+            [
+              "Why do Skillzify's scripts sit at the bottom of the page?",
+              "Classic scripts block HTML parsing while they download and run. At the bottom, the page content paints first and behaviour loads after."
+            ],
+            [
+              "What does style.css?v=29 do, and why does the number change?",
+              "It is cache-busting. The changed query string makes the URL new, so browsers download the fresh CSS instead of reusing a cached copy."
+            ]
+          ]
+        },
+        {
+          "id": "0.2",
+          "t": "Semantic HTML & Page Structure",
+          "sub": "Tags that mean something, not just divs",
+          "mins": 30,
+          "goal": "By the end you can structure any page with semantic HTML, explain what the viewport meta tag does on a phone, and explain why Skillzify's nav and footer divs are empty in the HTML.",
+          "body": "<h4>1. Structure vs presentation</h4>\n<p>HTML's only job is <b>meaning and structure</b>: this is a heading, this is navigation, this is the main content. Colour, spacing and layout belong to CSS; behaviour belongs to JavaScript. When HTML tries to do CSS's job (old-school font tags, inline styles everywhere), pages become impossible to restyle.</p>\n<h4>2. Semantic tags</h4>\n<p>A <code>div</code> means nothing. These tags carry meaning that browsers, screen readers and search engines can use:</p>\n<pre><code>&lt;header&gt;   site header / navigation\n&lt;nav&gt;      a block of navigation links\n&lt;main&gt;     the page's one main content area\n&lt;section&gt;  a themed chunk of content\n&lt;article&gt;  a self-contained piece (post, card)\n&lt;footer&gt;   closing info for a page or section</code></pre>\n<h4>3. The head: two lines that matter most</h4>\n<pre><code>&lt;meta charset=\"UTF-8\"&gt;\n&lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;</code></pre>\n<p><b>charset</b> tells the browser how to decode the file's bytes into characters — without it, symbols and non-English text can garble. <b>viewport</b> is what makes the page work on a phone: without it, mobile browsers pretend the screen is ~980px wide and shrink everything; with it, the layout width equals the real device width and your responsive CSS can do its job.</p>\n<h4>4. Empty divs that JavaScript fills</h4>\n<p>Every Skillzify page contains <code>&lt;div id=\"site-nav\"&gt;&lt;/div&gt;</code> and an empty footer div. The nav HTML is written <b>once</b>, in <code>nav.js</code>, which injects it into that placeholder on all 17 pages. Change the nav in one file and every page updates — the same \"don't repeat yourself\" instinct as a function.</p>\n<div class=\"callout why\"><b>Accessibility is not optional polish</b>Semantic tags, one h1 per page, alt text on images and real buttons (not clickable divs) are what make a page usable with a screen reader or a keyboard. Interviewers ask about this.</div>",
+          "task": "Open Skillzify's index.html and list every semantic tag it uses. Then sketch — on paper — the semantic structure of a lesson page: where header, main, section and footer go, and which parts JS injects.",
+          "checks": [
+            [
+              "What breaks on phones if the viewport meta tag is missing?",
+              "Mobile browsers assume a ~980px layout width and scale the page down, so text is tiny and responsive media queries keyed to device width never apply correctly."
+            ],
+            [
+              "Why is #site-nav empty in the HTML?",
+              "nav.js injects the shared navigation into it at runtime, so the nav is written once and reused across all 17 pages."
+            ]
+          ]
+        },
+        {
+          "id": "0.3",
+          "t": "CSS: Box Model, Variables & Themes",
+          "sub": "The system behind Skillzify's dark/light modes",
+          "mins": 40,
+          "goal": "By the end you can explain the box model, why box-sizing: border-box prevents layout surprises, and exactly how Skillzify's dark/light theme works with CSS variables.",
+          "body": "<h4>1. Every element is a box</h4>\n<p>The CSS box model says every element is four nested layers: <b>content</b> in the middle, then <b>padding</b> (space inside), then <b>border</b>, then <b>margin</b> (space outside). The catch: by default, <code>width: 200px</code> sets only the content width — padding and border are added on top, so a \"200px\" box with 20px padding is really 240px wide. That is the source of half of all beginner layout bugs.</p>\n<pre><code>/* The first three lines of Skillzify's style.css fix this globally */\n* { margin: 0; padding: 0; box-sizing: border-box; }</code></pre>\n<p>With <code>border-box</code>, width means the whole box including padding and border. Predictable. The universal reset also removes browsers' inconsistent default margins so spacing is entirely yours.</p>\n<h4>2. Layout: Flexbox and Grid</h4>\n<ul>\n<li><b>Flexbox</b> lays items out along one axis — a nav bar, a row of cards, centering something. Main tools: <code>display:flex</code>, <code>justify-content</code>, <code>align-items</code>, <code>gap</code>.</li>\n<li><b>Grid</b> lays items out in two dimensions — rows and columns at once, like this page's lesson cards. Main tool: <code>grid-template-columns</code>.</li>\n<li><b>Responsive design</b> uses media queries to change the layout at widths: three columns on desktop collapse to one column on a phone.</li>\n</ul>\n<pre><code>.container { width: min(1140px, 92%); margin: 0 auto; }</code></pre>\n<p>This one line is why Skillzify's content never stretches uncomfortably wide on a monitor and never touches the screen edges on a phone.</p>\n<h4>3. CSS variables: theming without duplication</h4>\n<pre><code>:root {\n  --bg: #0a0f22;  --text: #eef1ff;  --primary: #6c7bff;\n}\n[data-theme=\"light\"] {\n  --bg: #f4f6ff;  --text: #141a33;\n}\nbody { background: var(--bg); color: var(--text); }</code></pre>\n<p>Components never hard-code colours — they reference variables. Switching themes means <b>redefining the variables in one place</b>, and every component follows automatically. Skillzify also swaps accent palettes the same way, with selectors like <code>[data-accent=\"ocean\"]</code>. Change <code>--primary</code> once and every button, link and highlight on the site recolours — try it in the practice task.</p>\n<div class=\"callout why\"><b>The pattern to remember</b>Variables for values that change (colours, radii, spacing), classes for reusable components, and no colour ever typed twice. That discipline is what makes a 17-page site restyleable in an afternoon.</div>",
+          "task": "In Skillzify's style.css, change --primary to #ff0000 and reload: watch every button and link turn red. Change it back. Then find the [data-theme=\"light\"] block and predict — before toggling — three things that will change when you switch to light mode.",
+          "checks": [
+            [
+              "With box-sizing: content-box, why is a width:200px box with 20px padding actually 240px wide?",
+              "Because content-box sets width on the content only; padding (20px each side) and border are added outside it. border-box includes them in the declared width."
+            ],
+            [
+              "How does Skillzify's dark/light toggle change the whole site by changing so little?",
+              "All components use CSS variables like var(--bg). The toggle only changes the data-theme attribute on the html element; the [data-theme] block redefines the variables and everything repainting from them follows."
+            ]
+          ]
+        },
+        {
+          "id": "0.4",
+          "t": "JavaScript Basics & the DOM",
+          "sub": "Variables, events, and app.js — the shared brain",
+          "mins": 40,
+          "goal": "By the end you can write basic JavaScript, select and change DOM elements, respond to clicks, and explain the four jobs app.js does on every Skillzify page.",
+          "body": "<h4>1. The core language, fast</h4>\n<pre><code>const xp = 120;              // never reassigned\nlet streak = 5;              // can change\nconst user = { name: \"Vikas\", level: 3 };   // object\nconst done = [\"intro\", \"loops\"];            // array\nfunction addXp(amount) { return xp + amount; }\nconst double = (n) => n * 2;                // arrow function</code></pre>\n<p>Use <code>const</code> by default, <code>let</code> when reassignment is real, and treat <code>var</code> as legacy. Objects and arrays hold structured data; functions package behaviour; arrow functions are the compact form you'll see everywhere in modern code.</p>\n<h4>2. The DOM is JavaScript's handle on the page</h4>\n<pre><code>const btn = document.querySelector(\"#themeBtn\");\nbtn.addEventListener(\"click\", function () {\n  document.body.classList.toggle(\"light\");\n});</code></pre>\n<p><code>querySelector</code> finds elements, <code>addEventListener</code> reacts to clicks, keys and input, and properties like <code>textContent</code> and <code>classList</code> change what the user sees. Almost all frontend JavaScript is this loop: <b>find → listen → change</b>.</p>\n<h4>3. localStorage: the browser's tiny notebook</h4>\n<pre><code>localStorage.setItem(\"skillzify_theme\", \"dark\");\nconst theme = localStorage.getItem(\"skillzify_theme\"); // \"dark\"</code></pre>\n<p>It stores <b>strings only</b>, per site, and survives reloads. Objects must go through <code>JSON.stringify</code> on the way in and <code>JSON.parse</code> on the way out. Skillzify wraps both in <code>try/catch</code> helpers (<code>storeGet</code>/<code>storeSet</code>) so one corrupted value can never crash a page.</p>\n<h4>4. app.js: four jobs, wrapped safely</h4>\n<p><code>app.js</code> is wrapped in an <b>IIFE</b> — <code>(function () { \"use strict\"; ... })();</code> — so its variables stay private instead of leaking into the global scope where other files could collide with them. Inside, it does four jobs on every page: applies the saved theme, wires the mobile nav toggle and current-page highlighting, provides <code>toast(msg)</code>, and provides the storage helpers. It then deliberately exposes just those helpers as <code>window.Skillzify.toast</code> and friends for other files. Everything waits for <code>DOMContentLoaded</code> — touching elements before they exist is the classic beginner crash.</p>\n<div class=\"callout why\"><b>How Skillzify uses this</b>The pre-paint theme script in the head reads skillzify_theme from localStorage before first paint — that's why dark-mode users never see a white flash. Same storage, used earlier, for a visual reason.</div>",
+          "task": "In DevTools on the locally running site: toggle the theme, then open Application → Local Storage and find skillzify_theme. Change its value by hand, reload, and watch the inline head script apply your value before paint. Then call Skillzify.toast(\"hello\") from the Console.",
+          "checks": [
+            [
+              "Why does app.js wrap everything in an IIFE?",
+              "To keep its variables and helper functions out of the global scope, avoiding name collisions with the ~30 other JS files; it exposes only the intended API via window.Skillzify."
+            ],
+            [
+              "localStorage can only store strings — how does Skillzify store a progress object?",
+              "JSON.stringify when saving and JSON.parse when loading, wrapped in try/catch so bad data can't crash the page."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "badge": "M1",
+      "cat": "frontend",
+      "title": "JavaScript Deep + Modern Frontend",
+      "desc": "From JS that works to JS you can reason about — ES6+, async, state — then React, because that is what full-stack roles actually ask for.",
+      "meta": [
+        "Weeks 3–4 • 11 – 24 Dec",
+        "Files: learn.js • sync.js • mastery.js"
+      ],
+      "lessons": [
+        {
+          "id": "1.1",
+          "t": "ES6+ Essentials",
+          "sub": "The modern syntax Skillzify (and every codebase) assumes",
+          "mins": 35,
+          "goal": "By the end you can read and write destructuring, spread, template literals and array methods fluently — the syntax that makes older tutorials look foreign.",
+          "body": "<h4>1. Destructuring: unpack in one line</h4>\n<pre><code>const user = { name: \"Vikas\", xp: 340, streak: 6 };\nconst { name, xp } = user;            // name = \"Vikas\", xp = 340\nconst [first, second] = [\"a\", \"b\"];   // arrays unpack by position</code></pre>\n<h4>2. Spread and rest: copy and merge without mutation</h4>\n<pre><code>const doneLessons = [...oldLessons, \"new-lesson\"];  // new array\nconst merged = { ...defaults, ...overrides };       // later keys win</code></pre>\n<p>Spread creates a <b>new</b> array or object instead of modifying the old one. That habit — never mutate, always produce a new version — is the foundation of predictable state, and it is exactly how React state updates work later.</p>\n<h4>3. Template literals and array methods</h4>\n<p>Template literals (backtick strings) let you embed expressions directly inside text instead of gluing strings together with plus signs. Pair them with the array trio:</p>\n<pre><code>const names = lessons.map(l => l.title);        // transform each\nconst passed  = results.filter(r => r.score >= 50); // keep some\nconst totalXp = results.reduce((sum, r) => sum + r.xp, 0); // fold to one value</code></pre>\n<p><code>map</code>, <code>filter</code> and <code>reduce</code> replace most hand-written loops in modern codebases — including Skillzify's progress calculations, where XP totals and lesson unions are folds over arrays.</p>\n<div class=\"callout why\"><b>Why this lesson exists</b>Every later module assumes this syntax. Firestore merge code, React components and Gemini request bodies are all written in it. Fluency here is what makes the rest readable.</div>",
+          "task": "Take an array of 5 lesson objects {id, title, xp} and, using only map/filter/reduce: list the titles, keep lessons worth 20+ XP, and compute total XP. Then merge two progress objects with spread so the second one's streak wins.",
+          "checks": [
+            [
+              "Why prefer creating a new array with spread over push()-ing into the old one?",
+              "Mutation makes old references change silently, which breaks change detection and reasoning about state; a new array makes the update explicit and traceable."
+            ],
+            [
+              "Which array method turns a list of results into a single total XP number?",
+              "reduce — it folds the array into one accumulated value."
+            ]
+          ]
+        },
+        {
+          "id": "1.2",
+          "t": "Async JavaScript & Fetch",
+          "sub": "Promises, async/await, and talking to servers",
+          "mins": 45,
+          "goal": "By the end you can explain the callback → Promise → async/await progression, fetch JSON from an API with proper error handling, and describe what a race condition is.",
+          "body": "<h4>1. JavaScript waits without freezing</h4>\n<p>Network calls take time — a Gemini request can take seconds. JavaScript is single-threaded, so it cannot sit and wait; instead it registers work, keeps the page responsive, and comes back when the answer arrives. The modern spelling of that pattern is a <b>Promise</b>: an object representing a value that will exist later, which either <b>resolves</b> (success) or <b>rejects</b> (failure).</p>\n<h4>2. async/await: promises that read like normal code</h4>\n<pre><code>async function askTutor(question) {\n  try {\n    const res = await fetch(\"/api/tutor\", {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ question })\n    });\n    if (!res.ok) throw new Error(\"Server said \" + res.status);\n    const data = await res.json();\n    return data.reply;\n  } catch (err) {\n    return \"Tutor unavailable — try again.\";\n  }\n}</code></pre>\n<p>Three details matter. First, <code>fetch</code> only rejects on network failure — an HTTP 500 still resolves, so you must check <code>res.ok</code> yourself. Second, request and response bodies are JSON strings; <code>JSON.stringify</code> and <code>res.json()</code> are the two conversion points. Third, every async call needs a failure path the user can survive — Skillzify's AI UI shows a friendly fallback instead of a frozen spinner.</p>\n<h4>3. Race conditions</h4>\n<p>If a learner taps \"hint\" twice quickly, two requests fly; the slower first response can arrive <i>after</i> the second and overwrite newer state. Fixes range from disabling the button while loading, to tagging requests with an incrementing ID and ignoring stale replies. Knowing the bug exists puts you ahead of most tutorial code, which never mentions it.</p>\n<div class=\"callout why\"><b>How Skillzify uses this</b>sync.js pushes progress to Firestore and ai.js calls the backend — both are this exact pattern: await, check, parse, and a catch that degrades gracefully (keep working offline; show a fallback message).</div>",
+          "task": "Write an async function that fetches https://api.github.com/repos/vikaspatil06/skillzify-v2 and prints the repo's star count, with a try/catch that logs a friendly message on failure. Then deliberately break the URL and confirm your error path runs.",
+          "checks": [
+            [
+              "fetch() resolves even when the server returns HTTP 500 — so what must you check?",
+              "res.ok (or res.status). fetch only rejects on network-level failures, not HTTP error statuses."
+            ],
+            [
+              "What is a race condition in async UI code?",
+              "Two overlapping async operations complete out of order, so a stale earlier result overwrites a newer one; fixed by disabling triggers, request IDs, or cancellation."
+            ]
+          ]
+        },
+        {
+          "id": "1.3",
+          "t": "State & Data-Driven Rendering",
+          "sub": "How Skillzify renders lessons from data files",
+          "mins": 40,
+          "goal": "By the end you can explain 'UI = a function of data', how Skillzify stores its entire curriculum as JavaScript data, and how mastery and spaced repetition are computed from that data.",
+          "body": "<h4>1. The core idea: render from data, never hand-write DOM</h4>\n<p>Beginners build UI by creating elements one by one. Professionals keep a <b>single source of truth</b> — a data structure — and write a render function that turns data into DOM. Change the data, re-run render, and the UI is correct by construction. Skillzify's Learn page works exactly like this.</p>\n<h4>2. Content as code</h4>\n<p>Skillzify has no CMS and no content database. The curriculum <i>is</i> JavaScript data files: <code>lessons-b/i/a.js</code> hold the 250 lessons, <code>practice-data.js</code> holds 150 exercises, <code>reference-data.js</code> holds 127 entries. <code>learn.js</code> reads those arrays and renders the journey path; <code>lesson.js</code> renders one lesson. Adding a lesson means adding a data object, not touching rendering code.</p>\n<pre><code>{ id: \"b-014\", title: \"For Loops\", xp: 20, section: \"beginner\" }</code></pre>\n<h4>3. Derived state: mastery and review scheduling</h4>\n<p>Two of Skillzify's smartest features are pure functions over that data plus the learner's progress:</p>\n<ul>\n<li><b>Mastery Engine</b> (<code>mastery.js</code>) scores each section 0–100 from completed lessons, exercise accuracy and recency — then the \"Next Up\" card is just \"the highest-value incomplete item\", computed, not stored.</li>\n<li><b>Spaced repetition</b> (<code>review.js</code>) implements SM-2: intervals grow 1 → 3 → 7 → 14 → 30 → 60 days as you succeed. The schedule is derived from last-review date + ease, never a hand-maintained list.</li>\n</ul>\n<p>The lesson: <b>store facts, compute views.</b> Store \"lesson X completed on date D with score S\" — compute mastery, streaks and next-up on demand. Stored derived values drift out of sync; computed ones can't.</p>\n<div class=\"callout why\"><b>Bridge to React</b>This is precisely React's mental model — components render from state, and derived values are computed during render. Learn it in vanilla first and React becomes a syntax, not a new idea.</div>",
+          "task": "Given a data array of 6 lessons and a progress object {completedIds, scores}, write a render function (vanilla JS) that lists lessons with Done/Next/Locked states, plus a mastery percentage computed from the data. Change the data only, and watch the UI follow.",
+          "checks": [
+            [
+              "Why store raw facts and compute mastery instead of storing the mastery score?",
+              "Computed values are always consistent with the underlying facts; stored derived values can drift when facts change through another path (like sync from Android)."
+            ],
+            [
+              "How does Skillzify add a new lesson without changing rendering code?",
+              "Lessons are data files; learn.js renders whatever objects exist in the arrays. A new lesson is a new data object."
+            ]
+          ]
+        },
+        {
+          "id": "1.4",
+          "t": "React Fundamentals",
+          "sub": "The industry add-on: components, props, hooks",
+          "mins": 50,
+          "goal": "By the end you can build a small React app with components, props, useState and useEffect, and explain honestly when React beats vanilla JS — and when it doesn't.",
+          "body": "<h4>1. Components: UI as functions</h4>\n<p>A React component is a function that takes <b>props</b> (inputs) and returns a description of UI in JSX — HTML-like syntax inside JavaScript. The lesson app from the last lesson becomes:</p>\n<pre><code>function LessonCard({ title, xp, done }) {\n  return (\n    &lt;div className=\"card\"&gt;\n      &lt;h3&gt;{title}&lt;/h3&gt;\n      &lt;p&gt;{xp} XP {done ? \"✓\" : \"\"}&lt;/p&gt;\n    &lt;/div&gt;\n  );\n}</code></pre>\n<h4>2. State with useState, effects with useEffect</h4>\n<pre><code>function XpCounter() {\n  const [xp, setXp] = useState(0);\n  useEffect(() => { document.title = \"XP: \" + xp; }, [xp]);\n  return &lt;button onClick={() => setXp(xp + 10)}&gt;+10 XP ({xp})&lt;/button&gt;;\n}</code></pre>\n<p><code>useState</code> gives a component memory; calling the setter re-renders with the new value — you never touch the DOM directly. <code>useEffect</code> runs side effects (fetching, titles, subscriptions) after render, with a dependency array controlling when. Lists need a stable <code>key</code> per item so React can track identity across renders.</p>\n<h4>3. What React removes — and what it costs</h4>\n<p>React removes manual DOM updates, render-order bugs and a whole class of state/UI mismatches. It costs a build step, a bundle to download, and new failure modes (effect loops, stale closures). Skillzify chose vanilla deliberately: no build step, instant loads, and pages that embed Pyodide without toolchain friction. A content-heavy product dashboard at a company would usually choose React. Knowing <i>both</i> — and being able to defend either choice — is the interview-grade answer.</p>\n<h4>4. Next.js, at concept level</h4>\n<p>Next.js is React plus conventions: files in a folder become routes, and components can render on the server (fast first paint, good SEO) or the client (interactive). Learn the file-routing and server/client component ideas now; go deep only when a project needs it.</p>\n<div class=\"callout why\"><b>How this fits your stack</b>React is not in Skillzify — it's the industry layer on top. Your Phase 1 build (same app, both ways) is what turns this lesson from trivia into judgement.</div>",
+          "task": "Rebuild your Lesson 1.3 app in React (Vite or an online playground): a lesson list rendered from data, an XP counter with useState, and a useEffect that updates the page title with total XP. Write two sentences on what React removed and what it cost.",
+          "checks": [
+            [
+              "What does calling setXp actually do in React?",
+              "It schedules a re-render with the new state value; React updates the DOM to match. You never manipulate DOM nodes yourself."
+            ],
+            [
+              "Give one honest reason Skillzify uses vanilla JS instead of React.",
+              "No build step and instant page loads, with simple embedding of heavy libraries like Pyodide; the site's interactivity doesn't need a framework's machinery."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "badge": "M2",
+      "cat": "backend",
+      "title": "Python Fluency — The Language Skillzify Teaches & Uses",
+      "desc": "Python is both the subject and a tool: it generates Skillzify's flowcharts and it's the language of AI. Learn it to advanced level, in PyCharm.",
+      "meta": [
+        "Weeks 5–6 • 25 Dec – 7 Jan",
+        "Files: flowchart-gen.py • flowchart-algo.py"
+      ],
+      "lessons": [
+        {
+          "id": "2.1",
+          "t": "Python Core, Written Properly",
+          "sub": "Data structures, comprehensions, functions",
+          "mins": 40,
+          "goal": "By the end you can use Python's core data structures idiomatically — comprehensions over loops, the right container for the job, and functions with clean inputs and outputs.",
+          "body": "<h4>1. Pick the container by the question you ask</h4>\n<ul>\n<li><b>list</b> — ordered, changeable: \"give me item 3\", \"append this\".</li>\n<li><b>tuple</b> — ordered, fixed: coordinates, a (node, edge) pair that must not change.</li>\n<li><b>dict</b> — key → value lookup: a lesson record, JSON data. The workhorse.</li>\n<li><b>set</b> — uniqueness and membership: \"have I seen this id?\" in O(1).</li>\n</ul>\n<p>Choosing wrongly is how O(n²) accidents happen — scanning a list for membership inside a loop, where a set would be instant.</p>\n<h4>2. Comprehensions: loops that read as sentences</h4>\n<pre><code>titles = [l[\"title\"] for l in lessons if l[\"xp\"] >= 20]\nby_id  = {l[\"id\"]: l for l in lessons}   # dict comprehension → instant lookup</code></pre>\n<h4>3. Functions as pipelines</h4>\n<p>Skillzify's flowchart scripts are chains of small functions: parse → transform → emit. Each takes data in and returns data out, with no hidden globals — which is why they are testable one at a time in PyCharm's debugger. Prefer that style over one giant script: a bug in a 10-line function is a 10-line search.</p>\n<div class=\"callout why\"><b>Working setup</b>Do this module in PyCharm with a virtual environment per project (venv) and pip for packages. Environment hygiene — never installing into the system Python — is a professional habit, not trivia.</div>",
+          "task": "In PyCharm: build a list of 6 lesson dicts, produce (a) titles of lessons worth 20+ XP via comprehension, (b) an id→lesson dict, (c) a set of sections. Then write total_xp(lessons) as a pure function and test it with two different inputs.",
+          "checks": [
+            [
+              "When is a set the right container instead of a list?",
+              "When the questions are uniqueness and membership ('have I seen this?') — set lookup is O(1) versus O(n) scanning a list."
+            ],
+            [
+              "Why keep functions pure (data in, data out) in the flowchart scripts?",
+              "Each stage can be tested and debugged independently in PyCharm; hidden global state makes failures non-local and hard to reproduce."
+            ]
+          ]
+        },
+        {
+          "id": "2.2",
+          "t": "OOP in Python",
+          "sub": "Classes, objects, and when not to use them",
+          "mins": 40,
+          "goal": "By the end you can model a small domain with classes, explain encapsulation and inheritance honestly, and know when a plain dict or function is the better tool.",
+          "body": "<h4>1. A class bundles data with the behaviour that owns it</h4>\n<pre><code>class Lesson:\n    def __init__(self, id, title, xp):\n        self.id, self.title, self.xp = id, title, xp\n    def summary(self):\n        return self.title + \" (\" + str(self.xp) + \" XP)\"\n\nl = Lesson(\"b-014\", \"For Loops\", 20)\nprint(l.summary())</code></pre>\n<p><code>__init__</code> sets up the object's state; <code>self</code> is the object itself, passed explicitly. Methods are functions that live on the class and operate on that state.</p>\n<h4>2. The honest rules of OOP</h4>\n<ul>\n<li><b>Encapsulation:</b> keep state and its rules together — a Progress class that refuses negative XP beats checks scattered across files.</li>\n<li><b>Inheritance:</b> an Exercise is-a Question can share behaviour — but deep hierarchies become rigid. Prefer <b>composition</b> (an object holding other objects) for most real designs.</li>\n<li><b>Dataclasses:</b> for classes that are mostly data, <code>@dataclass</code> generates init/repr for you. Skillzify's flowchart nodes are a natural dataclass.</li>\n</ul>\n<h4>3. When NOT to use a class</h4>\n<p>A dict is fine for data that only gets read (like parsed JSON). A function is fine for a one-step transformation. Reach for a class when state + rules + lifetime travel together — a learner's progress, a flowchart builder mid-construction. Over-classing simple data is its own smell.</p>\n<div class=\"callout why\"><b>Interview angle</b>\"Explain OOP\" answers that recite four pillars fail. The answer that lands: a modelling example, one trade-off (inheritance vs composition), and one case where you deliberately didn't use a class.</div>",
+          "task": "Model Skillzify progress in Python: a @dataclass Lesson and a Progress class with add_lesson() that rejects duplicate lesson ids and tracks total XP. Then write the same thing with plain dicts and note which version you'd ship for (a) a script, (b) a long-lived app.",
+          "checks": [
+            [
+              "Composition vs inheritance — which do you reach for first, and why?",
+              "Composition: objects holding other objects stay flexible and loosely coupled; deep inheritance hierarchies are rigid and hard to change."
+            ],
+            [
+              "When is a dict better than a class?",
+              "For read-only or pass-through data (e.g. parsed JSON) with no rules or behaviour to protect — a class adds ceremony without buying safety."
+            ]
+          ]
+        },
+        {
+          "id": "2.3",
+          "t": "Generators, JSON & File Pipelines",
+          "sub": "The exact skills inside flowchart-gen.py",
+          "mins": 45,
+          "goal": "By the end you can process data lazily with generators, move data in and out of JSON and files safely, and trace how Skillzify turns Python code into flowchart JSON.",
+          "body": "<h4>1. Generators: values on demand</h4>\n<pre><code>def id_stream(lessons):\n    for l in lessons:\n        yield l[\"id\"]     # produces one value, pauses, resumes\n\nfor lid in id_stream(big_list):   # nothing is fully built in memory\n    ...</code></pre>\n<p>A normal function builds a whole list and returns it; a generator <b>yields</b> one item at a time. For big inputs — scanning thousands of lines of learner code — that is the difference between fine and out-of-memory. Rule of thumb: if the caller processes items one by one, yield them.</p>\n<h4>2. JSON and files: Python's border with every other system</h4>\n<pre><code>import json\nwith open(\"flowchart.json\", \"w\") as f:   # context manager: always closes\n    json.dump(nodes, f, indent=2)\ndata = json.loads(text_from_browser)      # str → Python objects</code></pre>\n<p>The <code>with</code> block is a <b>context manager</b>: the file closes even if an exception hits mid-write. <code>json.load/dump</code> work on files; <code>loads/dumps</code> work on strings. This is the same JSON the browser sends your Express server in Module 3 — one format, every border.</p>\n<h4>3. Trace the real pipeline: code → flowchart</h4>\n<p><code>flowchart-gen.py</code> reads Python code and emits a JSON list of nodes and edges; <code>flowchart-algo.py</code> does the same from pseudocode. The browser then renders that JSON with Mermaid (Module 6). Notice the architecture: Python never draws anything. It produces <b>structured data</b>, and a specialist renderer draws. Separating \"decide\" from \"draw\" is what makes both halves replaceable.</p>\n<div class=\"callout why\"><b>Error handling habit</b>Wrap file and JSON work in try/except with specific exceptions (FileNotFoundError, json.JSONDecodeError) and a message that says which input failed. A crashed generator with no context is a debugging session; with context, it's a one-line fix.</div>",
+          "task": "Write mini_gen.py: read 5 lines of simple Python containing one if/else from a text file, and write a JSON file listing node objects ({id, label, type}) for start, condition, both branches, and end. Print a friendly error if the file is missing.",
+          "checks": [
+            [
+              "Why use yield instead of returning a list when scanning a large file?",
+              "The generator produces items one at a time, so memory stays flat regardless of input size; a returned list materialises everything at once."
+            ],
+            [
+              "What does the with statement guarantee for file work?",
+              "The file is closed when the block exits — including when an exception is raised inside it."
+            ]
+          ]
+        },
+        {
+          "id": "2.4",
+          "t": "NumPy & Pandas Basics",
+          "sub": "Just enough data tooling for the AI module",
+          "mins": 40,
+          "goal": "By the end you can create and slice NumPy arrays, load tabular data into a Pandas DataFrame, and explain why AI code is written in array operations instead of loops.",
+          "body": "<h4>1. NumPy: lists with superpowers</h4>\n<pre><code>import numpy as np\nscores = np.array([40, 55, 80, 92])\nscores.mean()          # 66.75 — whole-array maths, no loop\nscores[scores >= 50]   # array([55, 80, 92]) — boolean filtering</code></pre>\n<p>Operations apply to the <b>whole array at once</b> (vectorisation), running in compiled code — often 10–100× faster than a Python loop, and shorter to read. An array also has a <b>shape</b>: a list of scores is (4,), a table of 30 learners × 5 scores is (30, 5). Shapes are the grammar of AI data.</p>\n<h4>2. Embeddings are just arrays</h4>\n<p>In Module 5 you'll meet embeddings: texts converted to vectors like (384,) or (768,) numbers. Similarity between two texts becomes arithmetic between two arrays (a dot product). Every RAG system you build later is, at the bottom, NumPy-style array maths — which is why this lesson sits here.</p>\n<h4>3. Pandas: tables with labels</h4>\n<pre><code>import pandas as pd\ndf = pd.read_csv(\"learners.csv\")\ndf.groupby(\"section\")[\"xp\"].mean()   # average XP per section, one line</code></pre>\n<p>A DataFrame is a spreadsheet you program: labelled rows and columns, filtering, grouping and joins without hand-written loops. Use it for datasets, logs and evaluation results (Module 5's evals are a DataFrame-shaped problem).</p>\n<div class=\"callout why\"><b>Scope discipline</b>You need literacy, not mastery: arrays, shapes, slicing, mean/filter, read_csv, groupby. Deep data-science technique belongs to a data track; this is the AI-engineering minimum.</div>",
+          "task": "With NumPy: create a (5, 3) array of fake quiz scores, compute per-quiz means, and boolean-filter learners averaging 60+. With Pandas: load any small CSV (make one), and group it by a category column with a mean.",
+          "checks": [
+            [
+              "Why is scores.mean() preferred over a hand-written loop?",
+              "It's vectorised: the operation runs over the whole array in compiled code — faster, shorter, and less error-prone than manual accumulation."
+            ],
+            [
+              "What is an embedding, in array terms?",
+              "A vector — a fixed-length NumPy-style array of numbers representing a text's meaning, so similarity becomes array arithmetic."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "badge": "M3",
+      "cat": "backend",
+      "title": "Backend — Node.js & Express, Properly",
+      "desc": "Skillzify's entire backend is one 41KB server.js. By the end of this module you should be able to write it — and explain every protection inside it.",
+      "meta": [
+        "Weeks 7–9 • 8 – 28 Jan",
+        "Files: server.js • package.json • .env"
+      ],
+      "lessons": [
+        {
+          "id": "3.1",
+          "t": "Node.js & the Event Loop",
+          "sub": "Server-side JavaScript and how it stays fast",
+          "mins": 40,
+          "goal": "By the end you can explain what Node is (and is not), how the event loop lets one thread serve thousands of learners, and how npm and package.json run Skillzify.",
+          "body": "<h4>1. Node: JavaScript outside the browser</h4>\n<p>Node.js takes Chrome's V8 JavaScript engine and gives it server powers the browser deliberately withholds: reading files, opening network ports, reading environment variables. Same language, different toolbox — there is no DOM, no <code>document</code>, no <code>localStorage</code> on the server.</p>\n<h4>2. The event loop: one thread, no waiting around</h4>\n<p>Node runs your code on a <b>single thread</b>. When code starts a slow operation — reading a file, calling the Gemini API — it registers a callback and moves on instead of blocking. When the operation finishes, its callback joins a queue and the <b>event loop</b> runs it. That is how one small Render instance serves many learners at once: almost all server time is waiting, and Node never waits idle.</p>\n<p>The flip side: heavy CPU work in your code (a giant synchronous loop) blocks <i>everyone</i>, because the single thread is busy. Servers must keep handlers light and push waiting to async operations.</p>\n<h4>3. npm and package.json: the project's contract</h4>\n<pre><code>{\n  \"engines\": { \"node\": \">=18\" },\n  \"scripts\": { \"start\": \"node server.js\" },\n  \"dependencies\": {\n    \"express\": \"4.22.3\",\n    \"dotenv\": \"16.4.5\",\n    \"firebase-admin\": \"14.5.0\"\n  }\n}</code></pre>\n<p><code>npm install</code> reads this file and rebuilds the exact dependency set on any machine — that is literally step one of every Render deploy. <code>npm start</code> is the command Render runs. Exact version pins (not \"latest\") are why a deploy today behaves like a deploy last month.</p>\n<div class=\"callout why\"><b>How Skillzify uses this</b>Render's free tier runs one Node process from server.js. The event loop is why that is enough: 15 AI modes, static files and caps all multiplex through async I/O on a single thread.</div>",
+          "task": "Create a blank Node project: npm init, install express, and print process.version and one environment variable from a script. Then write a handler that starts a 2-second setTimeout and logs immediately after — observe the log order and explain it with the event loop.",
+          "checks": [
+            [
+              "Why can one Node process serve many users if it is single-threaded?",
+              "Because request handling is mostly waiting on I/O. Async operations register callbacks and free the thread; the event loop runs each callback when its result arrives."
+            ],
+            [
+              "What kind of code is dangerous in a Node handler, and why?",
+              "Long synchronous CPU work — it occupies the single thread and blocks every other request until it finishes."
+            ]
+          ],
+          "mistakes": [
+            "Assuming Node has browser APIs — there is no document, window or localStorage on the server.",
+            "Writing long synchronous loops or huge JSON.parse of untrusted input inside request handlers, freezing all users.",
+            "Using loose version ranges in package.json, so a deploy silently changes behaviour when a dependency updates."
+          ],
+          "interview": [
+            [
+              "Explain the Node.js event loop in one minute.",
+              "Single thread + async I/O: slow operations register callbacks and release the thread; the event loop picks up completed callbacks from the queue. Concurrency comes from never blocking on waits."
+            ],
+            [
+              "Node vs a traditional threaded server — one trade-off each way?",
+              "Node: excellent I/O concurrency with tiny memory, but one CPU-heavy task blocks everyone. Threaded servers isolate CPU work per thread but pay memory and context-switch costs per connection."
+            ]
+          ]
+        },
+        {
+          "id": "3.2",
+          "t": "Express: Routing & Middleware",
+          "sub": "How server.js turns URLs into responses",
+          "mins": 45,
+          "goal": "By the end you can build an Express app with routes and static hosting, explain the middleware chain, and trace one request through Skillzify's server.js end to end.",
+          "body": "<h4>1. The request/response cycle</h4>\n<p>Every Express app is a function: request in, response out. A <b>route</b> matches a method + path and runs a handler:</p>\n<pre><code>const express = require(\"express\");\nconst app = express();\n\napp.use(express.json());                 // parse JSON bodies\napp.use(express.static(\"public\"));       // serve the website files\n\napp.post(\"/api/echo\", (req, res) => {\n  const { text } = req.body;\n  if (typeof text !== \"string\" || !text.trim())\n    return res.status(400).json({ error: \"text is required\" });\n  res.json({ echo: text.trim() });\n});\n\napp.listen(process.env.PORT || 3000);</code></pre>\n<h4>2. Middleware: the chain every request walks</h4>\n<p><code>app.use</code> registers <b>middleware</b> — functions that run in order before the route handler, each receiving <code>(req, res, next)</code>. JSON parsing, logging, auth checks and rate limiting are all middleware. Forget <code>next()</code> and the request hangs forever; Skillzify's server composes its protections exactly this way.</p>\n<h4>3. Static + API in one server</h4>\n<p><code>express.static</code> serves Skillzify's 17 HTML pages and assets, while <code>POST /api/*</code> routes handle AI calls. One process, two jobs — simple to deploy on Render, and the browser only ever talks to the API for things that need secrets or shared limits (Module 3.4).</p>\n<div class=\"callout why\"><b>Status codes are a contract</b>200 success, 400 the client sent something invalid, 401/403 auth problems, 429 rate limited, 500 your bug. Frontend code branches on these — inventing your own shapes per route makes the client a mess.</div>",
+          "task": "Build a mini server: express.static serving one HTML page, express.json(), and POST /api/echo with the validation above. Add a logging middleware that prints method + path + timestamp for every request, and prove order by hitting both routes.",
+          "checks": [
+            [
+              "What happens if a middleware never calls next() and never sends a response?",
+              "The request hangs until timeout — the chain stops and no handler runs."
+            ],
+            [
+              "Why does express.json() need to be registered before the routes that read req.body?",
+              "Middleware runs in registration order; the body must be parsed before any handler tries to use it."
+            ]
+          ],
+          "mistakes": [
+            "Registering middleware after routes and wondering why req.body is undefined.",
+            "Returning HTML error pages from API routes — APIs should answer JSON with a consistent { error } shape.",
+            "Forgetting res.status(400) on validation failures, so clients can't distinguish bad input from success."
+          ],
+          "interview": [
+            [
+              "Walk me through a request hitting your Express server.",
+              "It enters the middleware chain in registration order (parsing, logging, limits), matches a route by method+path, the handler validates input, does its work, and sends a JSON response with the right status code."
+            ],
+            [
+              "What is middleware, in one sentence?",
+              "A function in the request pipeline that can inspect or modify req/res and decides whether the request continues to the next stage."
+            ]
+          ]
+        },
+        {
+          "id": "3.3",
+          "t": "REST API Design & Validation",
+          "sub": "Designing endpoints other code can rely on",
+          "mins": 40,
+          "goal": "By the end you can design a small REST API with sensible verbs, paths and error shapes, and validate every input as if the client were hostile — because one day it will be.",
+          "body": "<h4>1. REST in practice</h4>\n<ul>\n<li><b>Nouns, not verbs, in paths:</b> <code>POST /api/tutor</code>, not <code>/api/askTutorQuestion</code>. The HTTP method carries the verb.</li>\n<li><b>Methods mean things:</b> GET reads (no side effects), POST creates/acts, PUT/PATCH updates, DELETE removes.</li>\n<li><b>Stateless:</b> each request carries everything the server needs — no hidden session memory of \"the last thing you asked\".</li>\n</ul>\n<h4>2. One error shape, everywhere</h4>\n<pre><code>// Every Skillzify-style API error looks like this:\n{ \"error\": \"question is required\" }\n\n// Success shapes are documented per route and never improvised.</code></pre>\n<p>Consistency is what lets <code>ai.js</code> handle failures from 15 different AI modes with one code path.</p>\n<h4>3. Validation: the server trusts nobody</h4>\n<p>Client-side validation is a UX nicety; <b>server-side validation is the security boundary</b>. Anyone can call your API with curl, bypassing your UI entirely. So the server checks: is the field present? The right type? Within length limits? Is the mode one of the known 15? Skillzify's server validates mode, message sizes and user IDs on every AI route before spending a single Gemini token.</p>\n<div class=\"callout why\"><b>The cost angle</b>Validation is also cost control: rejecting a 50,000-character \"question\" before it reaches a paid API is the difference between a hobby bill and a surprise.</div>",
+          "task": "Design (on paper) then implement two routes: POST /api/quiz {topic} → returns 3 generated-style questions from a static map, and POST /api/grade {answers[]} → returns a score. Reject missing/oversized/wrong-type input with the standard error shape and correct status codes. Test the failure cases with curl.",
+          "checks": [
+            [
+              "Why is client-side validation never sufficient?",
+              "Clients are bypassable — anyone can call the API directly with curl or a script. Only server-side checks form a real boundary."
+            ],
+            [
+              "Why keep one error shape across all routes?",
+              "So client code handles every failure with a single code path instead of per-route special cases."
+            ]
+          ],
+          "mistakes": [
+            "Putting verbs in URLs (/getUser, /doDelete) instead of using HTTP methods.",
+            "Validating only in the frontend and trusting request bodies on the server.",
+            "Returning different error formats per route, or 200 OK for failures."
+          ],
+          "interview": [
+            [
+              "How do you secure an API endpoint beyond authentication?",
+              "Validate and size-limit every input server-side, rate limit per IP/user, keep secrets server-side, return consistent errors that leak no internals."
+            ],
+            [
+              "GET vs POST — when does the choice actually matter?",
+              "GET must be safe and idempotent (reads, cacheable, appears in logs/URLs); POST is for actions and creations with side effects, like spending an AI call."
+            ]
+          ]
+        },
+        {
+          "id": "3.4",
+          "t": "Protecting Your API: Rate Limits, Caps & Secrets",
+          "sub": "The defensive layer inside Skillzify's server.js",
+          "mins": 45,
+          "goal": "By the end you can explain the difference between a rate limit and a daily cap, why API keys must never reach the browser, and how Skillzify layers all three defences.",
+          "body": "<h4>1. Two different problems, two different tools</h4>\n<ul>\n<li><b>Rate limit</b> — \"30 requests per minute per IP\" in Skillzify. Stops bursts: scripts, loops, abuse spikes. Window: seconds/minutes.</li>\n<li><b>Daily cap</b> — 50 AI calls/day signed-in, 10/day anonymous. Stops slow-drain cost abuse and keeps a free tier affordable. Window: a day, per user.</li>\n</ul>\n<p>A rate limit without a cap still lets a patient abuser spend your whole budget by midnight. A cap without a rate limit lets one script burn a user's day in four seconds. You need both.</p>\n<h4>2. Secrets live on the server. Full stop.</h4>\n<p>Anything shipped to a browser is public — view-source is not hacking. Skillzify's browser code calls <code>/api/*</code>; the <b>server</b> attaches the Gemini key, which lives only in Render environment variables (loaded locally from a gitignored <code>.env</code> via dotenv). Key rotation — several keys, server cycles through them — spreads quota so one key's limit doesn't take the product down.</p>\n<pre><code>// .env (never committed, never sent to the browser)\nGEMINI_API_KEYS=key1,key2,key3\n// server.js\nrequire(\"dotenv\").config();\nconst keys = process.env.GEMINI_API_KEYS.split(\",\");</code></pre>\n<h4>3. Know the honest limits</h4>\n<p>Skillzify's own notes admit the gaps: caps held in server memory reset when the free-tier service restarts, and full persistence needs Firestore-backed counters (firebase-admin is already a dependency for exactly this). Naming your system's real limits — in the design, not after an incident — is senior-level honesty.</p>\n<div class=\"callout why\"><b>The pattern to reuse everywhere</b>Validate → rate limit → cap → spend. In that order, cheapest check first, expensive resource last.</div>",
+          "task": "Add both defences to your Lesson 3.3 server: a simple in-memory rate limit (10 req/min per IP → 429) and a daily cap per user id (5/day → 429 with the standard error shape). Write down one way each can be bypassed and what the production fix would be.",
+          "checks": [
+            [
+              "Rate limit vs daily cap — what different abuse does each stop?",
+              "Rate limits stop bursts and scripts in short windows; daily caps stop slow, sustained cost drain across a day per user."
+            ],
+            [
+              "A teammate suggests putting the Gemini key in the frontend 'just for the demo'. Your answer?",
+              "No — anything in browser code is public. The key goes in server env vars; the browser calls your API, the server calls Gemini."
+            ]
+          ],
+          "mistakes": [
+            "Treating a rate limit as cost protection — patient abuse under the limit still drains budget.",
+            "Committing .env to GitHub 'temporarily'; keys leak permanently into git history.",
+            "Counting caps in browser storage, which any user can clear to reset their allowance."
+          ],
+          "interview": [
+            [
+              "Your free AI feature is being abused. Walk me through your defences in order.",
+              "Server-side validation and size limits first, then per-IP rate limits for bursts, then per-user daily caps for cost, keys only in env vars with rotation, and monitoring on spend."
+            ],
+            [
+              "Why do caps belong on the server, not the client?",
+              "Client state is user-controlled — clearable, editable, scriptable. Server (ideally database-backed) counters are the only ones that bind."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "badge": "M4",
+      "cat": "backend database",
+      "title": "Data & Auth — Firebase, plus SQL",
+      "desc": "Firestore's merge rules are the cleverest part of Skillzify. Learn them deeply — then learn relational data, because most companies do not run on Firestore.",
+      "meta": [
+        "Weeks 10–11 • 29 Jan – 11 Feb",
+        "Files: auth.js • sync.js • firestore.rules"
+      ],
+      "lessons": [
+        {
+          "id": "4.1",
+          "t": "Firebase Authentication",
+          "sub": "Email/password auth across web and Android",
+          "mins": 40,
+          "goal": "By the end you can wire Firebase Auth into a page, react to auth state correctly, and explain why the Firebase web API key being visible is not a security hole.",
+          "body": "<h4>1. What Firebase Auth actually does</h4>\n<p>You hand Firebase an email and password; it verifies credentials, issues the user an identity (<b>uid</b>), and keeps a session alive across reloads. Your code never sees or stores passwords — that entire risk class (hashing, resets, breaches) belongs to Firebase. Skillzify uses Email/Password only, with one account shared by web and Android: project <code>skillzify-1d0f2</code>.</p>\n<h4>2. Auth state is a stream, not a snapshot</h4>\n<pre><code>firebase.auth().onAuthStateChanged((user) => {\n  if (user) { loadProgress(user.uid); showApp(); }\n  else { showLogin(); }\n});</code></pre>\n<p>The classic beginner bug is checking \"current user\" once on page load — at that moment Firebase may still be restoring the session and reports null for a signed-in user. <code>onAuthStateChanged</code> fires when the state is <i>known</i> and again on every sign-in/out. Skillzify's <code>auth.js</code> (compat SDK 11.3.1) builds the whole login flow around this listener.</p>\n<h4>3. The public API key paradox</h4>\n<p>Skillzify's web config — including its API key — sits in plain sight in <code>auth.js</code>. This is by design: the key identifies the <i>project</i>, not a secret credential. Real security comes from <b>Firestore security rules</b> (Lesson 4.4) and the list of authorised domains in the Firebase console. A leaked \"key\" that only identifies a locked-down project grants nothing.</p>\n<div class=\"callout why\"><b>UX detail that matters</b>Auth errors should be human: \"wrong password\" beats Firebase's raw error codes. Map codes to friendly messages in auth.js, and never reveal whether an email exists on password-reset flows.</div>",
+          "task": "In a scratch Firebase project: add Email/Password auth, build a page with sign-up/sign-in/sign-out driven entirely by onAuthStateChanged, and deliberately reproduce the 'null on first load' bug by reading currentUser synchronously — then fix it with the listener.",
+          "checks": [
+            [
+              "Why is checking firebase.auth().currentUser once on page load unreliable?",
+              "Session restoration is asynchronous; currentUser can be null at load even for a signed-in user. onAuthStateChanged reports the state once it is actually known."
+            ],
+            [
+              "If the Firebase web API key is public, what actually secures the data?",
+              "Firestore security rules (per-user access control) plus authorised domains in the console. The key identifies the project; rules enforce access."
+            ]
+          ],
+          "mistakes": [
+            "Storing or handling raw passwords in your own code instead of delegating to the auth provider.",
+            "Reading currentUser synchronously on load and building UI on a possibly-wrong null.",
+            "Showing raw Firebase error codes to users instead of mapped, friendly messages."
+          ],
+          "interview": [
+            [
+              "A user pastes your Firebase config from view-source and says your app is hacked. Respond.",
+              "The web config is public by design — it identifies the project. Security is enforced by Firestore rules and authorised domains; demonstrate a denied cross-user read to prove it."
+            ],
+            [
+              "How does your app know a user is signed in on page load?",
+              "It doesn't guess: onAuthStateChanged fires after session restoration with the user or null, and the UI renders from that event."
+            ]
+          ]
+        },
+        {
+          "id": "4.2",
+          "t": "Firestore Data Modelling",
+          "sub": "Documents, collections, and the users/{uid} design",
+          "mins": 45,
+          "goal": "By the end you can model data as Firestore documents, explain why Skillzify keeps one document per user, and name the query and size limits that shape NoSQL design.",
+          "body": "<h4>1. The mental model: documents in collections</h4>\n<p>Firestore is not tables and rows. A <b>collection</b> holds <b>documents</b>; each document is a JSON-like object with fields, and can contain subcollections. You design around <b>how the app reads</b>, not around normalised purity — duplication is acceptable, joins are not a thing.</p>\n<h4>2. One document per user: Skillzify's core decision</h4>\n<pre><code>users/{uid}  →  {\n  lessonsDone: [\"b-001\", \"b-002\", ...],\n  xp: 340,\n  streak: { count: 6, lastDate: \"2026-11-10\" },\n  exercises: { \"ex-12\": { done: true, score: 8 } },\n  profile: { name: \"Vikas\" }\n}</code></pre>\n<p>Why one doc? The app always loads <i>everything about me</i> at sign-in — one read, no queries. Web and Android read and write the <i>same</i> document, which is what makes cross-device sync (Lesson 4.3) even possible. The cost: a document has a 1 MiB limit and hot-document write contention — fine for one learner's progress, wrong for a global leaderboard counter.</p>\n<h4>3. Design rules of thumb</h4>\n<ul>\n<li>Model for your reads: if the UI shows it together, store it together.</li>\n<li>Keep documents bounded: arrays that grow forever eventually need subcollections.</li>\n<li>Every query needs its fields indexed in mind: Firestore can only filter/sort on what it can index — no \"search anywhere\" queries.</li>\n</ul>\n<div class=\"callout why\"><b>The contrast to carry into SQL (Lesson 4.4)</b>SQL normalises to remove duplication and answers unplanned questions with joins. Firestore denormalises for planned reads and punishes unplanned ones. Neither is \"better\" — they optimise opposite things.</div>",
+          "task": "Model a bookmarks feature for Skillzify twice: (a) as a field inside users/{uid}, (b) as a subcollection users/{uid}/bookmarks/{lessonId}. List the reads each design makes easy or painful, the growth risk of each, and pick one with a reason.",
+          "checks": [
+            [
+              "Why does Skillzify store all of a user's progress in a single document?",
+              "The app always loads the whole user state at sign-in — one read, no queries — and web/Android sync the identical document."
+            ],
+            [
+              "Name one workload where the one-document design fails.",
+              "Anything unbounded or globally shared: ever-growing arrays hit the 1 MiB doc limit, and many writers on one doc (like a global counter) hit write contention."
+            ]
+          ],
+          "mistakes": [
+            "Modelling Firestore like SQL tables and expecting joins to stitch data at read time.",
+            "Letting arrays inside a document grow without bound (every lesson ever, every event ever).",
+            "Designing for writes you imagine instead of the reads the UI actually performs."
+          ],
+          "interview": [
+            [
+              "How do you decide between embedding data in a document vs a subcollection?",
+              "Embed when data is bounded and always read with the parent; use a subcollection when it grows unboundedly or needs independent querying/pagination."
+            ],
+            [
+              "Firestore or Postgres for a new startup app — how do you choose?",
+              "By access patterns and team: Firestore for simple, user-scoped, realtime-ish reads and zero ops; Postgres when relationships, complex queries, reporting or strict consistency dominate."
+            ]
+          ]
+        },
+        {
+          "id": "4.3",
+          "t": "Sync & Merge Rules",
+          "sub": "How web and Android share one truth without losing XP",
+          "mins": 50,
+          "goal": "By the end you can explain Skillzify's per-field merge rules, why each field merges differently, and design a correct merge rule for any new field you're given.",
+          "body": "<h4>1. The problem: two devices, one document, offline gaps</h4>\n<p>A learner earns 50 XP on Android on a train (offline), then does a lesson on web before the phone syncs. Both devices hold a version of <code>users/{uid}</code>. Naive \"last write wins\" for the whole document destroys one side's progress — guaranteed data loss in normal use.</p>\n<h4>2. The fix: merge per field, by meaning</h4>\n<p>Skillzify's <code>sync.js</code> merges field by field, with a rule chosen from what the field <i>means</i>:</p>\n<pre><code>lessonsDone : UNION            // completed on either device = completed\nxp          : MAX              // XP never goes backwards\nstreak      : LATER DATE WINS  // the fresher streak record is truer\nexercises   : PER-FIELD MERGE  // each exercise resolved independently\nprofile     : LAST WRITE WINS  // name/avatar edits — newest is the intent</code></pre>\n<p>The rules are <b>byte-identical</b> in the web and Android codebases — a rule that differs by platform is a bug that only appears after real learners lose data. Notice that \"last write wins\" is right for exactly one field: profile, where the newest edit expresses current intent and nothing accumulates.</p>\n<h4>3. The general method</h4>\n<p>For any new field ask: does it <b>accumulate</b> (union/max), does it <b>describe now</b> (last-write-wins), or is it a <b>collection of independent facts</b> (per-item merge)? Bookmarks accumulate → union with tombstones for removals. Settings describe now → last-write-wins. Quiz attempts are independent facts → per-attempt merge by id.</p>\n<div class=\"callout why\"><b>Edge case from production</b>The Skill Passport privacy flag is stored per-uid so it survives sign-out and doesn't leak between users sharing a browser — and it fails closed (private) if anything goes wrong. When in doubt, the safe default wins.</div>",
+          "task": "Write merge(local, remote) in JS implementing all five Skillzify rules for a sample progress object. Test it against three scenarios: disjoint lessons, XP 300 vs 450, streaks with different lastDates. Then choose and justify a merge rule for a new 'bookmarks' field including deletions.",
+          "checks": [
+            [
+              "Why not use last-write-wins for the whole progress document?",
+              "Because devices diverge offline; whole-document last-write destroys the losing device's accumulated progress. Per-field merges preserve both sides' facts."
+            ],
+            [
+              "Why must merge rules be identical in the web and Android code?",
+              "Sync is a two-party protocol — if each side merges differently, repeated syncs can oscillate or silently drop data depending on which device syncs last."
+            ]
+          ],
+          "mistakes": [
+            "Defaulting every field to last-write-wins because it's simple.",
+            "Forgetting deletions: a union-only merge resurrects removed items forever without tombstones.",
+            "Letting web and Android merge logic drift apart over time."
+          ],
+          "interview": [
+            [
+              "Design sync for an offline-first app. What's your approach?",
+              "Store per-user state as one sync unit, merge per field by semantics (union for sets, max for monotonic counters, last-write for intent fields), keep the merge code identical across platforms, and test with divergent-device scenarios."
+            ],
+            [
+              "A field must support deletion in a union-merged set. How?",
+              "Tombstones: record deleted ids with timestamps in a removals set, and merge = (union of adds) minus (union of tombstones)."
+            ]
+          ]
+        },
+        {
+          "id": "4.4",
+          "t": "Security Rules + the SQL Contrast",
+          "sub": "firestore.rules, and the same schema in PostgreSQL",
+          "mins": 50,
+          "goal": "By the end you can read and write owner-only Firestore rules, trace an allowed and a denied request by hand, and sketch Skillzify's data as SQL tables — explaining what each world makes easy.",
+          "body": "<h4>1. Rules are the real backend security</h4>\n<pre><code>rules_version = '2';\nservice cloud.firestore {\n  match /users/{uid} {\n    allow read, write: if request.auth != null\n                       && request.auth.uid == uid;\n  }\n}</code></pre>\n<p>Read it literally: a request may touch <code>users/{uid}</code> only if it is authenticated <i>and</i> the authenticated identity equals the document's uid. Everyone else — anonymous users, other users, scripts with the public API key — is denied. Rules are evaluated on Google's servers for every request; no client code can bypass them. They are deployed from the Firebase console, and a rules mistake is a data breach, so they are tested before publishing.</p>\n<h4>2. The same world in SQL</h4>\n<pre><code>CREATE TABLE users (id TEXT PRIMARY KEY, name TEXT);\nCREATE TABLE progress (\n  user_id TEXT REFERENCES users(id),\n  lesson_id TEXT,\n  xp INT,\n  PRIMARY KEY (user_id, lesson_id)\n);</code></pre>\n<p>In SQL, access control lives in your server code (every query must filter by the session's user), while structure is enforced by the schema and relationships by foreign keys. You gain joins, aggregations and ad-hoc questions (\"average XP per section across all users\" is one query in SQL, a project in Firestore) — and you own the server, auth and scaling that Firebase gave you for free.</p>\n<h4>3. Choosing, honestly</h4>\n<p>Skillzify's access pattern — \"load my stuff, save my stuff\" — is Firestore's home turf. The moment the product needs cross-user analytics, leaderboards or complex filtering as core features, SQL earns its keep. Most internships will test SQL; that is why this lesson pairs them.</p>\n<div class=\"callout why\"><b>Production note</b>Skillzify's community and passport features stay locked until the matching firestore.rules are published in the console — code alone doesn't grant access. Rules are a deployment step, not a file you forget.</div>",
+          "task": "Write rules for a showcase collection where anyone signed-in can read, only the author can create/update/delete their own posts. Then write the SQL schema for users + lessons + progress and one JOIN query that lists a user's completed lesson titles.",
+          "checks": [
+            [
+              "Trace it: user A (uid 'a') requests users/b while signed in. Allowed?",
+              "Denied. request.auth.uid ('a') != uid in path ('b'), so the allow condition fails."
+            ],
+            [
+              "Where does access control live in a SQL stack vs Firestore?",
+              "SQL: in your server code — every query must scope to the session user. Firestore: in declarative rules evaluated server-side by Google on every request."
+            ]
+          ],
+          "mistakes": [
+            "Shipping with test-mode rules (allow read, write: if true) left in production.",
+            "Assuming the hidden API key protects data — rules do; the key is public by design.",
+            "In SQL, forgetting the user filter on one query — the classic cross-user data leak."
+          ],
+          "interview": [
+            [
+              "How does Firestore security actually work if the API key is public?",
+              "Rules are evaluated server-side per request against request.auth and the target document; the key only identifies the project. Access is granted by rules, never by secrecy."
+            ],
+            [
+              "When would you migrate from Firestore to Postgres?",
+              "When core features need relational queries, cross-user aggregation/reporting, or complex filtering that Firestore's index model makes painful — not for fashion."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "badge": "M5",
+      "cat": "ai",
+      "title": "AI Engineering — From Gemini Calls to RAG Systems ★",
+      "desc": "The longest module, on purpose. Skillzify already does real AI engineering — failover, rotation, caps. This module teaches the concepts underneath, plus the RAG stack sold elsewhere as 'AI full stack'.",
+      "meta": [
+        "Weeks 12–15 • 12 Feb – 11 Mar",
+        "Files: ai.js • server.js AI routes • 15 modes"
+      ],
+      "lessons": [
+        {
+          "id": "5.1",
+          "t": "How LLMs Actually Work",
+          "sub": "Tokens, context, temperature — no magic",
+          "mins": 40,
+          "goal": "By the end you can explain tokens, context windows and temperature in plain language, and why hallucinations are a property of the design, not a bug someone forgot to fix.",
+          "body": "<h4>1. A model predicts the next token. That's the whole trick.</h4>\n<p>An LLM reads text as <b>tokens</b> — chunks of roughly 3–4 characters — and predicts the most plausible next token, again and again. Everything else (chat, code, tutoring) is scaffolding around that loop. Consequences you must internalise:</p>\n<ul>\n<li><b>Cost and limits are counted in tokens</b> — input plus output. A 50,000-character paste is a budget event.</li>\n<li><b>The model has no memory between calls.</b> \"Conversation memory\" is your app re-sending the history each time.</li>\n<li><b>It predicts plausible text, not verified facts</b> — hence <b>hallucinations</b>: fluent, confident, wrong. Mitigation is architectural (grounding, retrieval, citations — Lesson 5.5), not \"prompt harder\".</li>\n</ul>\n<h4>2. The context window</h4>\n<p>Everything the model can consider in one call — system prompt, history, your question, retrieved documents — must fit a fixed token window. Long inputs push earlier content out or get rejected. Designing what earns a place in the window <i>is</i> AI engineering.</p>\n<h4>3. Temperature and friends</h4>\n<p><b>Temperature</b> controls sampling randomness: low (≈0–0.3) for factual, repeatable tasks like grading or JSON output; higher (≈0.7–1.0) for brainstorming and drills variety. Skillzify's modes differ here deliberately — an error explainer should be stable; a quiz generator benefits from variety.</p>\n<div class=\"callout why\"><b>The system prompt is your product</b>Same model, different system prompt = different product. Skillzify's tutor persona, its Socratic hinting rules and its output formats all live in prompts maintained in server.js — treat them as versioned product code, not strings you tweak casually.</div>",
+          "task": "Take one Skillzify-style task (explain a Python error). Run it mentally at temperature 0.1 and 0.9: predict how three outputs would differ. Then rewrite a vague request ('help with code') into a version that specifies role, audience (a beginner), format and one hard rule (hint, don't solve).",
+          "checks": [
+            [
+              "Why does an LLM hallucinate, in one honest sentence?",
+              "It generates statistically plausible text, not retrieved facts — when knowledge runs out, plausible-sounding invention is the natural continuation."
+            ],
+            [
+              "Your chat app 'remembers' yesterday's conversation. What's really happening?",
+              "The app stores the history and re-sends it (or a summary) inside the context window on each new call; the model itself is stateless."
+            ]
+          ],
+          "mistakes": [
+            "Believing the model 'knows' your app or remembers past calls without you sending history.",
+            "Using high temperature for grading/JSON tasks and blaming the model for inconsistent output.",
+            "Treating hallucinations as fixable by a sterner prompt instead of grounding/retrieval design."
+          ],
+          "interview": [
+            [
+              "Explain tokens and context windows to a non-technical founder.",
+              "Tokens are the word-chunks the model reads and bills by; the context window is its desk size — everything it can look at for one answer must fit on the desk."
+            ],
+            [
+              "How do you reduce hallucinations in a production feature?",
+              "Ground answers in retrieved sources, constrain output formats, use low temperature for factual tasks, show citations, and add evals that measure error rates per release."
+            ]
+          ]
+        },
+        {
+          "id": "5.2",
+          "t": "Calling the Gemini API",
+          "sub": "REST from server.js — requests, streaming, structured output",
+          "mins": 50,
+          "goal": "By the end you can call the Gemini API from a Node server with fetch, stream a response to the browser, and force structured JSON output you can safely parse.",
+          "body": "<h4>1. The shape of a call</h4>\n<p>Skillzify talks to Gemini by <b>REST fetch from server.js</b> — no SDK. A generate-content call is a POST with the model in the URL and the conversation as structured contents:</p>\n<pre><code>const url = \"https://generativelanguage.googleapis.com/v1beta/models/\"\n          + model + \":generateContent?key=\" + apiKey;\nconst res = await fetch(url, {\n  method: \"POST\",\n  headers: { \"Content-Type\": \"application/json\" },\n  body: JSON.stringify({\n    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },\n    contents: [{ role: \"user\", parts: [{ text: question }] }],\n    generationConfig: { temperature: 0.4 }\n  })\n});\nconst data = await res.json();\n// reply text lives at data.candidates[0].content.parts[0].text</code></pre>\n<p>Note the discipline from Module 3: the key is concatenated <b>server-side</b> from env vars, the user's input was validated before this code runs, and the response path is checked before use — model APIs return errors, refusals and empty candidates, and blind indexing crashes.</p>\n<h4>2. Streaming: answer as it's written</h4>\n<p>The <code>:streamGenerateContent</code> variant sends the reply in chunks. Forward each chunk to the browser and the tutor feels alive instead of frozen for 8 seconds. Cost: more moving parts — partial JSON, mid-stream errors, client rendering per chunk. Skillzify's baseline is the simple non-streamed call; streaming is an upgrade you add when latency is felt, not by default.</p>\n<h4>3. Structured output: JSON you can trust (mostly)</h4>\n<p>For quizzes and drills, prose is useless — the UI needs data. Ask for JSON explicitly (response MIME type / schema where supported), then <b>parse defensively</b>: wrap in try/catch, validate field types, and have a fallback (retry once with a repair prompt, or degrade to plain text). \"The model returned almost-JSON\" is a normal Tuesday.</p>\n<div class=\"callout why\"><b>SDK vs REST — the honest trade</b>An SDK gives typed helpers and quieter upgrades; REST gives zero dependencies and total visibility — which is why Skillzify's approach doubles as a teaching tool. Either is defensible; hiding the request entirely is not, when you're learning.</div>",
+          "task": "From your Module 3 server, add POST /api/explain {code, error} that calls Gemini (free tier key in .env) with a system prompt for beginner-friendly explanations, temperature 0.3, and returns {reply}. Add one defensive layer: if the reply is empty or the call fails, return a graceful fallback message with a 200 from your route (log the real error server-side).",
+          "checks": [
+            [
+              "Where does the Gemini API key appear in a correct Skillzify-style call, and where never?",
+              "Server-side only — concatenated into the request in server.js from env vars. Never in browser code, where view-source would expose it."
+            ],
+            [
+              "Why parse model JSON defensively even when you requested JSON output?",
+              "Models occasionally return malformed, truncated or prose-wrapped output; unguarded JSON.parse turns a model hiccup into a server crash."
+            ]
+          ],
+          "mistakes": [
+            "Indexing data.candidates[0] without checking the response shape or error field.",
+            "Shipping the API key in frontend code or committing it in .env to git.",
+            "Requesting free-text when the UI needs structured data, then regex-scraping the prose."
+          ],
+          "interview": [
+            [
+              "Describe the full path of one AI request in your app.",
+              "Browser → my Express route (validate, rate-limit, cap) → server attaches key and calls Gemini → response checked and normalised → JSON back to the browser, with a fallback path at every failure point."
+            ],
+            [
+              "Streaming vs non-streaming — when do you pay streaming's complexity cost?",
+              "When perceived latency hurts the experience (long tutor replies, chat). For short structured outputs, a single response is simpler and fast enough."
+            ]
+          ]
+        },
+        {
+          "id": "5.3",
+          "t": "Prompt Engineering Patterns",
+          "sub": "Few-shot, roles, and Skillzify's 15 modes as case studies",
+          "mins": 45,
+          "goal": "By the end you can design a prompt for a new AI feature using role, context, few-shot examples and output constraints — and classify Skillzify's 15 modes by the pattern each one uses.",
+          "body": "<h4>1. The anatomy of a prompt that works</h4>\n<pre><code>ROLE:      You are a patient Python tutor for beginners.\nTASK:      Explain the error in the learner's code.\nRULES:     Give a hint first. Never output the full corrected code.\n           Use at most 120 words. End with one question.\nEXAMPLE:   Error: NameError ... → \"Hint: Python is case-sensitive...\"</code></pre>\n<p>Four levers, in order of impact: <b>role + task clarity</b> (who you are, what done looks like), <b>rules/constraints</b> (length, format, prohibitions), <b>examples</b> (few-shot: show 1–3 input→output pairs — the single strongest technique for consistent format), and <b>the user's actual input, clearly delimited</b> so the model never confuses instructions with data.</p>\n<h4>2. Patterns hiding in Skillzify's 15 modes</h4>\n<ul>\n<li><b>Socratic hinting</b> (Ask AI on questions): rules forbid the final answer — the product value <i>is</i> the restraint.</li>\n<li><b>Persona + rubric</b> (viva mode): the model plays an examiner with a scoring rubric in the prompt.</li>\n<li><b>Transform</b> (flowchart explain / flowchart-to-code): input format A, output format B, one worked example pins the mapping.</li>\n<li><b>Generate-then-format</b> (quizzes, drills): generation rules plus the structured-output discipline from Lesson 5.2.</li>\n</ul>\n<h4>3. Chain-of-thought, used carefully</h4>\n<p>Asking the model to reason step by step before answering improves hard problems — but the reasoning is also billable output and latency. Use it where accuracy pays (grading, debugging), skip it for lookups and formatting.</p>\n<div class=\"callout why\"><b>Prompts are code</b>Version them, change one variable at a time, and keep a small set of test inputs you re-run after every prompt edit (that's the seed of Lesson 5.6's evals). A prompt changed on vibes regresses silently.</div>",
+          "task": "Write the full prompt for a new mode: 'Interview Drill' — model asks one Python interview question, waits, then grades the learner's answer against a 3-point rubric in the prompt and returns JSON {score, feedback}. Include role, rules, one few-shot grading example, and delimited learner input.",
+          "checks": [
+            [
+              "What is few-shot prompting and why is it so effective for format consistency?",
+              "Including a few input→output examples in the prompt; the model pattern-matches the demonstrated format far more reliably than it follows format descriptions."
+            ],
+            [
+              "Why does Skillzify's Ask AI mode forbid giving the final answer?",
+              "Because the product is learning, not answers — the restraint is the feature. The rule lives in the prompt because the model would otherwise helpfully solve it."
+            ]
+          ],
+          "mistakes": [
+            "Writing one giant prompt with contradictory rules and no examples, then blaming the model.",
+            "Letting user input blend into instructions (no delimiters) — the root of prompt injection.",
+            "Editing three prompt variables at once with no test set, so improvements and regressions are indistinguishable."
+          ],
+          "interview": [
+            [
+              "How do you make an LLM feature's output consistent?",
+              "Constrain the format (ideally structured JSON), pin it with few-shot examples, low temperature for factual modes, validate output server-side, and regression-test prompts against a fixed input set."
+            ],
+            [
+              "What is prompt injection and one mitigation?",
+              "User input that tries to override the system instructions. Mitigate with clear delimiters, instruction hierarchy (system rules restated), output validation, and never letting model output directly trigger privileged actions."
+            ]
+          ]
+        },
+        {
+          "id": "5.4",
+          "t": "Reliability: Failover, Key Rotation & Cost",
+          "sub": "The engineering that keeps a free-tier AI product alive",
+          "mins": 45,
+          "goal": "By the end you can design a failover chain across models and keys, explain Skillzify's rotation and caps as one system, and estimate the cost of an AI feature before building it.",
+          "body": "<h4>1. Everything fails; design the order of falling back</h4>\n<p>Skillzify's server tries a <b>primary Gemini model</b>, and on failure (quota, overload, error) walks a failover list across 6 models — 2.5-flash family, flash-lite variants and newer releases. The principle: a slightly weaker model's answer beats an error page. Failover order is a product decision — order by (quality × availability), and log which rung served each request, or you'll never know your real reliability.</p>\n<h4>2. Key rotation: quota as a pool</h4>\n<p>Free-tier quotas attach per key/project. Skillzify holds several keys (<code>GEMINI_API_KEYS</code>) and rotates, multiplying headroom (verified capacity ~1,080 calls/day across keys). Rotation pairs with Module 3.4's per-user caps: caps stop one user draining the pool; rotation sizes the pool.</p>\n<h4>3. Cost estimation: arithmetic before architecture</h4>\n<pre><code>cost/day ≈ users × calls/user × (input + output tokens) × price/token\nExample: 200 users × 10 calls × 1,500 tokens ≈ 3M tokens/day</code></pre>\n<p>Run this napkin math for every AI feature <i>before</i> building it. It tells you your cap values, whether streaming is worth it, and when a feature needs a paid tier. Also design for model churn: Skillzify's primary model auto-routes to a successor on a set date — pinning your product to one model name forever is a scheduled outage.</p>\n<div class=\"callout why\"><b>Retry discipline</b>Retry transient failures (5xx, timeouts) with a small backoff, once or twice. Never retry validation errors or refusals — you'll pay to fail repeatedly. And every retry counts against caps and cost.</div>",
+          "task": "Write the failover logic for your /api/explain route: try model A with key 1; on 429/5xx, try model A key 2; then model B key 1; log which combination served. Simulate failures by making the first key deliberately invalid and prove the chain still answers.",
+          "checks": [
+            [
+              "Why is a weaker model's answer usually better than an error?",
+              "The feature's value is the answer; a slightly lower-quality successful response preserves the user experience, and you can log and tune quality separately from availability."
+            ],
+            [
+              "Caps and key rotation solve different problems — which is which?",
+              "Caps bound demand per user (cost/abuse control). Rotation expands supply (pooled quota across keys). You need both: pooled supply is still finite."
+            ]
+          ],
+          "mistakes": [
+            "Infinite or unlogged retries that multiply cost and hide outages.",
+            "Hard-coding one model name everywhere, so a model retirement breaks every route at once.",
+            "Estimating cost after launch from the invoice instead of before building from token arithmetic."
+          ],
+          "interview": [
+            [
+              "Your AI feature must stay up on a free tier. Architecture?",
+              "Per-user caps and rate limits on my server, a pool of API keys with rotation, model failover ordered by quality/availability, logged fallback rates, and graceful degradation messaging when everything is down."
+            ],
+            [
+              "How do you estimate an LLM feature's running cost?",
+              "Users × calls per user × average tokens per call × price per token — computed per day/month before building, then validated against real usage logs."
+            ]
+          ]
+        },
+        {
+          "id": "5.5",
+          "t": "Embeddings & RAG",
+          "sub": "Grounding answers in your own content",
+          "mins": 55,
+          "goal": "By the end you can explain embeddings and vector similarity, walk the full retrieve → ground → generate pipeline, and judge when RAG is the right tool versus a longer prompt or fine-tuning.",
+          "body": "<h4>1. Embeddings: meaning as numbers</h4>\n<p>An <b>embedding model</b> converts text into a vector — say 768 numbers — positioned so that texts with similar meaning sit close together (Lesson 2.4's arrays, with semantics). \"How do loops work?\" and \"Explain iteration in Python\" land near each other without sharing many words. <b>Similarity</b> is then arithmetic: cosine similarity or dot product between vectors.</p>\n<h4>2. The RAG pipeline</h4>\n<pre><code>OFFLINE:  documents → split into chunks → embed each chunk\n          → store vectors + text in a vector store\nONLINE:   question → embed → find top-k nearest chunks\n          → put chunks + question in the prompt\n          → model answers grounded in those chunks, with sources</code></pre>\n<p>Key craft points: <b>chunking</b> (small enough to be specific, big enough to keep context — a reference entry per chunk suits Skillzify), <b>top-k</b> (3–5 chunks is a sane start; more chunks = more tokens and more noise), and <b>grounding rules</b> in the prompt — \"answer only from the provided entries; say you don't know otherwise\" — plus showing the source — that combination is what turns a hallucinating model into a citing assistant.</p>\n<h4>3. RAG vs fine-tuning vs long prompt — the decision</h4>\n<ul>\n<li><b>Long prompt</b>: your whole knowledge fits the window and changes rarely → simplest. Skillzify today: correct choice — plain API calls, no retrieval needed yet.</li>\n<li><b>RAG</b>: knowledge is large, changes often, or must be cited → retrieval wins.</li>\n<li><b>Fine-tuning</b>: you need a consistent <i>style/behaviour</i>, not more facts. Expensive, slow to update, and a poor way to teach facts.</li>\n</ul>\n<div class=\"callout why\"><b>Vector stores, honestly</b>Chroma runs locally for learning; Pinecone is managed cloud. At Skillzify-reference scale (127 entries), even a JSON file + NumPy dot products in memory is a legitimate v1 — reach for infrastructure when scale demands it, not before.</div>",
+          "task": "Build the mini-RAG: take 20 Skillzify-style reference entries, embed them (Gemini embedding API), store vectors in a JSON file, and answer questions by retrieving the top-3 chunks into your /api/explain-style route with a grounding rule and source titles in the response. Test with one question whose answer is NOT in the entries — it must say so.",
+          "checks": [
+            [
+              "Why chunk documents before embedding them?",
+              "Retrieval must return specific, relevant passages; embedding whole documents averages their meaning away and wastes context window on irrelevant text."
+            ],
+            [
+              "A client wants the model to 'learn our 500-page manual'. RAG or fine-tune?",
+              "RAG — the need is factual, changing, citable knowledge. Fine-tuning teaches behaviour/style, not updatable facts."
+            ]
+          ],
+          "mistakes": [
+            "Stuffing top-20 chunks into the prompt 'for safety' — cost and noise both explode.",
+            "Skipping the grounding rule, so the model cheerfully answers from general knowledge and cites nothing.",
+            "Fine-tuning to add facts that a retrieval index would handle better and update instantly."
+          ],
+          "interview": [
+            [
+              "Explain RAG end to end, briefly.",
+              "Offline: chunk documents, embed chunks, store vectors. Online: embed the question, retrieve nearest chunks, place them in the prompt with grounding instructions, generate an answer that cites the retrieved sources."
+            ],
+            [
+              "How do you evaluate whether your RAG is working?",
+              "A fixed question set with known source entries: measure retrieval hit-rate (did the right chunk appear in top-k?) and answer faithfulness (claims supported by the chunk?), per change."
+            ]
+          ]
+        },
+        {
+          "id": "5.6",
+          "t": "Guardrails & Evals",
+          "sub": "Testing AI like you mean it",
+          "mins": 45,
+          "goal": "By the end you can add basic guardrails around an AI feature and run a simple eval set that tells you — with numbers — whether a prompt or model change helped or hurt.",
+          "body": "<h4>1. Guardrails: fences at the borders</h4>\n<ul>\n<li><b>Input side:</b> length limits and validation (Module 3), block-list for obviously out-of-scope abuse, delimiters against injection (Lesson 5.3).</li>\n<li><b>Output side:</b> schema validation for JSON modes, a refusal/fallback path, and never executing model output as code or queries without a sandbox and review.</li>\n<li><b>Product side:</b> Skillzify's Socratic rule is a guardrail — the tutor must not hand over exercise solutions. Policy can live in prompts, but verify it with tests, because prompts leak.</li>\n</ul>\n<h4>2. Evals: a test suite for behaviour</h4>\n<p>Normal code gets unit tests; AI features get <b>evals</b> — a fixed set of inputs with expected properties:</p>\n<pre><code>{ input: \"Explain: x = '1' + 2 in Python\",\n  expect: [\"mentions TypeError\", \"no full solution given\", \"under 150 words\"] }</code></pre>\n<p>Run the set after every prompt/model change; score pass rates automatically where checks are mechanical (contains, length, JSON validity) and by quick human review where they're not. A change that lifts the pass rate from 82% to 91% is progress; one that drops it is a regression — regardless of how the new prompt <i>feels</i>.</p>\n<h4>3. The loop that makes AI products good</h4>\n<p>Ship → log real failures (with privacy care) → add the failures to the eval set → fix → re-run evals → ship. Your eval set grows from real usage, which is exactly why it stays representative.</p>\n<div class=\"callout why\"><b>Scope for this roadmap</b>You need the habit, not a platform: a JSON file of 15–20 cases and a script that runs them and reports a score. That's a portfolio-worthy eval rig for Skillzify's tutor.</div>",
+          "task": "Build evals.json with 12 cases for your explain/tutor route (include 2 trap cases: one asking for a full exercise solution, one wildly off-topic). Write run_evals.js that scores mechanical checks (length, contains, JSON validity, refusal present) and prints a pass rate. Change one prompt rule and re-run — record both scores.",
+          "checks": [
+            [
+              "Why can't prompts alone be your guardrails?",
+              "Prompts are advisory to the model — injection and edge cases leak through. Enforce at the borders: input validation, output validation, and behavioural tests."
+            ],
+            [
+              "What makes an eval set trustworthy over time?",
+              "It's fixed (so scores are comparable across changes) and grows from real logged failures (so it stays representative of actual usage)."
+            ]
+          ],
+          "mistakes": [
+            "Judging prompt changes by trying three examples and vibes.",
+            "Eval cases that only test happy paths — traps and refusals are where products break.",
+            "Logging full user conversations carelessly; failure logs need privacy discipline too."
+          ],
+          "interview": [
+            [
+              "How do you know a prompt change improved your AI feature?",
+              "A fixed eval set with mechanical and reviewed checks, run before and after: compare pass rates per category, inspect new failures, and only ship improvements."
+            ],
+            [
+              "Your tutor must never solve exercises for students. How do you guarantee it?",
+              "Defence in depth: Socratic rules in the system prompt, output checks for solution-shaped responses, trap cases in the eval set run on every prompt/model change, and a fallback hint response on violation."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "badge": "M6",
+      "cat": "frontend",
+      "title": "Product Tools — Editor, In-Browser Runtime & Diagrams",
+      "desc": "The 'how does the compiler run Python with no server?' module. Short, fascinating, and what makes Skillzify different from a tutorial site.",
+      "meta": [
+        "Week 16 • 12 – 18 Mar",
+        "Files: compiler.html • Pyodide • CodeMirror • Mermaid"
+      ],
+      "lessons": [
+        {
+          "id": "6.1",
+          "t": "WebAssembly & Pyodide",
+          "sub": "Real Python 3.11 running in a browser tab",
+          "mins": 45,
+          "goal": "By the end you can explain what WebAssembly is, how Pyodide runs CPython in the browser, and the load-cost trade-offs of Skillzify's serverless compiler.",
+          "body": "<h4>1. WebAssembly: a second language for the web</h4>\n<p>Browsers run JavaScript — and, since WASM, a compact binary format that other languages can compile to. Programs written in C, Rust or Python's C implementation can be compiled once to WASM and run in a tab at near-native speed, sandboxed like JavaScript.</p>\n<h4>2. Pyodide: CPython compiled to WASM</h4>\n<pre><code>&lt;script src=\"https://cdn.jsdelivr.net/pyodide/v0.23.4/full/pyodide.js\"&gt;&lt;/script&gt;\n&lt;script&gt;\n  const pyodide = await loadPyodide();\n  const out = pyodide.runPython(\"print(2 + 3)\");  // real Python 3.11\n&lt;/script&gt;</code></pre>\n<p>Skillzify's compiler page loads Pyodide v0.23.4 from the jsDelivr CDN; the learner's code runs <b>entirely on their device</b>. No server cost per run, works offline once loaded, and learner code never leaves the machine. The price: a heavy first load (the Python runtime is megabytes), so the compiler page loads it lazily and shows progress — and the homepage never pays that cost at all.</p>\n<h4>3. The honest comparison: browser vs server execution</h4>\n<ul>\n<li><b>Browser (Pyodide):</b> free per-run, private, instant after load; but limited libraries, device-speed dependent, big initial download.</li>\n<li><b>Server:</b> full environment and libraries; but you pay per run, must sandbox hostile code seriously, and add network latency.</li>\n</ul>\n<p>For teaching Python basics to learners on phones, Skillzify's choice is right. For data-science workloads, it wouldn't be.</p>\n<div class=\"callout why\"><b>Error plumbing matters</b>Capturing stdout and tracebacks from Pyodide and rendering them readably — plus the \"Stuck?\" button that sends editor state to the AI hint flow — is where this page stops being a demo and becomes a product.</div>",
+          "task": "Build a one-page runner: load Pyodide from the CDN, run code from a textarea, and display stdout plus a cleaned-up error if it throws. Measure and note the first-load time, then add a loading indicator that explains what's happening.",
+          "checks": [
+            [
+              "What exactly is Pyodide?",
+              "The CPython interpreter compiled to WebAssembly, plus packaging to load it in a browser — real Python running client-side."
+            ],
+            [
+              "Why doesn't Skillzify put Pyodide on every page?",
+              "Its runtime is megabytes of download; only the compiler page needs it. Loading it everywhere would tax every visit for one page's feature."
+            ]
+          ],
+          "mistakes": [
+            "Loading heavy runtimes globally instead of lazily on the page that needs them.",
+            "Letting raw Python tracebacks hit beginners without a readable rendering or a help path.",
+            "Assuming browser execution removes all safety concerns — infinite loops still freeze the learner's tab; run timeouts matter."
+          ],
+          "interview": [
+            [
+              "How does your in-browser Python compiler work?",
+              "Pyodide — CPython compiled to WebAssembly — loads from a CDN on the compiler page; learner code executes locally in the tab, with stdout/errors captured and rendered, and no server involved per run."
+            ],
+            [
+              "Client-side vs server-side code execution — trade-offs?",
+              "Client: zero marginal cost, privacy, offline; heavy load, limited environment. Server: full environment; per-run cost, serious sandboxing duty, latency."
+            ]
+          ]
+        },
+        {
+          "id": "6.2",
+          "t": "CodeMirror: Building a Real Code Editor",
+          "sub": "Tokenising, highlighting and editor state",
+          "mins": 35,
+          "goal": "By the end you can embed CodeMirror, explain how syntax highlighting works, and read editor state to power features like Skillzify's Stuck? AI hints.",
+          "body": "<h4>1. A textarea is not an editor</h4>\n<p>Learners need line numbers, syntax colours, bracket matching and sane tabs. CodeMirror provides that layer: it renders an editable surface and <b>tokenises</b> code — a Python mode scans the text and labels each piece (keyword, string, number, comment) so themes can colour them. Skillzify pins CodeMirror 5.65.16 with Python mode and selectable themes (Dracula, Nord, Monokai).</p>\n<pre><code>const editor = CodeMirror.fromTextArea(document.getElementById(\"code\"), {\n  mode: \"python\", theme: \"dracula\", lineNumbers: true, indentUnit: 4\n});\n// Read and write the learner's code as data:\nconst code = editor.getValue();\neditor.setValue(\"# new exercise\");</code></pre>\n<h4>2. Editor state as a feature surface</h4>\n<p>Once code is data via <code>getValue()</code>, features compose: Run sends it to Pyodide (Lesson 6.1); the <b>Stuck?</b> button sends code + the current error to the AI hint route; exercise checks compare output. Every compiler feature is \"editor state → some consumer\".</p>\n<h4>3. Version honesty: CM5 vs CM6</h4>\n<p>Skillzify uses CodeMirror 5 — stable, simple, one global script. CodeMirror 6 is a ground-up rewrite (modular, better mobile/accessibility) at the cost of a build step and new APIs. Knowing what you run and why beats chasing the newest major.</p>\n<div class=\"callout why\"><b>Mobile reality check</b>Code editing on phones is painful — small targets, autocorrect fighting code. Skillzify mitigates with sensible defaults, but when you test your runner (Lesson 6.1 task), test it on your own phone before calling it done.</div>",
+          "task": "Upgrade your Lesson 6.1 runner: replace the textarea with CodeMirror (Python mode, a dark theme, line numbers) and add a Stuck? button that logs {code, lastError} as JSON — the exact payload an AI hint route would receive.",
+          "checks": [
+            [
+              "How does syntax highlighting actually work in CodeMirror?",
+              "A language mode tokenises the text — labelling keywords, strings, comments — and the theme maps token types to colours. It's analysis, not stored formatting."
+            ],
+            [
+              "Why is editor.getValue() such an important API for the product?",
+              "It turns the learner's code into data any feature can consume: the Pyodide runner, exercise checks, and the AI Stuck? hint flow."
+            ]
+          ],
+          "mistakes": [
+            "Shipping a raw textarea and calling it a code editor for learners.",
+            "Forgetting that editor content isn't in the DOM form value — you must read it via the editor API.",
+            "Ignoring mobile: autocapitalise/autocorrect defaults wreck code typed on phones."
+          ],
+          "interview": [
+            [
+              "What does a code editor library actually do beyond a textarea?",
+              "Tokenisation-driven highlighting, line numbers, indentation handling, bracket matching, and a state API (getValue/setValue) that features build on."
+            ],
+            [
+              "Your compiler needs an 'AI hint' feature. What data do you send?",
+              "The current editor code and the latest error/output — enough context for a grounded hint — to my server route, which calls the model with a Socratic prompt."
+            ]
+          ]
+        },
+        {
+          "id": "6.3",
+          "t": "Mermaid: Diagrams as Data",
+          "sub": "Flowcharts from text — and the JSON in between",
+          "mins": 35,
+          "goal": "By the end you can write Mermaid flowchart syntax, render it in a page, and explain Skillzify's Python → JSON → Mermaid pipeline as a separation of deciding and drawing.",
+          "body": "<h4>1. Diagrams you can diff</h4>\n<p>Mermaid renders diagrams from plain text:</p>\n<pre><code>flowchart TD\n  A[Start] --> B{Is x > 0?}\n  B -->|Yes| C[Print positive]\n  B -->|No| D[Print zero or negative]\n  C --> E[End]\n  D --> E</code></pre>\n<p>Because a diagram is text, it can be generated by code, stored in git, and diffed in reviews — none of which a hand-drawn image allows.</p>\n<h4>2. Skillzify's three-stage pipeline</h4>\n<p>Recall Module 2: <code>flowchart-gen.py</code> parses Python code into a JSON list of nodes and edges. A thin converter turns that JSON into Mermaid syntax, and Mermaid 10 renders the SVG in <code>compiler.html</code> / lesson pages. Each stage has one job: <b>Python decides structure, JSON carries it, Mermaid draws it</b>. Swap the renderer tomorrow and the generators don't change.</p>\n<h4>3. When text-diagrams are the wrong tool</h4>\n<p>Precise spatial layouts, dense architecture posters, anything needing pixel control — text diagramming fights you. For algorithmic flowcharts generated from learner code, it's exactly right.</p>\n<div class=\"callout why\"><b>The reusable idea</b>Intermediate representations (here: JSON) between a producer and a renderer are one of software's deepest patterns — compilers do it (AST → IR → machine code), and so does this little flowchart feature.</div>",
+          "task": "Write Mermaid for a 'check pass mark' flowchart by hand and render it in a page via the Mermaid CDN. Then write 10 lines of Python that generate that same Mermaid text from a tiny node/edge list — closing the loop from Module 2.",
+          "checks": [
+            [
+              "Why is generating Mermaid text better than generating a flowchart image directly?",
+              "Text is generatable, storable, diffable and renderer-independent; an image pipeline locks you into one drawing implementation and opaque output."
+            ],
+            [
+              "Name the three stages of Skillzify's flowchart pipeline and each stage's job.",
+              "Python generators decide structure → JSON carries nodes/edges → Mermaid renders the diagram."
+            ]
+          ],
+          "mistakes": [
+            "Hand-editing generated diagram output instead of fixing the generator.",
+            "Skipping the intermediate JSON and coupling the Python parser directly to one renderer.",
+            "Using Mermaid for pixel-perfect posters it was never meant for."
+          ],
+          "interview": [
+            [
+              "Why introduce an intermediate JSON format between your parser and renderer?",
+              "Decoupling: either side can change independently, the format is testable on its own, and other renderers can consume the same data later."
+            ],
+            [
+              "Advantage of diagrams-as-text in a team workflow?",
+              "They live in git, diff in pull requests, and can be generated from code — reviews cover diagrams like any other source."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "badge": "M7",
+      "cat": "mobile",
+      "title": "Android — Kotlin & Jetpack Compose",
+      "desc": "Same product, second platform, same Firebase backend. Learn it screen by screen in Android Studio, saving Chaquopy for last.",
+      "meta": [
+        "Weeks 17–19 • 19 Mar – 8 Apr",
+        "Files: android/ • Gradle 8.10.2 • JDK 17"
+      ],
+      "lessons": [
+        {
+          "id": "7.1",
+          "t": "Kotlin for JS/Python Developers",
+          "sub": "Null safety, data classes, lambdas — mapped to what you know",
+          "mins": 40,
+          "goal": "By the end you can read Skillzify's Kotlin comfortably by mapping each concept to a JavaScript or Python equivalent, and explain why null safety is Kotlin's headline feature.",
+          "body": "<h4>1. The familiar 80%</h4>\n<pre><code>val name: String = \"Vikas\"        // val = const, var = let\nvar xp: Int = 340\nfun addXp(amount: Int): Int = xp + amount\nval titles = lessons.map { it.title }        // lambdas, like arrow functions\ndata class Lesson(val id: String, val title: String, val xp: Int)</code></pre>\n<p>Collections, lambdas, string templates and data classes all have direct cousins in the languages you already know. Learn by translation and you'll be reading real code in days.</p>\n<h4>2. Null safety: the type system refuses the classic crash</h4>\n<pre><code>var nickname: String? = null   // the ? makes null legal — and visible\nprintln(nickname?.length)      // safe call: prints null, no crash\nval len = nickname?.length ?: 0  // Elvis operator: default when null</code></pre>\n<p>In Java, any reference might be null and you find out in production. In Kotlin, nullable types are explicit, and the compiler forces you to handle them. For an app reading Firestore documents — where any field might be missing — this eliminates an entire crash category, provided you resist the <code>!!</code> \"trust me\" operator.</p>\n<h4>3. Where Kotlin differs in spirit</h4>\n<p>Everything is an object (no primitives at the language level), functions are first-class, and immutability (<code>val</code>) is the cultural default — the same \"don't mutate\" discipline from Lesson 1.1, enforced by the language.</p>\n<div class=\"callout why\"><b>Study method for this module</b>GitHub is the source of truth for Skillzify's Android code (the local copy is stale). Read one real file per lesson in the repo, with this lesson's concepts as your checklist.</div>",
+          "task": "In Android Studio (or a Kotlin playground): define a Lesson data class and a Progress class with a nullable lastLessonId, write addXp and a titles list via map, and handle the null case with ?. and ?: — no !! anywhere. Explain each line in JS terms in comments.",
+          "checks": [
+            [
+              "What problem does Kotlin's String? vs String distinction solve?",
+              "Nullability is explicit in the type and checked by the compiler, so missing-value crashes (Java's NPE epidemic) become compile-time obligations instead of production surprises."
+            ],
+            [
+              "What does the Elvis operator ?: do?",
+              "It supplies a default value when the left side is null: nickname?.length ?: 0 means 'length, or 0 if nickname is null'."
+            ]
+          ],
+          "mistakes": [
+            "Sprinkling !! to silence the compiler — it reintroduces exactly the crashes null safety exists to prevent.",
+            "Reaching for var everywhere instead of the val-by-default habit.",
+            "Porting JS patterns blindly (e.g. dynamic maps) instead of using data classes with real types."
+          ],
+          "interview": [
+            [
+              "Why does Android's move from Java to Kotlin matter in practice?",
+              "Null safety removes a top crash class, data classes and lambdas cut boilerplate, and coroutines simplify async — all of which show up daily in production Android code quality."
+            ],
+            [
+              "val vs var — and why default to val?",
+              "val is read-only (like const), var is mutable. Defaulting to val makes state changes deliberate and code easier to reason about."
+            ]
+          ]
+        },
+        {
+          "id": "7.2",
+          "t": "Jetpack Compose UI",
+          "sub": "Declarative UI — React's idea, native on Android",
+          "mins": 45,
+          "goal": "By the end you can build a Compose screen from composables, explain state and recomposition, and theme with Material 3 — recognising the same model you learned in React.",
+          "body": "<h4>1. Composables: functions that describe UI</h4>\n<pre><code>@Composable\nfun LessonCard(lesson: Lesson) {\n    Card(modifier = Modifier.padding(8.dp)) {\n        Column(modifier = Modifier.padding(16.dp)) {\n            Text(lesson.title, style = MaterialTheme.typography.titleMedium)\n            Text(lesson.xp.toString() + \" XP\")\n        }\n    }\n}</code></pre>\n<p>If this looks like a React component, that's because it is the same idea: a function of data returns a UI description. You never inflate layouts or hunt views by id.</p>\n<h4>2. State and recomposition</h4>\n<pre><code>var xp by remember { mutableStateOf(0) }\nButton(onClick = { xp += 10 }) { Text(\"Earn XP (\" + xp + \")\") }</code></pre>\n<p>When state changes, Compose <b>recomposes</b> — re-runs the affected composables with new values and updates only what differs. <code>remember</code> keeps state across recompositions. The discipline mirrors React exactly: UI is a function of state; mutate state, never the UI directly.</p>\n<h4>3. Material 3 theming</h4>\n<p>Skillzify's app uses Material 3: colour schemes, typography scales and component styles flow from a theme, the same \"change variables in one place\" idea as CSS variables in Lesson 0.3 — third platform, same principle.</p>\n<div class=\"callout why\"><b>Why this module is shorter than it looks</b>You already paid the conceptual cost in Module 1 (components, state, derived UI). Android's remaining difficulty is platform knowledge — lifecycle, navigation, the build system — which the next two lessons cover.</div>",
+          "task": "Build a Compose screen in Android Studio: a scrollable list (LazyColumn) of 6 Lesson data-class items rendered by a LessonCard composable, with a working XP counter using remember/mutableStateOf and Material 3 theming.",
+          "checks": [
+            [
+              "What triggers recomposition, and what does it do?",
+              "A state change; Compose re-runs the composables that read that state with the new value and updates only the differing UI."
+            ],
+            [
+              "Name the exact React concept that matches a @Composable function.",
+              "A function component: data/props in, UI description out, re-rendered when its state inputs change."
+            ]
+          ],
+          "mistakes": [
+            "Storing state in plain local variables inside a composable — it resets on every recomposition; use remember/mutableStateOf.",
+            "Doing network or database work directly in a composable body instead of in a ViewModel/effect.",
+            "Ignoring modifiers order — padding before vs after background changes what gets painted."
+          ],
+          "interview": [
+            [
+              "Explain declarative UI to someone who only knows the old View system.",
+              "You describe what the UI should look like for a given state; the framework diffs and updates. No manual view lookups or imperative updates — same shift as React on web."
+            ],
+            [
+              "Where should screen state live as an app grows?",
+              "In a ViewModel (next lesson) that survives configuration changes, exposing state the composables render — composables stay dumb and testable."
+            ]
+          ]
+        },
+        {
+          "id": "7.3",
+          "t": "ViewModel, Navigation & Coroutines",
+          "sub": "Architecture that survives rotation and scale",
+          "mins": 45,
+          "goal": "By the end you can structure an Android screen with a ViewModel, move between screens with Navigation Compose, and run background work with coroutines without leaking or blocking.",
+          "body": "<h4>1. ViewModel: state with a longer life than the screen</h4>\n<p>Rotate the phone and the Activity is recreated — composable state dies, but a <b>ViewModel</b> survives configuration changes. It owns the screen's data and logic (load progress, handle events), exposes state, and stays free of UI code — which is what makes the logic unit-testable. Think of it as the Android counterpart of keeping state logic out of React components.</p>\n<h4>2. Navigation Compose: routes for screens</h4>\n<pre><code>NavHost(navController, startDestination = \"learn\") {\n    composable(\"learn\") { LearnScreen(onLesson = { navController.navigate(\"lesson/\" + it) }) }\n    composable(\"lesson/{id}\") { LessonScreen(it.arguments?.getString(\"id\")) }\n}</code></pre>\n<p>Screens are routes with string patterns and arguments — the same mental model as web URLs, which is no accident.</p>\n<h4>3. Coroutines: async without callback pyramids</h4>\n<pre><code>viewModelScope.launch {\n    val progress = repo.loadProgress(uid)   // suspends, doesn't block\n    _state.value = progress\n}</code></pre>\n<p>A <b>suspend</b> function can pause without blocking a thread; <code>launch</code> runs it in a scope tied to a lifecycle (viewModelScope cancels automatically when the ViewModel dies). This is Kotlin's answer to the async problems from Lesson 1.2 — Firestore calls, network and database work all become sequential-looking code that doesn't freeze the UI.</p>\n<div class=\"callout why\"><b>The through-line of this whole course</b>Separate state/logic from rendering (1.3), keep side effects at the edges (1.4, 5.x), let lifecycles own cleanup. Android just gives the same ideas platform names.</div>",
+          "task": "Refactor your Lesson 7.2 screen: move the lesson list and XP into a ViewModel, load the list from a fake suspend function with a 500ms delay inside viewModelScope, and add Navigation Compose with learn → lesson/{id} routes.",
+          "checks": [
+            [
+              "Why does state belong in a ViewModel instead of the composable?",
+              "ViewModels survive configuration changes (like rotation) that recreate the UI, and they keep logic testable and out of rendering code."
+            ],
+            [
+              "What does 'suspend' mean for a coroutine function?",
+              "It can pause at await points without blocking its thread, resuming when the async work completes — with cancellation tied to its scope."
+            ]
+          ],
+          "mistakes": [
+            "Launching coroutines in a global scope that outlives the screen and updates dead UI.",
+            "Blocking the main thread with runBlocking or heavy work in composables.",
+            "Passing whole objects through navigation routes instead of ids re-loaded by the destination."
+          ],
+          "interview": [
+            [
+              "How do you keep Android UI state across rotation?",
+              "Hold it in a ViewModel, which is retained across configuration changes; composables render the ViewModel's state."
+            ],
+            [
+              "Coroutines vs threads/callbacks — the pitch?",
+              "Structured concurrency: async code reads sequentially, runs on managed scopes, and cancels with lifecycles — avoiding callback nesting and leaked threads."
+            ]
+          ]
+        },
+        {
+          "id": "7.4",
+          "t": "Firebase on Android & Chaquopy",
+          "sub": "Same backend, native app — plus Python inside the APK",
+          "mins": 45,
+          "goal": "By the end you can connect an Android app to the same Firebase project as the web app, explain why the sync merge rules must match byte-for-byte, and describe how Chaquopy embeds Python in the APK.",
+          "body": "<h4>1. One project, two platforms</h4>\n<p>The Android app registers with the same Firebase project (<code>skillzify-1d0f2</code>) and pulls dependencies via the <b>Firebase BoM</b> (33.7.0 in Skillzify) — a bill of materials that pins mutually compatible versions of Auth, Firestore and friends, the Android answer to package.json discipline. Sign-in is the same Email/Password; the document is the same <code>users/{uid}</code>.</p>\n<h4>2. The merge rules are a protocol, not a preference</h4>\n<p>Lesson 4.3's five merge rules are implemented identically in Kotlin. This is the part of cross-platform development nobody warns you about: the shared contract lives in two languages, and the only defence is a written spec plus scenario tests run against both implementations (disjoint lessons, XP max, streak dates).</p>\n<h4>3. Chaquopy: Python inside Android</h4>\n<p>Skillzify's Android compiler can't use Pyodide — there's no browser. <b>Chaquopy</b> (15.0.1) embeds a real CPython 3.11 interpreter in the APK, so learner code runs natively and offline. Kotlin calls into Python modules and gets results back across the bridge. Same product promise (\"Python runs on your device\"), two completely different mechanisms — a perfect example of platform-appropriate implementation behind one feature.</p>\n<h4>4. The build system, without fear</h4>\n<p>Gradle 8.10.2 + Android Gradle Plugin 8.5.2 on JDK 17, compileSdk 34, minSdk 24. CI (Lesson 8.2) runs the same build on GitHub Actions. When a build fails, read the <i>first</i> error, not the cascade — and never mix Gradle DSL dialects in one file, a scar Skillzify's own CI history carries.</p>\n<div class=\"callout why\"><b>Definition of done for this module</b>XP earned in your Android build appears in your web build (Lesson 4.3's test, across real platforms) — and you can narrate every hop of that journey.</div>",
+          "task": "Connect your Android app to your scratch Firebase project via the BoM: implement Email/Password sign-in and read/write users/{uid} with the five merge rules implemented in Kotlin. Verify by changing XP on web (your Module 4 build) and watching Android agree after sync.",
+          "checks": [
+            [
+              "What is the Firebase BoM and what problem does it solve?",
+              "A bill of materials pinning compatible versions of all Firebase libraries, so adding Auth + Firestore can't produce a mismatched-version build failure."
+            ],
+            [
+              "How does Android run Python without a browser?",
+              "Chaquopy embeds the CPython interpreter inside the APK; Kotlin calls Python modules natively, fully offline."
+            ]
+          ],
+          "mistakes": [
+            "Letting Kotlin and JS merge implementations drift — sync bugs appear only after learners lose progress.",
+            "Mixing build.gradle and build.gradle.kts DSL styles in one project.",
+            "Testing sync only on one platform and assuming the other behaves identically."
+          ],
+          "interview": [
+            [
+              "Your app exists on web and Android with shared data. What's the hardest part?",
+              "Not the UI — the shared contract: one document schema and identical merge semantics implemented in two languages, verified by cross-platform scenario tests."
+            ],
+            [
+              "Why embed Python in the APK instead of calling a server to run code?",
+              "Offline use, zero per-run server cost and latency — at the price of APK size and an embedded-runtime maintenance duty."
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "badge": "M8",
+      "cat": "devops",
+      "title": "DevOps, Cloud & Shipping Like a Professional",
+      "desc": "You already use GitHub Actions, Render and GA4 — now understand them line by line, and add the AWS/Docker literacy internships expect.",
+      "meta": [
+        "Week 20+ • From 9 Apr",
+        "Files: build-apk.yml • render.yaml • SECURITY.md"
+      ],
+      "lessons": [
+        {
+          "id": "8.1",
+          "t": "Git Workflows",
+          "sub": "Branches, merges, and commits that tell a story",
+          "mins": 40,
+          "goal": "By the end you can work a feature-branch flow confidently, write commits a teammate can review, resolve a merge conflict calmly, and explain rebase vs merge honestly.",
+          "body": "<h4>1. Git is a graph, not a folder backup</h4>\n<p>Every commit is a snapshot plus a pointer to its parent(s). A <b>branch</b> is just a movable label on a commit. That one model explains everything: merging joins two lines of history; a conflict means both lines changed the same lines of the same file and a human must decide.</p>\n<h4>2. The daily workflow</h4>\n<pre><code>git checkout -b feature/passport-privacy\n# ... work, in small pieces ...\ngit add -p                 # stage deliberately, hunk by hunk\ngit commit -m \"Passport: make privacy flag per-user\"\ngit push -u origin feature/passport-privacy   # → open a PR</code></pre>\n<p>Small commits with messages that say <i>why</i> (\"make privacy flag per-user\", not \"fix stuff\") are what let future-you — and reviewers — understand a change in seconds. This is also where your standing rule fits: batch changes locally, push only when you say \"commit\".</p>\n<h4>3. Merge vs rebase</h4>\n<p><b>Merge</b> preserves true history with a merge commit — safe, shared-branch friendly. <b>Rebase</b> replays your commits onto the latest base for a linear story — cleaner, but it rewrites commits, so never rebase history others have pulled. Rule: rebase your own unpushed work; merge shared work.</p>\n<div class=\"callout why\"><b>Conflict protocol</b>Don't panic-delete. Open the file, read both sides between the conflict markers, decide the correct combined result, delete the markers, run the tests, commit. A conflict is a question, not an error.</div>",
+          "task": "In a scratch repo: create two branches that edit the same line of one file, merge them, and resolve the conflict by hand. Then write three commit messages for Skillzify-style changes (a feature, a fix, a rules change) that each explain why in one line.",
+          "checks": [
+            [
+              "Why never rebase a branch teammates have already pulled?",
+              "Rebase rewrites commit hashes; teammates' clones then disagree with the remote history, producing duplicated commits and painful recovery."
+            ],
+            [
+              "What makes a commit message professional?",
+              "It states what changed and why in one searchable line — 'Passport: make privacy flag per-user' — not 'fix' or 'updates'."
+            ]
+          ],
+          "mistakes": [
+            "Committing everything at day's end in one giant 'changes' commit.",
+            "Force-pushing shared branches to 'fix' history.",
+            "Resolving conflicts by picking one side wholesale without reading both."
+          ],
+          "interview": [
+            [
+              "Merge vs rebase — when each?",
+              "Merge for shared/public history (preserves context, safe). Rebase for tidying your own local, unpushed commits into a linear story before sharing."
+            ],
+            [
+              "Walk me through your team's branching flow.",
+              "Feature branches off main, small reviewed PRs, CI required green, squash or merge per team convention, delete branch after merge."
+            ]
+          ]
+        },
+        {
+          "id": "8.2",
+          "t": "GitHub Actions CI",
+          "sub": "Reading build-apk.yml line by line",
+          "mins": 45,
+          "goal": "By the end you can read and write a GitHub Actions workflow — triggers, jobs, steps, secrets — and explain Skillzify's APK pipeline and its CodeQL/Dependabot companions.",
+          "body": "<h4>1. Anatomy of a workflow</h4>\n<pre><code>name: Build APK\non: { push: { branches: [ main ] } }\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with: { java-version: \"17\", distribution: \"temurin\" }\n      - run: cd android && ./gradlew assembleArm64Debug</code></pre>\n<p><code>on</code> is the trigger, <code>jobs</code> are machines, <code>steps</code> are commands or reusable actions. Skillzify's real workflow follows exactly this shape: JDK 17, Gradle 8.10.2, assemble the arm64 debug APK on every push to main. Green check = the app builds from a clean machine, which is the only build result that counts.</p>\n<h4>2. The supporting cast</h4>\n<ul>\n<li><b>CodeQL</b> — static security analysis on push/PR + weekly, across JS/TS, Python and Java/Kotlin in Skillzify's setup.</li>\n<li><b>Dependabot</b> — watches dependencies and opens PRs for updates/vulnerabilities. Skillzify runs alerts + dependency graph with auto security updates deliberately off — a human reviews each bump.</li>\n<li><b>Secrets</b> — CI credentials live in repo settings, injected as env vars, masked in logs. Same doctrine as Lesson 3.4, second home.</li>\n</ul>\n<h4>3. Reading failures like a professional</h4>\n<p>Open the failed step, find the <i>first</i> real error (the rest is cascade), reproduce locally with the same command, fix, push. Skillzify's CI history includes a run of failures caused by mixing Gradle DSL dialects — the lesson generalises: most CI failures are environment or config, not your feature code.</p>\n<div class=\"callout why\"><b>CI is a promise</b>\"Works on my machine\" is not a build. If Actions can't build it from a cold checkout, it doesn't ship — that discipline is what makes the green check meaningful in interviews and teams.</div>",
+          "task": "Add a workflow to a scratch repo that runs on push: checkout, set up Node 20, npm install, and a placeholder test step. Then annotate Skillzify's build-apk.yml — one comment per line in your own words — in a local copy.",
+          "checks": [
+            [
+              "What do on, jobs and steps mean in a workflow file?",
+              "on = the triggering event; jobs = isolated runner machines that execute work; steps = the ordered commands/actions inside a job."
+            ],
+            [
+              "Your CI fails but the code works locally. First three suspects?",
+              "Environment differences (versions, OS), missing env vars/secrets, and config/DSl mistakes — in that order, before suspecting feature code."
+            ]
+          ],
+          "mistakes": [
+            "Pinning nothing — using latest JDK/Gradle so CI changes behaviour without any code change.",
+            "Echoing secrets into logs while debugging.",
+            "Treating a red CI as noise and merging anyway 'because it works locally'."
+          ],
+          "interview": [
+            [
+              "Explain your project's CI pipeline.",
+              "On push to main, Actions checks out the repo, sets up JDK 17, builds the arm64 debug APK with Gradle; CodeQL scans weekly and Dependabot watches dependencies. Green build from a clean runner is the ship gate."
+            ],
+            [
+              "Where do CI secrets live and how are they used?",
+              "In repository/organisation secret settings, injected as environment variables at runtime and masked in logs — never in the workflow file or the repo."
+            ]
+          ]
+        },
+        {
+          "id": "8.3",
+          "t": "Hosting Models: Render, Pages & AWS Concepts",
+          "sub": "Where code lives, what it costs, and how deploys really happen",
+          "mins": 45,
+          "goal": "By the end you can compare static hosting, a managed service like Render, and raw cloud (AWS) — and explain Skillzify's actual deploy topology, including its manual-redeploy quirk.",
+          "body": "<h4>1. Three models, three bargains</h4>\n<ul>\n<li><b>Static hosting (GitHub Pages):</b> files only, no server code. Free, instant, perfect for the frontend — useless for /api routes and secrets. Skillzify mirrors its static site here.</li>\n<li><b>Managed service (Render):</b> runs your Node server from a repo + <code>render.yaml</code>: build command <code>npm install</code>, start <code>npm start</code>, env vars in a dashboard. Free tier sleeps when idle (cold starts) — the price of free.</li>\n<li><b>Cloud (AWS):</b> raw building blocks — S3 stores files, EC2 rents computers, IAM controls who may do what. Maximum control, maximum responsibility. Skillzify does <b>not</b> use AWS; you learn it because employers do.</li>\n</ul>\n<h4>2. Skillzify's real topology</h4>\n<p>Production and staging are separate Render services from the same repo, differing only in env vars. Because staging was connected by public repo URL (not the GitHub App), <b>pushes do not auto-deploy</b> — redeploy is a manual dashboard action. Forgetting this once teaches the lesson forever: \"I pushed the fix\" ≠ \"the fix is live\". Verify the deployed thing, not the repo.</p>\n<h4>3. Environments and configuration</h4>\n<p>Code should be identical across environments; <b>configuration</b> (env vars: keys, caps, model names) differs. The moment staging and production run different code, staging stops predicting production — the entire point of having it.</p>\n<div class=\"callout why\"><b>AWS literacy checklist (concepts only)</b>S3 = object storage, EC2 = virtual servers, IAM = permissions, Region = geography of your infrastructure. Be able to place each in a sentence about a real architecture; deep AWS is its own certification track, not this roadmap's job.</div>",
+          "task": "Draw Skillzify's deploy journey end to end: commit → (manual step?) → Render build → live service → learner's browser → Firebase → Gemini. Mark exactly where the manual redeploy happens and one failure each stage can produce. Then place S3/EC2/IAM in one sentence each for a hypothetical AWS version.",
+          "checks": [
+            [
+              "Why doesn't Skillzify's staging update when code is pushed?",
+              "It was connected via public repo URL without the GitHub App integration, so no deploy webhook fires — redeploys are triggered manually from the Render dashboard."
+            ],
+            [
+              "Staging and production must run identical what, and differ in what?",
+              "Identical code; different configuration via environment variables (keys, caps, endpoints)."
+            ]
+          ],
+          "mistakes": [
+            "Assuming push = deployed without verifying the live service.",
+            "Letting staging drift onto different code 'just to test something quick' — permanently.",
+            "Hard-coding environment-specific values (URLs, keys) in code instead of env vars."
+          ],
+          "interview": [
+            [
+              "Static hosting vs a server host — how do you choose per part of an app?",
+              "Static for files (fast, free, cacheable); a server host wherever secrets, dynamic APIs or per-user logic live. Skillzify uses both: Pages mirror + Render service."
+            ],
+            [
+              "Explain S3, EC2 and IAM in one breath.",
+              "S3 stores objects/files, EC2 provides virtual compute, IAM defines who and what can access both."
+            ]
+          ]
+        },
+        {
+          "id": "8.4",
+          "t": "Secrets, Security Posture & Analytics",
+          "sub": "SECURITY.md, responsible disclosure, and reading GA4",
+          "mins": 40,
+          "goal": "By the end you can run a small project's security posture like a professional — secrets hygiene, a SECURITY.md with private reporting, dependency awareness — and read basic analytics without fooling yourself.",
+          "body": "<h4>1. Secrets hygiene, the full doctrine</h4>\n<ul>\n<li>Keys live in env vars / platform secret stores — never in code, never in git history (history is forever; rotate any key that ever lands there).</li>\n<li><code>.env</code> is gitignored; <code>.env.example</code> with placeholder names is committed so teammates know what to set.</li>\n<li>The Firebase web config is the famous exception that proves the rule: public by design, protected by rules (Lesson 4.4) — know <i>which</i> keys are which kind.</li>\n</ul>\n<h4>2. SECURITY.md and private reporting</h4>\n<p>Skillzify ships a <code>SECURITY.md</code> naming a security contact (the product email) and enables GitHub's <b>private vulnerability reporting</b> — researchers get a confidential channel instead of a public issue. Add Dependabot alerts and CodeQL from Lesson 8.2 and a one-person project has a genuinely professional posture: prevention (rules, validation), detection (scanning), and response (a published contact).</p>\n<h4>3. Analytics without self-deception</h4>\n<p>GA4 (Skillzify's <code>G-YYR4JD16G8</code> on all pages) answers: which pages, from where, in what order, dropping off where. Read it for decisions — a lesson everyone abandons at minute one is a content bug. But respect its limits: small numbers are noise, pageviews aren't learning, and tracking must stay proportionate — measure the product, don't surveil the learner.</p>\n<div class=\"callout why\"><b>The capstone awaits</b>With this lesson the modules end. The finish line is the Mastery Check below plus one act of synthesis: rebuild Skillzify Mini — 10 lessons, auth, sync, one AI mode, deployed via Actions → Render, with a README explaining every layer. That artefact, plus these lessons, is what you walk into Summer 2027 interviews with.</div>",
+          "task": "Audit one of your own projects: find every key/secret and where it lives, write or update its SECURITY.md with a contact, enable private vulnerability reporting and Dependabot alerts, and add a .env.example. Screenshot your GA4-style questions list: three product questions analytics could answer for Skillzify.",
+          "checks": [
+            [
+              "A Gemini key was committed to git last month but the file was later deleted. Safe?",
+              "No — git history retains it. The key must be rotated/revoked; deletion from the working tree does not purge history."
+            ],
+            [
+              "What three layers make up a small project's security posture?",
+              "Prevention (validation, rules, secrets hygiene), detection (CodeQL, Dependabot alerts), and response (SECURITY.md with private reporting channel)."
+            ]
+          ],
+          "mistakes": [
+            "Believing deleting a leaked key from the repo fixes the leak.",
+            "Collecting analytics 'because everyone does' with no product question behind it.",
+            "A SECURITY.md nobody monitors — a reporting channel that goes nowhere is worse than none."
+          ],
+          "interview": [
+            [
+              "How do you handle secrets in a project, end to end?",
+              "Env vars/secret stores only, .env gitignored with a committed .env.example, rotation on any suspected exposure, public-by-design configs (Firebase web) distinguished from true secrets and protected by rules."
+            ],
+            [
+              "What would you look at first in analytics for a learning product?",
+              "Per-lesson drop-off and completion funnels — where learners abandon is where the content or UX is broken; raw pageviews alone say almost nothing."
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "EXTRA": {
+    "0.1": {
+      "m": [
+        "Putting scripts in the head and wondering why the page renders slowly — classic scripts block parsing.",
+        "Assuming a pushed file change reaches users instantly, ignoring browser caching (hence ?v=)."
+      ],
+      "i": [
+        [
+          "Walk me through what happens when I type your site's URL.",
+          "DNS resolves the domain, the browser requests index.html, parses it into the DOM, fetches CSS (CSSOM) and JS in order, then paints — with scripts at the bottom so content renders first."
+        ],
+        [
+          "Why does your site version its CSS/JS URLs?",
+          "Cache-busting: a changed query string creates a new URL, forcing browsers to fetch the updated file instead of a stale cached copy."
+        ]
+      ]
+    },
+    "0.2": {
+      "m": [
+        "Building pages from divs alone when semantic tags exist — hurts accessibility and SEO.",
+        "Skipping the viewport meta tag, then debugging 'broken' mobile layouts for hours."
+      ],
+      "i": [
+        [
+          "What does semantic HTML buy you?",
+          "Meaning for browsers, screen readers and search engines: structure that assistive tech can navigate and crawlers can understand, plus more maintainable markup."
+        ],
+        [
+          "Why is the viewport meta tag essential for mobile?",
+          "Without it mobile browsers assume ~980px width and scale down; with it, layout width equals device width so responsive CSS applies correctly."
+        ]
+      ]
+    },
+    "0.3": {
+      "m": [
+        "Hard-coding the same colour in forty places instead of one CSS variable.",
+        "Forgetting box-sizing and chasing phantom layout overflows caused by padding."
+      ],
+      "i": [
+        [
+          "Explain the CSS box model and the content-box trap.",
+          "Content, padding, border, margin. With content-box, declared width covers content only, so padding/border inflate the real size; border-box makes width mean the whole box."
+        ],
+        [
+          "How would you implement a dark/light theme cleanly?",
+          "CSS variables for all themed values, swapped by a data-theme attribute on the root element; components only ever reference variables."
+        ]
+      ]
+    },
+    "0.4": {
+      "m": [
+        "Touching DOM elements before DOMContentLoaded — the classic null crash.",
+        "Storing objects in localStorage without JSON.stringify and reading back '[object Object]'."
+      ],
+      "i": [
+        [
+          "What is an IIFE and why use one in a multi-file vanilla app?",
+          "An immediately-invoked function expression that scopes variables privately, preventing global collisions across files; you expose only a deliberate API."
+        ],
+        [
+          "localStorage vs a real database — limits?",
+          "Strings only, ~5MB, synchronous, per-device and per-browser, no queries and no cross-device sync — fine for preferences and progress caches, not a data layer."
+        ]
+      ]
+    },
+    "1.1": {
+      "m": [
+        "Mutating arrays/objects in place and then wondering why change detection and debugging get weird.",
+        "Reaching for var out of habit in modern code."
+      ],
+      "i": [
+        [
+          "map vs filter vs reduce — one line each.",
+          "map transforms every item, filter keeps items passing a test, reduce folds the array into a single accumulated value."
+        ],
+        [
+          "Why does React culture dislike mutation?",
+          "Change detection and rendering rely on new references signalling new state; mutating in place hides changes and creates stale-UI bugs."
+        ]
+      ]
+    },
+    "1.2": {
+      "m": [
+        "Forgetting that fetch resolves on HTTP errors — always check res.ok.",
+        "Firing duplicate requests on double-clicks with no guard, creating race conditions."
+      ],
+      "i": [
+        [
+          "Explain Promises and async/await.",
+          "A Promise represents a future value that resolves or rejects; async/await is syntax that lets you write that flow sequentially with try/catch error handling."
+        ],
+        [
+          "How do you handle errors from an API call in UI code?",
+          "Check res.ok, parse defensively, catch network failures, and give the user a fallback state — never a frozen spinner or a crash."
+        ]
+      ]
+    },
+    "1.3": {
+      "m": [
+        "Storing derived values (like a mastery score) that can drift from the facts they're computed from.",
+        "Hand-building DOM node by node instead of rendering from a data array."
+      ],
+      "i": [
+        [
+          "What does 'UI is a function of state' mean in practice?",
+          "One source-of-truth data structure and a render function; change the data, re-render, and the UI is correct by construction — no manual DOM bookkeeping."
+        ],
+        [
+          "Why store content as data files instead of a CMS, in Skillzify's case?",
+          "Lessons ship with the code: versioned in git, zero extra infrastructure, instant loads; rendering code never changes when content is added."
+        ]
+      ]
+    },
+    "1.4": {
+      "m": [
+        "Putting everything in one giant component with prop drilling ten levels deep.",
+        "useEffect with missing dependencies causing stale data, or no dependency array causing effect loops."
+      ],
+      "i": [
+        [
+          "Explain useState and useEffect to a vanilla JS developer.",
+          "useState gives a component memory that triggers re-render on change; useEffect runs side effects after render, scoped by a dependency array."
+        ],
+        [
+          "When would you NOT choose React?",
+          "Content-first pages, tiny interactivity, or where a build step and bundle cost outweigh benefits — e.g. Skillzify's fast, framework-free pages."
+        ]
+      ]
+    },
+    "2.1": {
+      "m": [
+        "Scanning a list for membership inside a loop (O(n²)) where a set gives O(1).",
+        "Writing C-style index loops in Python instead of iterating values and using comprehensions."
+      ],
+      "i": [
+        [
+          "List vs tuple vs set vs dict — when each?",
+          "List: ordered mutable sequence. Tuple: fixed record. Set: uniqueness/membership. Dict: key-based lookup — the default workhorse."
+        ],
+        [
+          "What is a comprehension and why prefer it?",
+          "A compact expression building a collection from another; it reads as a sentence and is the idiomatic Python way to map/filter."
+        ]
+      ]
+    },
+    "2.2": {
+      "m": [
+        "Deep inheritance trees for tiny scripts — classes where a dict would do.",
+        "Making every attribute public and then adding getter/setter ceremony anyway."
+      ],
+      "i": [
+        [
+          "Composition vs inheritance?",
+          "Inheritance shares behaviour through is-a relationships but couples tightly; composition assembles behaviour from parts and stays flexible — prefer it by default."
+        ],
+        [
+          "What does @dataclass give you?",
+          "Generated __init__, __repr__ and equality for data-holding classes — the boilerplate written for you."
+        ]
+      ]
+    },
+    "2.3": {
+      "m": [
+        "Opening files without a context manager, leaking handles on exceptions.",
+        "Loading a huge file fully into memory when a generator would stream it."
+      ],
+      "i": [
+        [
+          "Generator vs normal function — the difference?",
+          "A generator yields values lazily one at a time and pauses between them; a normal function builds and returns the complete result at once."
+        ],
+        [
+          "Why separate 'produce JSON' from 'render diagram' in the flowchart feature?",
+          "Decoupling: the parser and renderer evolve independently, the JSON is independently testable, and other renderers can reuse it."
+        ]
+      ]
+    },
+    "2.4": {
+      "m": [
+        "Writing Python loops over arrays when a vectorised operation exists.",
+        "Ignoring array shapes until a broadcasting bug produces a silently wrong result."
+      ],
+      "i": [
+        [
+          "Why is NumPy faster than pure Python loops?",
+          "Operations run vectorised in compiled code over contiguous typed arrays, instead of per-element Python interpreter work."
+        ],
+        [
+          "What is an embedding, technically?",
+          "A fixed-length float vector produced by a model such that semantic similarity corresponds to geometric closeness (cosine/dot product)."
+        ]
+      ]
+    }
+  }
+}

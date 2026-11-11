@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 2.10 — NumPy &amp; Pandas Basics — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="2.10">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m2.html">Python Fluency — The Language Skillzify Teaches &amp; Uses</a> &nbsp;›&nbsp; Lesson 2.10</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 2.10 • Python Fluency — The Language Skillzify Teaches &amp; Uses • 40 min</span></div>
+<div class="reader-body">
+<h2>NumPy &amp; Pandas Basics</h2>
+<p class="goal">Just enough data tooling for the AI module</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=r-uOLxNrNk8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Data Analysis with Python - Full Course for Beginners (Numpy, Pandas, Matplotlib, Seaborn)</b><span>freeCodeCamp.org</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. NumPy: lists with superpowers</a></li>
+<li><a href="#sub-2">2. Embeddings are just arrays</a></li>
+<li><a href="#sub-3">3. Pandas: tables with labels</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can create and slice NumPy arrays, load tabular data into a Pandas DataFrame, and explain why AI code is written in array operations instead of loops.</div>
+<h4 id="sub-1">1. NumPy: lists with superpowers</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=r-uOLxNrNk8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>Operations apply to the <b>whole array at once</b> (vectorisation), running in compiled code — often 10–100× faster than a Python loop, and shorter to read. An array also has a <b>shape</b>: a list of scores is (4,), a table of 30 learners × 5 scores is (30, 5). Shapes are the grammar of AI data.</p>
+<h4 id="sub-2">2. Embeddings are just arrays</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=r-uOLxNrNk8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>In Module 5 you'll meet embeddings: texts converted to vectors like (384,) or (768,) numbers. Similarity between two texts becomes arithmetic between two arrays (a dot product). Every RAG system you build later is, at the bottom, NumPy-style array maths — which is why this lesson sits here.</p>
+<h4 id="sub-3">3. Pandas: tables with labels</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=r-uOLxNrNk8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>A DataFrame is a spreadsheet you program: labelled rows and columns, filtering, grouping and joins without hand-written loops. Use it for datasets, logs and evaluation results (Module 5's evals are a DataFrame-shaped problem).</p>
+<div class="callout why"><b>Scope discipline</b>You need literacy, not mastery: arrays, shapes, slicing, mean/filter, read_csv, groupby. Deep data-science technique belongs to a data track; this is the AI-engineering minimum.</div>
+<div class="callout build"><b>Watch out — common mistakes</b><ul>
+<li>Writing Python loops over arrays when a vectorised operation exists.</li>
+<li>Ignoring array shapes until a broadcasting bug produces a silently wrong result.</li>
+</ul></div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>import numpy as np
+scores = np.array([40, 55, 80, 92])
+scores.mean()          # 66.75 — whole-array maths, no loop
+scores[scores >= 50]   # array([55, 80, 92]) — boolean filtering</code></pre></div>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>import pandas as pd
+df = pd.read_csv("learners.csv")
+df.groupby("section")["xp"].mean()   # average XP per section, one line</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>With NumPy: create a (5, 3) array of fake quiz scores, compute per-quiz means, and boolean-filter learners averaging 60+. With Pandas: load any small CSV (make one), and group it by a category column with a mean.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why is scores.mean() preferred over a hand-written loop?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">It's vectorised: the operation runs over the whole array in compiled code — faster, shorter, and less error-prone than manual accumulation.</p></div>
+<div class="quiz-q"><p class="qq">What is an embedding, in array terms?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">A vector — a fixed-length NumPy-style array of numbers representing a text's meaning, so similarity becomes array arithmetic.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Why is NumPy faster than pure Python loops?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Operations run vectorised in compiled code over contiguous typed arrays, instead of per-element Python interpreter work.</p></div>
+<div class="interview-q"><p class="iq">What is an embedding, technically?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">A fixed-length float vector produced by a model such that semantic similarity corresponds to geometric closeness (cosine/dot product).</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="2-9.html">← Lesson 2.9</a>
+<a class="nav-btn next" href="3-1.html">Lesson 3.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

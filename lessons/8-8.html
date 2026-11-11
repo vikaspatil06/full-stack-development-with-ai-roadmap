@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 8.8 — Secrets, Security Posture &amp; Analytics — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="8.8">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m8.html">DevOps, Cloud &amp; Shipping Like a Professional</a> &nbsp;›&nbsp; Lesson 8.8</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 8.8 • DevOps, Cloud &amp; Shipping Like a Professional • 40 min</span></div>
+<div class="reader-body">
+<h2>Secrets, Security Posture &amp; Analytics</h2>
+<p class="goal">SECURITY.md, responsible disclosure, and reading GA4</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=hQfojGT_Cis" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Why You NEED .env Files (And How to Use Them)</b><span>Learn In Minutes</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Secrets hygiene, the full doctrine</a></li>
+<li><a href="#sub-2">2. SECURITY.md and private reporting</a></li>
+<li><a href="#sub-3">3. Analytics without self-deception</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can run a small project's security posture like a professional — secrets hygiene, a SECURITY.md with private reporting, dependency awareness — and read basic analytics without fooling yourself.</div>
+<h4 id="sub-1">1. Secrets hygiene, the full doctrine</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=hQfojGT_Cis" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<ul>
+<li>Keys live in env vars / platform secret stores — never in code, never in git history (history is forever; rotate any key that ever lands there).</li>
+<li><code>.env</code> is gitignored; <code>.env.example</code> with placeholder names is committed so teammates know what to set.</li>
+<li>The Firebase web config is the famous exception that proves the rule: public by design, protected by rules (Lesson 4.4) — know <i>which</i> keys are which kind.</li>
+</ul>
+<h4 id="sub-2">2. SECURITY.md and private reporting</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=hQfojGT_Cis" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify ships a <code>SECURITY.md</code> naming a security contact (the product email) and enables GitHub's <b>private vulnerability reporting</b> — researchers get a confidential channel instead of a public issue. Add Dependabot alerts and CodeQL from Lesson 8.2 and a one-person project has a genuinely professional posture: prevention (rules, validation), detection (scanning), and response (a published contact).</p>
+<h4 id="sub-3">3. Analytics without self-deception</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=hQfojGT_Cis" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>GA4 (Skillzify's <code>G-YYR4JD16G8</code> on all pages) answers: which pages, from where, in what order, dropping off where. Read it for decisions — a lesson everyone abandons at minute one is a content bug. But respect its limits: small numbers are noise, pageviews aren't learning, and tracking must stay proportionate — measure the product, don't surveil the learner.</p>
+<div class="callout why"><b>The capstone awaits</b>With this lesson the modules end. The finish line is the Mastery Check below plus one act of synthesis: rebuild Skillzify Mini — 10 lessons, auth, sync, one AI mode, deployed via Actions → Render, with a README explaining every layer. That artefact, plus these lessons, is what you walk into Summer 2027 interviews with.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<p class="muted-note">Concepts only — no code snippet in this lesson.</p>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Audit one of your own projects: find every key/secret and where it lives, write or update its SECURITY.md with a contact, enable private vulnerability reporting and Dependabot alerts, and add a .env.example. Screenshot your GA4-style questions list: three product questions analytics could answer for Skillzify.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">A Gemini key was committed to git last month but the file was later deleted. Safe?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">No — git history retains it. The key must be rotated/revoked; deletion from the working tree does not purge history.</p></div>
+<div class="quiz-q"><p class="qq">What three layers make up a small project's security posture?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Prevention (validation, rules, secrets hygiene), detection (CodeQL, Dependabot alerts), and response (SECURITY.md with private reporting channel).</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">How do you handle secrets in a project, end to end?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Env vars/secret stores only, .env gitignored with a committed .env.example, rotation on any suspected exposure, public-by-design configs (Firebase web) distinguished from true secrets and protected by rules.</p></div>
+<div class="interview-q"><p class="iq">What would you look at first in analytics for a learning product?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Per-lesson drop-off and completion funnels — where learners abandon is where the content or UX is broken; raw pageviews alone say almost nothing.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="8-7.html">← Lesson 8.7</a>
+<a class="nav-btn next" href="8-9.html">Lesson 8.9 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

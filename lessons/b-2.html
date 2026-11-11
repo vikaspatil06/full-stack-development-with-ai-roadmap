@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson B.2 — HTML Base 2 — Tables, Forms, Inputs, Semantic Layout — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="B.2">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/b.html">Basics — Start From Zero</a> &nbsp;›&nbsp; Lesson B.2</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson B.2 • Basics — Start From Zero • 30 min</span></div>
+<div class="reader-body">
+<h2>HTML Base 2 — Tables, Forms, Inputs, Semantic Layout</h2>
+<p class="goal">Data on a page and data from the user</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=mJgBOIoGihA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>HTML Full Course for Beginners</b><span>Dave Gray</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Tables for tabular data</a></li>
+<li><a href="#sub-2">2. Forms collect user input</a></li>
+<li><a href="#sub-3">3. Semantic layout</a></li>
+<li><a href="#sub-4">4. Built-in validation</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can build a table, a working form with the right input types, and a page laid out with semantic tags instead of divs everywhere.</div>
+<h4 id="sub-1">1. Tables for tabular data</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=mJgBOIoGihA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Tables are for data with rows and columns, never for layout. A table uses <code>table</code>, <code>thead</code> for the header row, <code>tbody</code> for the body, <code>tr</code> for each row, and <code>th</code> for header cells and <code>td</code> for data cells. Skillzify uses tables in reference pages where comparing values side by side is the whole point.</p><h4 id="sub-2">2. Forms collect user input</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=mJgBOIoGihA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A form wraps inputs and a submit button. Each input needs a <code>label</code> linked by <code>for</code> and <code>id</code>, so clicking the label focuses the field and screen readers announce it. The right input type matters: <code>email</code> brings up the right mobile keyboard and validates format, <code>number</code> restricts to digits, <code>password</code> hides the text, and <code>select</code> and <code>textarea</code> cover choices and long text.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Semantic layout</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=mJgBOIoGihA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Replace generic divs with tags that mean something: <code>header</code> for the top, <code>nav</code> for links, <code>main</code> for the one main content area, <code>section</code> for themed chunks, <code>article</code> for self-contained pieces, and <code>footer</code> for the close. Skillzify pages use exactly this skeleton, which is why its shared nav can be injected into one placeholder on every page.</p><h4 id="sub-4">4. Built-in validation</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=mJgBOIoGihA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Attributes like <code>required</code>, <code>minlength</code>, <code>min</code> and <code>max</code> give you free validation before JavaScript ever runs. The browser blocks submission and shows a message. Never rely on it alone, though: real validation always happens again on the server.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>&lt;form action="/api/signup" method="post"&gt;
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;input type="email" id="email" name="email" required&gt;
+  &lt;label for="level"&gt;Level&lt;/label&gt;
+  &lt;select id="level" name="level"&gt;
+    &lt;option&gt;Beginner&lt;/option&gt;&lt;option&gt;Intermediate&lt;/option&gt;
+  &lt;/select&gt;
+  &lt;button type="submit"&gt;Create account&lt;/button&gt;
+&lt;/form&gt;</pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Build a Skillzify signup form: name (text, required), email (email, required), password (minlength 8), level (select), and a checkbox for terms. Submit it empty and watch the browser block it; then fill it in and confirm it passes.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why link a label to its input with for and id?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Clicking the label focuses the field, and screen readers announce the label when the field is focused — without it, the field is unnamed to assistive tech.</p></div>
+<div class="quiz-q"><p class="qq">Why is browser form validation not enough on its own?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Anyone can bypass the browser with curl or DevTools, so the server must validate every field again. Browser validation is only a convenience.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">When should you use a table, and when should you not?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Use tables for genuinely tabular data like scores or schedules. Never use them for page layout — that job belongs to Flexbox and Grid.</p></div>
+<div class="interview-q"><p class="iq">What is the difference between GET and POST on a form?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">GET puts data in the URL and is for safe reads; POST puts data in the body and is for actions that change something, like signup or login.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="b-1.html">← Lesson B.1</a>
+<a class="nav-btn next" href="b-3.html">Lesson B.3 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

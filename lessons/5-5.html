@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 5.5 — Prompt Engineering Patterns — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="5.5">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m5.html">AI Engineering — From Gemini Calls to RAG Systems ★</a> &nbsp;›&nbsp; Lesson 5.5</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 5.5 • AI Engineering — From Gemini Calls to RAG Systems ★ • 45 min</span></div>
+<div class="reader-body">
+<h2>Prompt Engineering Patterns</h2>
+<p class="goal">Few-shot, roles, and Skillzify's 15 modes as case studies</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=U6nxdHQkhzI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Master Prompt Engineering in 9 Minutes | AI Builder Series EP 02</b><span>AI Builder</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. The anatomy of a prompt that works</a></li>
+<li><a href="#sub-2">2. Patterns hiding in Skillzify's 15 modes</a></li>
+<li><a href="#sub-3">3. Chain-of-thought, used carefully</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can design a prompt for a new AI feature using role, context, few-shot examples and output constraints — and classify Skillzify's 15 modes by the pattern each one uses.</div>
+<h4 id="sub-1">1. The anatomy of a prompt that works</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=U6nxdHQkhzI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>Four levers, in order of impact: <b>role + task clarity</b> (who you are, what done looks like), <b>rules/constraints</b> (length, format, prohibitions), <b>examples</b> (few-shot: show 1–3 input→output pairs — the single strongest technique for consistent format), and <b>the user's actual input, clearly delimited</b> so the model never confuses instructions with data.</p>
+<h4 id="sub-2">2. Patterns hiding in Skillzify's 15 modes</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=U6nxdHQkhzI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<ul>
+<li><b>Socratic hinting</b> (Ask AI on questions): rules forbid the final answer — the product value <i>is</i> the restraint.</li>
+<li><b>Persona + rubric</b> (viva mode): the model plays an examiner with a scoring rubric in the prompt.</li>
+<li><b>Transform</b> (flowchart explain / flowchart-to-code): input format A, output format B, one worked example pins the mapping.</li>
+<li><b>Generate-then-format</b> (quizzes, drills): generation rules plus the structured-output discipline from Lesson 5.2.</li>
+</ul>
+<h4 id="sub-3">3. Chain-of-thought, used carefully</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=U6nxdHQkhzI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Asking the model to reason step by step before answering improves hard problems — but the reasoning is also billable output and latency. Use it where accuracy pays (grading, debugging), skip it for lookups and formatting.</p>
+<div class="callout why"><b>Prompts are code</b>Version them, change one variable at a time, and keep a small set of test inputs you re-run after every prompt edit (that's the seed of Lesson 5.6's evals). A prompt changed on vibes regresses silently.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>ROLE:      You are a patient Python tutor for beginners.
+TASK:      Explain the error in the learner's code.
+RULES:     Give a hint first. Never output the full corrected code.
+           Use at most 120 words. End with one question.
+EXAMPLE:   Error: NameError ... → "Hint: Python is case-sensitive..."</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Write the full prompt for a new mode: 'Interview Drill' — model asks one Python interview question, waits, then grades the learner's answer against a 3-point rubric in the prompt and returns JSON {score, feedback}. Include role, rules, one few-shot grading example, and delimited learner input.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">What is few-shot prompting and why is it so effective for format consistency?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Including a few input→output examples in the prompt; the model pattern-matches the demonstrated format far more reliably than it follows format descriptions.</p></div>
+<div class="quiz-q"><p class="qq">Why does Skillzify's Ask AI mode forbid giving the final answer?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Because the product is learning, not answers — the restraint is the feature. The rule lives in the prompt because the model would otherwise helpfully solve it.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">How do you make an LLM feature's output consistent?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Constrain the format (ideally structured JSON), pin it with few-shot examples, low temperature for factual modes, validate output server-side, and regression-test prompts against a fixed input set.</p></div>
+<div class="interview-q"><p class="iq">What is prompt injection and one mitigation?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">User input that tries to override the system instructions. Mitigate with clear delimiters, instruction hierarchy (system rules restated), output validation, and never letting model output directly trigger privileged actions.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="5-4.html">← Lesson 5.4</a>
+<a class="nav-btn next" href="5-6.html">Lesson 5.6 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

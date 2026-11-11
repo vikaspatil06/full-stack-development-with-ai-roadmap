@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 2.1 — Python Core, Written Properly — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="2.1">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m2.html">Python Fluency — The Language Skillzify Teaches &amp; Uses</a> &nbsp;›&nbsp; Lesson 2.1</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 2.1 • Python Fluency — The Language Skillzify Teaches &amp; Uses • 40 min</span></div>
+<div class="reader-body">
+<h2>Python Core, Written Properly</h2>
+<p class="goal">Data structures, comprehensions, functions</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Learn Python - Full Course for Beginners [Tutorial]</b><span>freeCodeCamp.org</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Pick the container by the question you ask</a></li>
+<li><a href="#sub-2">2. Comprehensions: loops that read as sentences</a></li>
+<li><a href="#sub-3">3. Functions as pipelines</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can use Python's core data structures idiomatically — comprehensions over loops, the right container for the job, and functions with clean inputs and outputs.</div>
+<h4 id="sub-1">1. Pick the container by the question you ask</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<ul>
+<li><b>list</b> — ordered, changeable: "give me item 3", "append this".</li>
+<li><b>tuple</b> — ordered, fixed: coordinates, a (node, edge) pair that must not change.</li>
+<li><b>dict</b> — key → value lookup: a lesson record, JSON data. The workhorse.</li>
+<li><b>set</b> — uniqueness and membership: "have I seen this id?" in O(1).</li>
+</ul>
+<p>Choosing wrongly is how O(n²) accidents happen — scanning a list for membership inside a loop, where a set would be instant.</p>
+<h4 id="sub-2">2. Comprehensions: loops that read as sentences</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<h4 id="sub-3">3. Functions as pipelines</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify's flowchart scripts are chains of small functions: parse → transform → emit. Each takes data in and returns data out, with no hidden globals — which is why they are testable one at a time in PyCharm's debugger. Prefer that style over one giant script: a bug in a 10-line function is a 10-line search.</p>
+<div class="callout why"><b>Working setup</b>Do this module in PyCharm with a virtual environment per project (venv) and pip for packages. Environment hygiene — never installing into the system Python — is a professional habit, not trivia.</div>
+<div class="callout build"><b>Watch out — common mistakes</b><ul>
+<li>Scanning a list for membership inside a loop (O(n²)) where a set gives O(1).</li>
+<li>Writing C-style index loops in Python instead of iterating values and using comprehensions.</li>
+</ul></div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>titles = [l["title"] for l in lessons if l["xp"] >= 20]
+by_id  = {l["id"]: l for l in lessons}   # dict comprehension → instant lookup</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>In PyCharm: build a list of 6 lesson dicts, produce (a) titles of lessons worth 20+ XP via comprehension, (b) an id→lesson dict, (c) a set of sections. Then write total_xp(lessons) as a pure function and test it with two different inputs.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">When is a set the right container instead of a list?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">When the questions are uniqueness and membership ('have I seen this?') — set lookup is O(1) versus O(n) scanning a list.</p></div>
+<div class="quiz-q"><p class="qq">Why keep functions pure (data in, data out) in the flowchart scripts?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Each stage can be tested and debugged independently in PyCharm; hidden global state makes failures non-local and hard to reproduce.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">List vs tuple vs set vs dict — when each?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">List: ordered mutable sequence. Tuple: fixed record. Set: uniqueness/membership. Dict: key-based lookup — the default workhorse.</p></div>
+<div class="interview-q"><p class="iq">What is a comprehension and why prefer it?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">A compact expression building a collection from another; it reads as a sentence and is the idiomatic Python way to map/filter.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="1-9.html">← Lesson 1.9</a>
+<a class="nav-btn next" href="2-2.html">Lesson 2.2 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

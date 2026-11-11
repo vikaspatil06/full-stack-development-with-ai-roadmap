@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 6.4 — CodeMirror Extensions — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="6.4">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m6.html">Product Tools — Editor, In-Browser Runtime &amp; Diagrams</a> &nbsp;›&nbsp; Lesson 6.4</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 6.4 • Product Tools — Editor, In-Browser Runtime &amp; Diagrams • 30 min</span></div>
+<div class="reader-body">
+<h2>CodeMirror Extensions</h2>
+<p class="goal">Beyond a textarea: highlighting, completion, lint and themes</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>How to build a self-typing editor demo with Waku + CodeMirror</b><span>craftzdog</span></p>
+<p class="shared-note">Shared with Lesson 6.3 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. CodeMirror 6 is a box of composable extensions</a></li>
+<li><a href="#sub-2">2. Language support is a data package</a></li>
+<li><a href="#sub-3">3. Linting: your own diagnostics, live</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can assemble a CodeMirror 6 editor from extensions, add Python highlighting and autocompletion, wire a lint source, and explain why extensions compose instead of inheriting.</div>
+<h4 id="sub-1">1. CodeMirror 6 is a box of composable extensions</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>CodeMirror 6 is not one editor with settings — it is a small core plus extensions that each add one capability: line numbers, syntax highlighting, autocompletion, search, themes. You build an editor by listing the extensions you want, and two editors can share most of a list while differing in one piece. That composition model is why Skillzify can use the same editor for the Python runner and the flowchart code view with different language support: same core, different extension lists.</p><h4 id="sub-2">2. Language support is a data package</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Syntax highlighting comes from a language package — @codemirror/lang-python for Python — which parses the code and tags each token so a theme can colour it. Autocompletion is a separate extension that suggests identifiers as you type, fed by a completion source you can extend with Skillzify's own lesson vocabulary. The key insight is that highlighting is parsing: the editor genuinely understands the code's structure, which is why it can also bracket-match, fold blocks and indent correctly.</p><h4 id="sub-3">3. Linting: your own diagnostics, live</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>The lint extension shows squiggles under problems, driven by a lint source — a function that receives the document and returns diagnostics with positions and severities. You can wire it to Pyodide: run a syntax check on each edit and surface Python's own error messages in the editor, at the exact line. That closes the loop between writing and running: the editor stops being a fancy textarea and becomes a small IDE.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Extensions are values in an array — swap one, and the editor's behaviour changes without touching anything else. That is the whole design philosophy in one line.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>import { EditorView, basicSetup } from "codemirror";
+import { python } from "@codemirror/lang-python";
+import { autocompletion } from "@codemirror/autocomplete";
+import { linter } from "@codemirror/lint";
+
+const view = new EditorView({
+  doc: "print('hello')\n",
+  extensions: [
+    basicSetup,
+    python(),
+    autocompletion(),
+    linter(async (view) =&gt; checkWithPyodide(view.state.doc.toString()))
+  ],
+  parent: document.getElementById("editor")
+});</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Build a CodeMirror 6 editor for Python with highlighting, autocompletion and a lint source that flags lines longer than 79 characters. Then add a second editor instance on the same page for JavaScript, sharing the base extension list, and note exactly which extensions differ and why.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why does CodeMirror 6 use extensions instead of configuration flags?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Extensions compose: each adds one capability, so editors share most of a list and differ in one piece, instead of inheriting a fixed feature set.</p></div>
+<div class="quiz-q"><p class="qq">What does a lint source receive and return?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">It receives the editor view and document, and returns diagnostics — each with a position, severity and message — which the editor renders as squiggles.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">How would you add Skillzify lesson keywords to autocompletion?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Write a custom completion source that merges the language's completions with your own list, and register it as an extension alongside the default one.</p></div>
+<div class="interview-q"><p class="iq">Highlighting looks cosmetic — why is it actually parsing?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Because the language package tokenises the code structurally, which is what also enables bracket matching, folding and correct indentation. Colour is the visible side effect.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="6-3.html">← Lesson 6.3</a>
+<a class="nav-btn next" href="6-5.html">Lesson 6.5 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

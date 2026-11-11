@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 4.9 — Security Rules + the SQL Contrast — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="4.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m4.html">Data &amp; Auth — Firebase, plus SQL</a> &nbsp;›&nbsp; Lesson 4.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 4.9 • Data &amp; Auth — Firebase, plus SQL • 50 min</span></div>
+<div class="reader-body">
+<h2>Security Rules + the SQL Contrast</h2>
+<p class="goal">firestore.rules, and the same schema in PostgreSQL</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=C999kVz96_w" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Security Rules for Firestore - Firebase Firestore</b><span>Philipp Lackner</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Rules are the real backend security</a></li>
+<li><a href="#sub-2">2. The same world in SQL</a></li>
+<li><a href="#sub-3">3. Choosing, honestly</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can read and write owner-only Firestore rules, trace an allowed and a denied request by hand, and sketch Skillzify's data as SQL tables — explaining what each world makes easy.</div>
+<h4 id="sub-1">1. Rules are the real backend security</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=C999kVz96_w" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>Read it literally: a request may touch <code>users/{uid}</code> only if it is authenticated <i>and</i> the authenticated identity equals the document's uid. Everyone else — anonymous users, other users, scripts with the public API key — is denied. Rules are evaluated on Google's servers for every request; no client code can bypass them. They are deployed from the Firebase console, and a rules mistake is a data breach, so they are tested before publishing.</p>
+<h4 id="sub-2">2. The same world in SQL</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=C999kVz96_w" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>In SQL, access control lives in your server code (every query must filter by the session's user), while structure is enforced by the schema and relationships by foreign keys. You gain joins, aggregations and ad-hoc questions ("average XP per section across all users" is one query in SQL, a project in Firestore) — and you own the server, auth and scaling that Firebase gave you for free.</p>
+<h4 id="sub-3">3. Choosing, honestly</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=C999kVz96_w" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify's access pattern — "load my stuff, save my stuff" — is Firestore's home turf. The moment the product needs cross-user analytics, leaderboards or complex filtering as core features, SQL earns its keep. Most internships will test SQL; that is why this lesson pairs them.</p>
+<div class="callout why"><b>Production note</b>Skillzify's community and passport features stay locked until the matching firestore.rules are published in the console — code alone doesn't grant access. Rules are a deployment step, not a file you forget.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>rules_version = '2';
+service cloud.firestore {
+  match /users/{uid} {
+    allow read, write: if request.auth != null
+                       && request.auth.uid == uid;
+  }
+}</code></pre></div>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>CREATE TABLE users (id TEXT PRIMARY KEY, name TEXT);
+CREATE TABLE progress (
+  user_id TEXT REFERENCES users(id),
+  lesson_id TEXT,
+  xp INT,
+  PRIMARY KEY (user_id, lesson_id)
+);</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Write rules for a showcase collection where anyone signed-in can read, only the author can create/update/delete their own posts. Then write the SQL schema for users + lessons + progress and one JOIN query that lists a user's completed lesson titles.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Trace it: user A (uid 'a') requests users/b while signed in. Allowed?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Denied. request.auth.uid ('a') != uid in path ('b'), so the allow condition fails.</p></div>
+<div class="quiz-q"><p class="qq">Where does access control live in a SQL stack vs Firestore?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">SQL: in your server code — every query must scope to the session user. Firestore: in declarative rules evaluated server-side by Google on every request.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">How does Firestore security actually work if the API key is public?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Rules are evaluated server-side per request against request.auth and the target document; the key only identifies the project. Access is granted by rules, never by secrecy.</p></div>
+<div class="interview-q"><p class="iq">When would you migrate from Firestore to Postgres?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">When core features need relational queries, cross-user aggregation/reporting, or complex filtering that Firestore's index model makes painful — not for fashion.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="4-8.html">← Lesson 4.8</a>
+<a class="nav-btn next" href="5-1.html">Lesson 5.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

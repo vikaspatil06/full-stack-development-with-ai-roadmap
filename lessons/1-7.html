@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 1.7 — State &amp; Data-Driven Rendering — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="1.7">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m1.html">JavaScript Deep + Modern Frontend</a> &nbsp;›&nbsp; Lesson 1.7</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 1.7 • JavaScript Deep + Modern Frontend • 40 min</span></div>
+<div class="reader-body">
+<h2>State &amp; Data-Driven Rendering</h2>
+<p class="goal">How Skillzify renders lessons from data files</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=lwttCxDH5T8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>How React Thinks: An Animated Technical Documentary</b><span>Agentic Dev Hub</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. The core idea: render from data, never hand-write DOM</a></li>
+<li><a href="#sub-2">2. Content as code</a></li>
+<li><a href="#sub-3">3. Derived state: mastery and review scheduling</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain 'UI = a function of data', how Skillzify stores its entire curriculum as JavaScript data, and how mastery and spaced repetition are computed from that data.</div>
+<h4 id="sub-1">1. The core idea: render from data, never hand-write DOM</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=lwttCxDH5T8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Beginners build UI by creating elements one by one. Professionals keep a <b>single source of truth</b> — a data structure — and write a render function that turns data into DOM. Change the data, re-run render, and the UI is correct by construction. Skillzify's Learn page works exactly like this.</p>
+<h4 id="sub-2">2. Content as code</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=lwttCxDH5T8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify has no CMS and no content database. The curriculum <i>is</i> JavaScript data files: <code>lessons-b/i/a.js</code> hold the 250 lessons, <code>practice-data.js</code> holds 150 exercises, <code>reference-data.js</code> holds 127 entries. <code>learn.js</code> reads those arrays and renders the journey path; <code>lesson.js</code> renders one lesson. Adding a lesson means adding a data object, not touching rendering code.</p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<h4 id="sub-3">3. Derived state: mastery and review scheduling</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=lwttCxDH5T8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Two of Skillzify's smartest features are pure functions over that data plus the learner's progress:</p>
+<ul>
+<li><b>Mastery Engine</b> (<code>mastery.js</code>) scores each section 0–100 from completed lessons, exercise accuracy and recency — then the "Next Up" card is just "the highest-value incomplete item", computed, not stored.</li>
+<li><b>Spaced repetition</b> (<code>review.js</code>) implements SM-2: intervals grow 1 → 3 → 7 → 14 → 30 → 60 days as you succeed. The schedule is derived from last-review date + ease, never a hand-maintained list.</li>
+</ul>
+<p>The lesson: <b>store facts, compute views.</b> Store "lesson X completed on date D with score S" — compute mastery, streaks and next-up on demand. Stored derived values drift out of sync; computed ones can't.</p>
+<div class="callout why"><b>Bridge to React</b>This is precisely React's mental model — components render from state, and derived values are computed during render. Learn it in vanilla first and React becomes a syntax, not a new idea.</div>
+<div class="callout build"><b>Watch out — common mistakes</b><ul>
+<li>Storing derived values (like a mastery score) that can drift from the facts they're computed from.</li>
+<li>Hand-building DOM node by node instead of rendering from a data array.</li>
+</ul></div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>{ id: "b-014", title: "For Loops", xp: 20, section: "beginner" }</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Given a data array of 6 lessons and a progress object {completedIds, scores}, write a render function (vanilla JS) that lists lessons with Done/Next/Locked states, plus a mastery percentage computed from the data. Change the data only, and watch the UI follow.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why store raw facts and compute mastery instead of storing the mastery score?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Computed values are always consistent with the underlying facts; stored derived values can drift when facts change through another path (like sync from Android).</p></div>
+<div class="quiz-q"><p class="qq">How does Skillzify add a new lesson without changing rendering code?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Lessons are data files; learn.js renders whatever objects exist in the arrays. A new lesson is a new data object.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">What does 'UI is a function of state' mean in practice?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">One source-of-truth data structure and a render function; change the data, re-render, and the UI is correct by construction — no manual DOM bookkeeping.</p></div>
+<div class="interview-q"><p class="iq">Why store content as data files instead of a CMS, in Skillzify's case?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Lessons ship with the code: versioned in git, zero extra infrastructure, instant loads; rendering code never changes when content is added.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="1-6.html">← Lesson 1.6</a>
+<a class="nav-btn next" href="1-8.html">Lesson 1.8 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

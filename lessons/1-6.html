@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 1.6 — DOM Events &amp; Delegation — Listening Smart — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="1.6">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m1.html">JavaScript Deep + Modern Frontend</a> &nbsp;›&nbsp; Lesson 1.6</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 1.6 • JavaScript Deep + Modern Frontend • 30 min</span></div>
+<div class="reader-body">
+<h2>DOM Events &amp; Delegation — Listening Smart</h2>
+<p class="goal">Bubbling, capturing, and one listener for a thousand elements</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Learn JavaScript - Full Course for Beginners</b><span>freeCodeCamp.org</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Events travel in three phases</a></li>
+<li><a href="#sub-2">2. Delegation: one listener, endless children</a></li>
+<li><a href="#sub-3">3. Controlling the flow</a></li>
+<li><a href="#sub-4">4. Listeners and memory</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain event bubbling, use delegation to handle dynamic lists with a single listener, and stop memory leaks from orphaned listeners.</div>
+<h4 id="sub-1">1. Events travel in three phases</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When a user clicks a button inside a card inside a page, the event travels down from the window to the target (capturing), fires at the target, then bubbles back up through every ancestor. addEventListener listens on the bubbling phase by default. Understanding this journey is the key to everything else in this lesson, because it means ancestors can hear events from descendants.</p><h4 id="sub-2">2. Delegation: one listener, endless children</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Instead of attaching a listener to every lesson card, attach one to their shared parent and check event.target to see which child was actually clicked. New cards added later work automatically, because the parent was already listening. Skillzify's Learn page renders 250 lessons from data — delegation is the only sane way to wire them all.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Controlling the flow</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>stopPropagation halts the journey so ancestors never hear the event; preventDefault stops the browser's default action, like following a link or submitting a form. Use both sparingly — stopping propagation can break other features listening higher up, and preventing defaults on the wrong element breaks accessibility.</p><h4 id="sub-4">4. Listeners and memory</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Every listener holds a reference to its element. Remove an element without removing its listeners and the memory can linger. Delegation avoids this almost entirely: one listener on a long-lived parent, no per-item cleanup, and dynamic content that just works.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>document.getElementById("lessonList").addEventListener("click", function (e) {
+  const card = e.target.closest(".lesson-card");
+  if (!card) return;               // click was not on a card
+  openLesson(card.dataset.id);     // one listener serves all cards
+});</pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Build a list of 20 items rendered from an array with a single delegated click listener that logs the clicked item's id. Add 5 more items dynamically and confirm they work without adding any listeners. Then add a button inside one item that uses stopPropagation.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why does event delegation work for elements added after the listener was attached?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">The listener lives on the parent, and events from new children still bubble up to it — the parent never needed to know the children existed.</p></div>
+<div class="quiz-q"><p class="qq">What does e.target.closest do, and why is it useful here?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">It walks up from the clicked element to the nearest ancestor matching the selector, so clicks on a card's inner text or icon still resolve to the card.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Explain event bubbling and capturing.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Capturing travels from window down to the target; bubbling travels back up through ancestors. Listeners default to bubbling.</p></div>
+<div class="interview-q"><p class="iq">When would you use stopPropagation, and what is the risk?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">To keep an event from reaching ancestors, e.g. a button inside a card. The risk is silently breaking other features that listen higher up.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="1-5.html">← Lesson 1.5</a>
+<a class="nav-btn next" href="1-7.html">Lesson 1.7 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

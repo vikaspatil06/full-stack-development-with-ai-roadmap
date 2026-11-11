@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 5.10 — Guardrails &amp; Evals — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="5.10">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m5.html">AI Engineering — From Gemini Calls to RAG Systems ★</a> &nbsp;›&nbsp; Lesson 5.10</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 5.10 • AI Engineering — From Gemini Calls to RAG Systems ★ • 45 min</span></div>
+<div class="reader-body">
+<h2>Guardrails &amp; Evals</h2>
+<p class="goal">Testing AI like you mean it</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=qP5tBuRBnhM" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Databricks GenAI Course #16: LLM Guardrails: Hallucination, Toxicity, PII, and Prompt Injection</b><span>StackLessons</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Guardrails: fences at the borders</a></li>
+<li><a href="#sub-2">2. Evals: a test suite for behaviour</a></li>
+<li><a href="#sub-3">3. The loop that makes AI products good</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can add basic guardrails around an AI feature and run a simple eval set that tells you — with numbers — whether a prompt or model change helped or hurt.</div>
+<h4 id="sub-1">1. Guardrails: fences at the borders</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=qP5tBuRBnhM" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<ul>
+<li><b>Input side:</b> length limits and validation (Module 3), block-list for obviously out-of-scope abuse, delimiters against injection (Lesson 5.3).</li>
+<li><b>Output side:</b> schema validation for JSON modes, a refusal/fallback path, and never executing model output as code or queries without a sandbox and review.</li>
+<li><b>Product side:</b> Skillzify's Socratic rule is a guardrail — the tutor must not hand over exercise solutions. Policy can live in prompts, but verify it with tests, because prompts leak.</li>
+</ul>
+<h4 id="sub-2">2. Evals: a test suite for behaviour</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=qP5tBuRBnhM" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Normal code gets unit tests; AI features get <b>evals</b> — a fixed set of inputs with expected properties:</p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>Run the set after every prompt/model change; score pass rates automatically where checks are mechanical (contains, length, JSON validity) and by quick human review where they're not. A change that lifts the pass rate from 82% to 91% is progress; one that drops it is a regression — regardless of how the new prompt <i>feels</i>.</p>
+<h4 id="sub-3">3. The loop that makes AI products good</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=qP5tBuRBnhM" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Ship → log real failures (with privacy care) → add the failures to the eval set → fix → re-run evals → ship. Your eval set grows from real usage, which is exactly why it stays representative.</p>
+<div class="callout why"><b>Scope for this roadmap</b>You need the habit, not a platform: a JSON file of 15–20 cases and a script that runs them and reports a score. That's a portfolio-worthy eval rig for Skillzify's tutor.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>{ input: "Explain: x = '1' + 2 in Python",
+  expect: ["mentions TypeError", "no full solution given", "under 150 words"] }</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Build evals.json with 12 cases for your explain/tutor route (include 2 trap cases: one asking for a full exercise solution, one wildly off-topic). Write run_evals.js that scores mechanical checks (length, contains, JSON validity, refusal present) and prints a pass rate. Change one prompt rule and re-run — record both scores.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why can't prompts alone be your guardrails?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Prompts are advisory to the model — injection and edge cases leak through. Enforce at the borders: input validation, output validation, and behavioural tests.</p></div>
+<div class="quiz-q"><p class="qq">What makes an eval set trustworthy over time?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">It's fixed (so scores are comparable across changes) and grows from real logged failures (so it stays representative of actual usage).</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">How do you know a prompt change improved your AI feature?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">A fixed eval set with mechanical and reviewed checks, run before and after: compare pass rates per category, inspect new failures, and only ship improvements.</p></div>
+<div class="interview-q"><p class="iq">Your tutor must never solve exercises for students. How do you guarantee it?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Defence in depth: Socratic rules in the system prompt, output checks for solution-shaped responses, trap cases in the eval set run on every prompt/model change, and a fallback hint response on violation.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="5-9.html">← Lesson 5.9</a>
+<a class="nav-btn next" href="6-1.html">Lesson 6.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 3.4 — REST API Design &amp; Validation — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="3.4">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m3.html">Backend — Node.js &amp; Express, Properly</a> &nbsp;›&nbsp; Lesson 3.4</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 3.4 • Backend — Node.js &amp; Express, Properly • 40 min</span></div>
+<div class="reader-body">
+<h2>REST API Design &amp; Validation</h2>
+<p class="goal">Designing endpoints other code can rely on</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=BzpcPezUFQw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>REST API Design: Everything You Need to Build APIs Clients Can Trust</b><span>Sokurenko</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. REST in practice</a></li>
+<li><a href="#sub-2">2. One error shape, everywhere</a></li>
+<li><a href="#sub-3">3. Validation: the server trusts nobody</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can design a small REST API with sensible verbs, paths and error shapes, and validate every input as if the client were hostile — because one day it will be.</div>
+<h4 id="sub-1">1. REST in practice</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=BzpcPezUFQw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<ul>
+<li><b>Nouns, not verbs, in paths:</b> <code>POST /api/tutor</code>, not <code>/api/askTutorQuestion</code>. The HTTP method carries the verb.</li>
+<li><b>Methods mean things:</b> GET reads (no side effects), POST creates/acts, PUT/PATCH updates, DELETE removes.</li>
+<li><b>Stateless:</b> each request carries everything the server needs — no hidden session memory of "the last thing you asked".</li>
+</ul>
+<h4 id="sub-2">2. One error shape, everywhere</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=BzpcPezUFQw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>Consistency is what lets <code>ai.js</code> handle failures from 15 different AI modes with one code path.</p>
+<h4 id="sub-3">3. Validation: the server trusts nobody</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=BzpcPezUFQw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Client-side validation is a UX nicety; <b>server-side validation is the security boundary</b>. Anyone can call your API with curl, bypassing your UI entirely. So the server checks: is the field present? The right type? Within length limits? Is the mode one of the known 15? Skillzify's server validates mode, message sizes and user IDs on every AI route before spending a single Gemini token.</p>
+<div class="callout why"><b>The cost angle</b>Validation is also cost control: rejecting a 50,000-character "question" before it reaches a paid API is the difference between a hobby bill and a surprise.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>// Every Skillzify-style API error looks like this:
+{ "error": "question is required" }
+
+// Success shapes are documented per route and never improvised.</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Design (on paper) then implement two routes: POST /api/quiz {topic} → returns 3 generated-style questions from a static map, and POST /api/grade {answers[]} → returns a score. Reject missing/oversized/wrong-type input with the standard error shape and correct status codes. Test the failure cases with curl.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why is client-side validation never sufficient?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Clients are bypassable — anyone can call the API directly with curl or a script. Only server-side checks form a real boundary.</p></div>
+<div class="quiz-q"><p class="qq">Why keep one error shape across all routes?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">So client code handles every failure with a single code path instead of per-route special cases.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">How do you secure an API endpoint beyond authentication?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Validate and size-limit every input server-side, rate limit per IP/user, keep secrets server-side, return consistent errors that leak no internals.</p></div>
+<div class="interview-q"><p class="iq">GET vs POST — when does the choice actually matter?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">GET must be safe and idempotent (reads, cacheable, appears in logs/URLs); POST is for actions and creations with side effects, like spending an AI call.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="3-3.html">← Lesson 3.3</a>
+<a class="nav-btn next" href="3-5.html">Lesson 3.5 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

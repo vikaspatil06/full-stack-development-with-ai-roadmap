@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 7.9 — Publishing Basics — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="7.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m7.html">Android — Kotlin &amp; Jetpack Compose</a> &nbsp;›&nbsp; Lesson 7.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 7.9 • Android — Kotlin &amp; Jetpack Compose • 25 min</span></div>
+<div class="reader-body">
+<h2>Publishing Basics</h2>
+<p class="goal">From a debug APK to a Play Store listing real users can install</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=N1bpUYy_vgI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Google Play Console Tutorial 2026 | Publish Your Android App Successfully</b><span>YouTube</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Release builds are a different artefact</a></li>
+<li><a href="#sub-2">2. The listing is a product page</a></li>
+<li><a href="#sub-3">3. Test tracks before production</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can build a signed release bundle, set up a Play Console listing, run a closed test track, and explain what the review process checks.</div>
+<h4 id="sub-1">1. Release builds are a different artefact</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=N1bpUYy_vgI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>What you run on your phone is a debug APK: unsigned, unoptimised, and installable only by a developer. What the Play Store distributes is an App Bundle — an AAB — built in release mode with code shrinking, resource shrinking and a signing key that proves the app came from you. Lose that signing key and you can never update the app again under the same listing, so it lives in a keystore backed up in two places, never committed to git. Play App Signing holds the final key on Google's side; you hold the upload key.</p><h4 id="sub-2">2. The listing is a product page</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=N1bpUYy_vgI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A store listing needs an icon, screenshots on real device sizes, a short description that says what the app does in one breath, and a full description for search. Add a privacy policy URL, a content rating questionnaire, and the data safety section declaring what the app collects — for Skillzify, that means Firebase Auth identifiers and Firestore progress data. The data safety form is a legal statement, not marketing copy: get it wrong and the listing can be removed.</p><h4 id="sub-3">3. Test tracks before production</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=N1bpUYy_vgI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Never ship straight to production. Internal testing goes to your own team, closed testing to a list of real users, open testing to anyone who opts in — each a chance to catch crashes on devices you do not own. Google reviews every production release, usually within days, checking policy compliance and basic function. Staged rollouts then limit the blast radius: release to 10 percent, watch crash rates and reviews, and only then go to 100 percent.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Version codes only go up, and a published version can never be unpublished into the same code — every release is a commitment.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>// Release checklist, in order:
+// 1. gradlew bundleRelease          - build the signed AAB
+// 2. Version code +1, version name  - e.g. versionCode 3, "2.1.0"
+// 3. Internal track                 - install it yourself, on a real phone
+// 4. Closed track                   - 10+ testers, a week of real use
+// 5. Production, staged rollout     - 10 percent, watch crashes, then 100 percent
+// Signing key: backed up offline, never in git, never shared.</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Prepare the Skillzify Android app for release: bump the version code and name, build a signed release bundle, and write the full store listing — title, short and full description, and a data safety declaration for Auth and Firestore data. Upload it to the internal test track and install it from there on a real device.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why is the signing key the most important file in a release?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Without it you cannot publish updates under the same listing. Lose it and the app is effectively orphaned.</p></div>
+<div class="quiz-q"><p class="qq">Why ship to a closed test track before production?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Real users on real devices find crashes and policy issues you cannot, and a staged rollout limits the damage if something still slips through.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">AAB vs APK — why does Google prefer bundles?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">An AAB lets Google generate optimised APKs per device — only the needed screen densities and CPU architectures — so users download less.</p></div>
+<div class="interview-q"><p class="iq">Your release is rejected in review. What do you do first?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Read the rejection reason exactly, fix the policy issue — often the data safety form or a permission — and resubmit. Never resubmit unchanged hoping for a different reviewer.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="7-8.html">← Lesson 7.8</a>
+<a class="nav-btn next" href="8-1.html">Lesson 8.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

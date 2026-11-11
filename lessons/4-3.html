@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 4.3 — Firestore Queries &amp; Indexes — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="4.3">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m4.html">Data &amp; Auth — Firebase, plus SQL</a> &nbsp;›&nbsp; Lesson 4.3</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 4.3 • Data &amp; Auth — Firebase, plus SQL • 30 min</span></div>
+<div class="reader-body">
+<h2>Firestore Queries &amp; Indexes</h2>
+<p class="goal">Where, order, paginate — and the index error that teaches you the rules</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=lW7DWV2jST0" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Cloud Firestore Data Modeling (Google I/O'19)</b><span>Firebase</span></p>
+<p class="shared-note">Shared with Lesson 4.2 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Queries are built from filters, order and limits</a></li>
+<li><a href="#sub-2">2. The composite index rule</a></li>
+<li><a href="#sub-3">3. What queries cannot do</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can write compound Firestore queries, read the missing-index error, create the composite index it asks for, and paginate a list with cursors instead of loading everything.</div>
+<h4 id="sub-1">1. Queries are built from filters, order and limits</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=lW7DWV2jST0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A Firestore query starts from a collection and chains conditions: <b>where</b> filters documents, <b>orderBy</b> sorts them, <b>limit</b> caps how many come back. Every clause you add narrows the result, and every document returned costs one read — so a query that fetches 200 documents to show 10 is a billing bug, not just a slow page. Skillzify's community page, for example, asks for questions ordered by creation time, limited to the first page, instead of pulling the whole collection and sorting in JavaScript.</p><h4 id="sub-2">2. The composite index rule</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=lW7DWV2jST0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Firestore can answer a query only if an index exists for that exact combination of fields. Single-field indexes are automatic; the moment you combine a range filter on one field with an order on another, or filter on two fields, Firestore refuses and returns an error containing a direct link to create the missing composite index. That error is not a failure — it is the database telling you exactly what it needs. Create the index in the console, wait for it to build, and the same query works.</p><h4 id="sub-3">3. What queries cannot do</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=lW7DWV2jST0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Firestore has no joins, no full-text search and no server-side aggregation. You cannot ask for documents where any of five fields matches a substring, and you cannot ask the server to count or sum. Those jobs belong to a different layer: denormalised fields you maintain on write, a search service, or a small aggregation document updated by a Cloud Function. Designing around these limits is the real skill — the query syntax itself takes an afternoon.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Pagination uses a <b>cursor</b>: the last document of the page you just showed. Pass it to startAfter and Firestore returns the next slice. Never use offset for paging through large lists — it still reads and charges for every skipped document.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>import { collection, query, where, orderBy, limit, startAfter, getDocs } from "firebase/firestore";
+
+const q = query(
+  collection(db, "questions"),
+  where("section", "==", "beginner"),
+  where("answered", "==", true),
+  orderBy("createdAt", "desc"),
+  limit(10)
+);
+// First page: getDocs(q). Next page: same query plus startAfter(lastDoc).</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>In the Skillzify community, write a query that fetches the 10 most recent answered questions for one section. Then add a second where clause, trigger the missing-index error on purpose, follow its link to create the composite index, and re-run the query. Finally, implement a Load more button using startAfter with the last visible document as the cursor.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why does Firestore refuse a query that combines a filter on one field with an order on another?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">No index exists for that field combination. Single-field indexes are automatic, but compound combinations need a composite index, which the error message links you to create.</p></div>
+<div class="quiz-q"><p class="qq">Why is startAfter better than offset for pagination?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">startAfter resumes from a cursor document, while offset still reads and bills for every document it skips.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">A query needs a composite index — what does that tell you about how Firestore executes queries?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Firestore answers queries from pre-built indexes, not by scanning documents. A query without a matching index cannot run, which is why reads stay fast and predictable at scale.</p></div>
+<div class="interview-q"><p class="iq">How would you implement search across lesson titles in Firestore?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Firestore has no full-text search. Maintain a lowercase keyword array on write and query it with array-contains, or use a dedicated search service for real text search.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="4-2.html">← Lesson 4.2</a>
+<a class="nav-btn next" href="4-4.html">Lesson 4.4 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

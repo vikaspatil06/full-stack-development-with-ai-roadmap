@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 6.2 — Pyodide Deep — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="6.2">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m6.html">Product Tools — Editor, In-Browser Runtime &amp; Diagrams</a> &nbsp;›&nbsp; Lesson 6.2</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 6.2 • Product Tools — Editor, In-Browser Runtime &amp; Diagrams • 35 min</span></div>
+<div class="reader-body">
+<h2>Pyodide Deep</h2>
+<p class="goal">Real Python in the browser: workers, packages, and the JS bridge</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=eYekV2Do0YU" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Master WebAssembly: The Complete Course from Beginner to Advanced</b><span>KubeSimplify</span></p>
+<p class="shared-note">Shared with Lesson 6.1 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Pyodide is CPython compiled to WebAssembly</a></li>
+<li><a href="#sub-2">2. Run it in a Worker, never on the main thread</a></li>
+<li><a href="#sub-3">3. The bridge: stdout, packages, and data</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can load Pyodide in a Web Worker, run user code with captured stdout, install packages with micropip, and pass data between Python and JavaScript without freezing the page.</div>
+<h4 id="sub-1">1. Pyodide is CPython compiled to WebAssembly</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=eYekV2Do0YU" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Pyodide is the real CPython interpreter, compiled to WebAssembly so it runs entirely in the browser — no server, no sandbox account, no per-run cost. That is why Skillzify's Code Studio can run learner code instantly and offline: the runtime downloads once, then every run is local. The trade-off is size and startup time — the runtime is several megabytes — so you load it once, lazily, and show honest loading state instead of pretending it is instant.</p><h4 id="sub-2">2. Run it in a Worker, never on the main thread</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=eYekV2Do0YU" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Python code can loop forever, and a loop on the main thread freezes the whole page. The fix is a Web Worker: Pyodide lives in a separate thread, the UI stays responsive, and you can terminate the worker when code runs too long. Communication is message-passing — the main thread sends code, the worker sends back output, errors and a done signal. Skillzify's compiler is this architecture: the editor is the UI, the worker is the machine.</p><h4 id="sub-3">3. The bridge: stdout, packages, and data</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=eYekV2Do0YU" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Three bridge details make it feel like a real environment. First, capture stdout by redirecting Python's print output into a buffer the worker returns as text. Second, install packages with micropip — loadPackage for the bundled scientific stack, micropip.install for pure-Python packages from PyPI — and cache them so the second run is fast. Third, move data across the bridge with toJs and fromJs: Python lists become JS arrays, dicts become Maps, and proxies must be destroyed or they leak memory.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Guard the worker with a timeout — terminate and respawn after a few seconds — because an infinite loop has no other off switch.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>// Inside the worker: load once, run many times
+importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js");
+let pyodideReady = loadPyodide();
+
+onmessage = async (e) =&gt; {
+  const pyodide = await pyodideReady;
+  pyodide.setStdout({ batched: (s) =&gt; postMessage({ type: "out", text: s }) });
+  try {
+    await pyodide.loadPackage("numpy"); // or micropip.install("requests")
+    const result = await pyodide.runPythonAsync(e.data.code);
+    postMessage({ type: "done", result: String(result) });
+  } catch (err) {
+    postMessage({ type: "error", text: String(err.message) });
+  }
+};
+// Main thread: new Worker("pyodide-worker.js"), post code, kill on timeout.</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Build a single-page Pyodide runner: a textarea, a Run button, and an output pane, with Pyodide in a Web Worker and a 5-second timeout that kills and respawns the worker. Verify three things: print output appears, an infinite loop freezes nothing, and import numpy works after loadPackage.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why must Pyodide run in a Web Worker instead of the main thread?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Python code can loop forever; on the main thread that freezes the page. A worker keeps the UI responsive and can be terminated on timeout.</p></div>
+<div class="quiz-q"><p class="qq">How do you get print output out of Pyodide and into your page?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Redirect Python stdout with setStdout and forward each batch to the main thread as a message, which appends it to the output pane.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Pyodide vs running Python on a server — when is each right?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Pyodide for instant, free, offline-capable runs of learner code; a server for untrusted code at scale, heavy packages, or work that must not depend on the user's device.</p></div>
+<div class="interview-q"><p class="iq">What leaks if you pass Python objects to JavaScript carelessly?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">PyProxy objects wrap Python values; if you never destroy them they hold Python objects alive and leak memory. Convert with toJs or destroy the proxy.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="6-1.html">← Lesson 6.1</a>
+<a class="nav-btn next" href="6-3.html">Lesson 6.3 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

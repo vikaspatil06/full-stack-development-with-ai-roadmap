@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 8.2 — Git Branching Strategies — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="8.2">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m8.html">DevOps, Cloud &amp; Shipping Like a Professional</a> &nbsp;›&nbsp; Lesson 8.2</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 8.2 • DevOps, Cloud &amp; Shipping Like a Professional • 25 min</span></div>
+<div class="reader-body">
+<h2>Git Branching Strategies</h2>
+<p class="goal">GitHub Flow, Git Flow, trunk-based — and how to pick without a meeting</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=DVRQoVRzMIY" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Git Tutorial for Beginners - Git &amp; GitHub Fundamentals In Depth</b><span>Tech With Tim</span></p>
+<p class="shared-note">Shared with Lesson 8.1 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. The three strategies, honestly compared</a></li>
+<li><a href="#sub-2">2. The pull request is the unit of review</a></li>
+<li><a href="#sub-3">3. Merge conflicts are normal, not emergencies</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can compare the three main branching strategies, run a feature-branch workflow with pull requests, and resolve a merge conflict without losing work.</div>
+<h4 id="sub-1">1. The three strategies, honestly compared</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=DVRQoVRzMIY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Git Flow uses long-lived develop and release branches with strict rules — powerful for versioned software with scheduled releases, heavy for a solo project. GitHub Flow is simpler: main is always deployable, every change is a short-lived feature branch merged by pull request — the right default for a continuously deployed web app like Skillzify. Trunk-based development goes further: tiny branches merged within a day, with feature flags hiding unfinished work. The differences are about release cadence and team size, not about which is more correct.</p><h4 id="sub-2">2. The pull request is the unit of review</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=DVRQoVRzMIY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A feature branch exists to make a change reviewable: one branch, one purpose, a pull request that describes what changed and why. Keep branches small — a pull request touching forty files is reviewed by skimming, which is to say not reviewed at all. Merge with a squash or a merge commit deliberately: squash keeps main's history readable, merge commits preserve the branch's story. Skillzify's history shows the discipline working — one commit per feature, named so the log reads like a changelog.</p><h4 id="sub-3">3. Merge conflicts are normal, not emergencies</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=DVRQoVRzMIY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A conflict means two branches changed the same lines, and Git cannot decide. Resolve it by reading both versions, choosing the correct combination — often both changes are needed — and testing the result before committing the resolution. Never resolve by accepting one side blindly. Rebase keeps history linear by replaying your branch onto the latest main, but it rewrites commits — fine for your own branch, forbidden for shared ones. The rule is simple: rebase private branches, merge public ones.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Branch naming is a small kindness that pays off in the log: feature/, fix/ and docs/ prefixes tell any reader what a branch is before they open it.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code># The GitHub Flow loop, as run daily:
+git checkout main &amp;&amp; git pull
+ git checkout -b feature/mastery-badges
+# ... work, commit in small steps ...
+git push -u origin feature/mastery-badges
+# Open a pull request, get review, squash-merge, delete the branch.
+# Conflict? git pull --rebase, resolve markers, git rebase --continue.</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Create a feature branch for a small Skillzify change, make three focused commits, and open a pull request with a description a reviewer can act on. Then deliberately create a merge conflict with a second branch, resolve it by keeping both changes, and verify the merged result still builds.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">When is GitHub Flow a better fit than Git Flow?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">For continuously deployed apps with a small team, where main is always deployable and releases are frequent — Git Flow's release branches add process with no benefit.</p></div>
+<div class="quiz-q"><p class="qq">Why must you never rebase a shared branch?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Rebase rewrites commit history. Others who based work on the old commits end up with duplicated, conflicting history.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Your pull request touches 40 files. What does the reviewer do, and what should you have done?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">They skim it and miss things. Split the change into small, separately reviewable pull requests, each with one purpose.</p></div>
+<div class="interview-q"><p class="iq">Squash merge vs merge commit — how do you choose?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Squash for a clean, one-commit-per-feature main history; merge commits when the branch's own history is worth preserving. Pick one and stay consistent.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="8-1.html">← Lesson 8.1</a>
+<a class="nav-btn next" href="8-3.html">Lesson 8.3 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

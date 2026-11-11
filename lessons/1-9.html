@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 1.9 — React Fundamentals — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="1.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m1.html">JavaScript Deep + Modern Frontend</a> &nbsp;›&nbsp; Lesson 1.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 1.9 • JavaScript Deep + Modern Frontend • 50 min</span></div>
+<div class="reader-body">
+<h2>React Fundamentals</h2>
+<p class="goal">The industry add-on: components, props, hooks</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=u6gSSpfsoOQ" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>React JavaScript Framework for Beginners – Project-Based Course</b><span>freeCodeCamp.org</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Components: UI as functions</a></li>
+<li><a href="#sub-2">2. State with useState, effects with useEffect</a></li>
+<li><a href="#sub-3">3. What React removes — and what it costs</a></li>
+<li><a href="#sub-4">4. Next.js, at concept level</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can build a small React app with components, props, useState and useEffect, and explain honestly when React beats vanilla JS — and when it doesn't.</div>
+<h4 id="sub-1">1. Components: UI as functions</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=u6gSSpfsoOQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>A React component is a function that takes <b>props</b> (inputs) and returns a description of UI in JSX — HTML-like syntax inside JavaScript. The lesson app from the last lesson becomes:</p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<h4 id="sub-2">2. State with useState, effects with useEffect</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=u6gSSpfsoOQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p><code>useState</code> gives a component memory; calling the setter re-renders with the new value — you never touch the DOM directly. <code>useEffect</code> runs side effects (fetching, titles, subscriptions) after render, with a dependency array controlling when. Lists need a stable <code>key</code> per item so React can track identity across renders.</p>
+<h4 id="sub-3">3. What React removes — and what it costs</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=u6gSSpfsoOQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>React removes manual DOM updates, render-order bugs and a whole class of state/UI mismatches. It costs a build step, a bundle to download, and new failure modes (effect loops, stale closures). Skillzify chose vanilla deliberately: no build step, instant loads, and pages that embed Pyodide without toolchain friction. A content-heavy product dashboard at a company would usually choose React. Knowing <i>both</i> — and being able to defend either choice — is the interview-grade answer.</p>
+<h4 id="sub-4">4. Next.js, at concept level</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=u6gSSpfsoOQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Next.js is React plus conventions: files in a folder become routes, and components can render on the server (fast first paint, good SEO) or the client (interactive). Learn the file-routing and server/client component ideas now; go deep only when a project needs it.</p>
+<div class="callout why"><b>How this fits your stack</b>React is not in Skillzify — it's the industry layer on top. Your Phase 1 build (same app, both ways) is what turns this lesson from trivia into judgement.</div>
+<div class="callout build"><b>Watch out — common mistakes</b><ul>
+<li>Putting everything in one giant component with prop drilling ten levels deep.</li>
+<li>useEffect with missing dependencies causing stale data, or no dependency array causing effect loops.</li>
+</ul></div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>function LessonCard({ title, xp, done }) {
+  return (
+    &lt;div className="card"&gt;
+      &lt;h3&gt;{title}&lt;/h3&gt;
+      &lt;p&gt;{xp} XP {done ? "✓" : ""}&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre></div>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>function XpCounter() {
+  const [xp, setXp] = useState(0);
+  useEffect(() => { document.title = "XP: " + xp; }, [xp]);
+  return &lt;button onClick={() => setXp(xp + 10)}&gt;+10 XP ({xp})&lt;/button&gt;;
+}</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Rebuild your Lesson 1.3 app in React (Vite or an online playground): a lesson list rendered from data, an XP counter with useState, and a useEffect that updates the page title with total XP. Write two sentences on what React removed and what it cost.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">What does calling setXp actually do in React?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">It schedules a re-render with the new state value; React updates the DOM to match. You never manipulate DOM nodes yourself.</p></div>
+<div class="quiz-q"><p class="qq">Give one honest reason Skillzify uses vanilla JS instead of React.</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">No build step and instant page loads, with simple embedding of heavy libraries like Pyodide; the site's interactivity doesn't need a framework's machinery.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Explain useState and useEffect to a vanilla JS developer.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">useState gives a component memory that triggers re-render on change; useEffect runs side effects after render, scoped by a dependency array.</p></div>
+<div class="interview-q"><p class="iq">When would you NOT choose React?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Content-first pages, tiny interactivity, or where a build step and bundle cost outweigh benefits — e.g. Skillzify's fast, framework-free pages.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="1-8.html">← Lesson 1.8</a>
+<a class="nav-btn next" href="2-1.html">Lesson 2.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

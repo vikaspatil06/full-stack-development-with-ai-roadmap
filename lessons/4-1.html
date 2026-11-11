@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 4.1 — Firebase Authentication — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="4.1">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m4.html">Data &amp; Auth — Firebase, plus SQL</a> &nbsp;›&nbsp; Lesson 4.1</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 4.1 • Data &amp; Auth — Firebase, plus SQL • 40 min</span></div>
+<div class="reader-body">
+<h2>Firebase Authentication</h2>
+<p class="goal">Email/password auth across web and Android</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=6kgitEWTxac" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>React Firebase Authentication Crash Course With Context API and Protected Routes For Beginners</b><span>React Firebase Authentication</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. What Firebase Auth actually does</a></li>
+<li><a href="#sub-2">2. Auth state is a stream, not a snapshot</a></li>
+<li><a href="#sub-3">3. The public API key paradox</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can wire Firebase Auth into a page, react to auth state correctly, and explain why the Firebase web API key being visible is not a security hole.</div>
+<h4 id="sub-1">1. What Firebase Auth actually does</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=6kgitEWTxac" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>You hand Firebase an email and password; it verifies credentials, issues the user an identity (<b>uid</b>), and keeps a session alive across reloads. Your code never sees or stores passwords — that entire risk class (hashing, resets, breaches) belongs to Firebase. Skillzify uses Email/Password only, with one account shared by web and Android: project <code>skillzify-1d0f2</code>.</p>
+<h4 id="sub-2">2. Auth state is a stream, not a snapshot</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=6kgitEWTxac" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>The classic beginner bug is checking "current user" once on page load — at that moment Firebase may still be restoring the session and reports null for a signed-in user. <code>onAuthStateChanged</code> fires when the state is <i>known</i> and again on every sign-in/out. Skillzify's <code>auth.js</code> (compat SDK 11.3.1) builds the whole login flow around this listener.</p>
+<h4 id="sub-3">3. The public API key paradox</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=6kgitEWTxac" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify's web config — including its API key — sits in plain sight in <code>auth.js</code>. This is by design: the key identifies the <i>project</i>, not a secret credential. Real security comes from <b>Firestore security rules</b> (Lesson 4.4) and the list of authorised domains in the Firebase console. A leaked "key" that only identifies a locked-down project grants nothing.</p>
+<div class="callout why"><b>UX detail that matters</b>Auth errors should be human: "wrong password" beats Firebase's raw error codes. Map codes to friendly messages in auth.js, and never reveal whether an email exists on password-reset flows.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>firebase.auth().onAuthStateChanged((user) => {
+  if (user) { loadProgress(user.uid); showApp(); }
+  else { showLogin(); }
+});</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>In a scratch Firebase project: add Email/Password auth, build a page with sign-up/sign-in/sign-out driven entirely by onAuthStateChanged, and deliberately reproduce the 'null on first load' bug by reading currentUser synchronously — then fix it with the listener.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why is checking firebase.auth().currentUser once on page load unreliable?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Session restoration is asynchronous; currentUser can be null at load even for a signed-in user. onAuthStateChanged reports the state once it is actually known.</p></div>
+<div class="quiz-q"><p class="qq">If the Firebase web API key is public, what actually secures the data?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Firestore security rules (per-user access control) plus authorised domains in the console. The key identifies the project; rules enforce access.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">A user pastes your Firebase config from view-source and says your app is hacked. Respond.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">The web config is public by design — it identifies the project. Security is enforced by Firestore rules and authorised domains; demonstrate a denied cross-user read to prove it.</p></div>
+<div class="interview-q"><p class="iq">How does your app know a user is signed in on page load?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">It doesn't guess: onAuthStateChanged fires after session restoration with the user or null, and the UI renders from that event.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="3-9.html">← Lesson 3.9</a>
+<a class="nav-btn next" href="4-2.html">Lesson 4.2 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 0.1 — How a Web Page Loads — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="0.1">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m0.html">Foundations — How the Web Actually Works</a> &nbsp;›&nbsp; Lesson 0.1</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 0.1 • Foundations — How the Web Actually Works • 25 min</span></div>
+<div class="reader-body">
+<h2>How a Web Page Loads</h2>
+<p class="goal">From typing a URL to pixels on screen</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>What Happens When You Type a URL? (DNS, TCP, TLS, HTTP Explained)</b><span>BrightShell</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. The journey of one page load</a></li>
+<li><a href="#sub-2">2. Why scripts go at the bottom</a></li>
+<li><a href="#sub-3">3. Cache-busting: the ?v=29 trick</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can trace exactly what happens between pressing Enter on a Skillzify URL and seeing the homepage — and explain why Skillzify's scripts sit at the bottom of the page.</div>
+<h4 id="sub-1">1. The journey of one page load</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>When a browser opens <b>https://skillzify-v2-staging.onrender.com</b>, five things happen in order:</p>
+<ul>
+<li><b>DNS lookup</b> — the domain name is translated into the IP address of a Render server.</li>
+<li><b>HTTP request</b> — the browser asks that server for <code>index.html</code>. The server replies with the file's text. Nothing has been "run" yet — HTML is just text.</li>
+<li><b>Parsing</b> — the browser reads the HTML top to bottom and builds the <b>DOM</b> (Document Object Model): a live tree of elements it can draw and JavaScript can change.</li>
+<li><b>CSS is fetched and parsed</b> — a stylesheet link like <code>assets/css/style.css?v=29</code> triggers another request. The parsed rules become the <b>CSSOM</b>. DOM + CSSOM together decide what gets painted.</li>
+<li><b>JavaScript runs last</b> — scripts execute in the order they appear, and each one can read and modify the DOM.</li>
+</ul>
+<h4 id="sub-2">2. Why scripts go at the bottom</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>A classic script <b>blocks parsing</b> while it downloads and runs. Put a script in the head and the browser stops building the page until it finishes. Skillzify puts all its scripts just before the closing body tag, so the learner sees the page first and the behaviour arrives a moment later.</p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>Order matters because later files use helpers from earlier ones: <code>auth.js</code> and <code>sync.js</code> call the toast and storage helpers that <code>app.js</code> defines. Swap the order and the page breaks with "not a function" errors.</p>
+<h4 id="sub-3">3. Cache-busting: the ?v=29 trick</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=zHqEIUjxtRA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Browsers cache CSS and JS aggressively. If you fix a bug in <code>style.css</code> but the learner's browser keeps the old cached copy, your fix never arrives. Skillzify appends a version query — <code>style.css?v=29</code> — and bumps the number on every change. A new URL means a fresh download.</p>
+<div class="callout why"><b>How Skillzify uses this</b>There is no build step and no framework. You can run the entire site locally with one command — <code>python3 -m http.server 8080</code> inside the project folder — because a page load really is just files being served.</div>
+<div class="callout build"><b>Watch out — common mistakes</b><ul>
+<li>Putting scripts in the head and wondering why the page renders slowly — classic scripts block parsing.</li>
+<li>Assuming a pushed file change reaches users instantly, ignoring browser caching (hence ?v=).</li>
+</ul></div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>&lt;!-- Skillzify index.html, end of body: order is a dependency chain --&gt;
+&lt;script src="assets/js/nav.js"&gt;&lt;/script&gt;
+&lt;script src="assets/js/app.js?v=5"&gt;&lt;/script&gt;
+&lt;script src="assets/js/auth.js?v=7"&gt;&lt;/script&gt;
+&lt;script src="assets/js/sync.js?v=17"&gt;&lt;/script&gt;</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Run Skillzify locally with python3 -m http.server 8080. Open DevTools → Network, reload, and find: the HTML document, style.css, and three JS files. Note the load order and which file is largest.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why do Skillzify's scripts sit at the bottom of the page?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">Classic scripts block HTML parsing while they download and run. At the bottom, the page content paints first and behaviour loads after.</p></div>
+<div class="quiz-q"><p class="qq">What does style.css?v=29 do, and why does the number change?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">It is cache-busting. The changed query string makes the URL new, so browsers download the fresh CSS instead of reusing a cached copy.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Walk me through what happens when I type your site's URL.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">DNS resolves the domain, the browser requests index.html, parses it into the DOM, fetches CSS (CSSOM) and JS in order, then paints — with scripts at the bottom so content renders first.</p></div>
+<div class="interview-q"><p class="iq">Why does your site version its CSS/JS URLs?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Cache-busting: a changed query string creates a new URL, forcing browsers to fetch the updated file instead of a stale cached copy.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="b-10.html">← Lesson B.10</a>
+<a class="nav-btn next" href="0-2.html">Lesson 0.2 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

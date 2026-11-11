@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson B.9 — Git Base — Init, Add, Commit, Push, GitHub Basics — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="B.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/b.html">Basics — Start From Zero</a> &nbsp;›&nbsp; Lesson B.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson B.9 • Basics — Start From Zero • 25 min</span></div>
+<div class="reader-body">
+<h2>Git Base — Init, Add, Commit, Push, GitHub Basics</h2>
+<p class="goal">Version control from your first commit</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=tRZGeaHPoaw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Git and GitHub Tutorial for Beginners</b><span>Kevin Stratvert</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Git tracks snapshots, not files</a></li>
+<li><a href="#sub-2">2. The core workflow</a></li>
+<li><a href="#sub-3">3. Commit messages are documentation</a></li>
+<li><a href="#sub-4">4. Never commit secrets</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can initialise a repo, stage and commit changes, push to GitHub, and explain what each step actually does.</div>
+<h4 id="sub-1">1. Git tracks snapshots, not files</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=tRZGeaHPoaw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Git records snapshots of your project over time. Each commit is a checkpoint with a message, a timestamp and a parent commit, forming a history you can rewind. Skillzify's entire history lives this way: every feature, fix and refactor is a commit you can inspect, which is why a bug can be traced to the exact change that introduced it.</p><h4 id="sub-2">2. The core workflow</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=tRZGeaHPoaw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Four commands cover daily work. <code>git init</code> creates a repo. <code>git add</code> stages changes into the next snapshot. <code>git commit -m</code> records the snapshot with a message. <code>git push</code> sends commits to GitHub, the remote copy. <code>git status</code> and <code>git log</code> show where you stand and what happened before.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. Commit messages are documentation</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=tRZGeaHPoaw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Write messages in the imperative mood describing what the change does: Add, Fix, Update, Remove. A future you, or a teammate, reads the log to understand why a line exists. Vague messages like update stuff are a small debt that compounds into an unreadable history.</p><h4 id="sub-4">4. Never commit secrets</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=tRZGeaHPoaw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>API keys, passwords and service-account files must never reach GitHub. A <code>.gitignore</code> file lists paths Git skips, and a committed <code>.env.example</code> shows the shape of the config without the values. Skillzify's Firebase web config is public by design, but its Gemini key lives only in environment variables on Render.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>git init
+ git add .
+ git commit -m "Add lesson list page"
+ git branch -M main
+ git remote add origin https://github.com/vikaspatil06/demo.git
+ git push -u origin main
+# later, each change is:
+ git add . &amp;&amp; git commit -m "Fix theme toggle" &amp;&amp; git push</pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Create a practice repo: init it, add a .gitignore with node_modules and .env, commit a small HTML file, create the repo on GitHub, and push. Then make a second commit fixing one line and push again; check git log shows both.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">What is the difference between git add and git commit?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">add stages changes into the next snapshot; commit records that staged snapshot into history. Nothing is saved until you commit.</p></div>
+<div class="quiz-q"><p class="qq">Why does a .env file belong in .gitignore?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">It holds secrets like API keys. Once pushed to GitHub, a secret is public forever — even deleting it later leaves it in history.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Explain the difference between git and GitHub.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Git is the version-control tool that runs locally and tracks history; GitHub is a hosting service for Git repos that adds collaboration, pull requests and CI.</p></div>
+<div class="interview-q"><p class="iq">What does git status tell you?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Which files are staged, modified, untracked or clean, and which branch you are on — the state of your working tree versus the last commit.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="b-8.html">← Lesson B.8</a>
+<a class="nav-btn next" href="b-10.html">Lesson B.10 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 3.8 — Testing APIs — Postman, curl, and Automated Checks — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="3.8">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m3.html">Backend — Node.js &amp; Express, Properly</a> &nbsp;›&nbsp; Lesson 3.8</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 3.8 • Backend — Node.js &amp; Express, Properly • 30 min</span></div>
+<div class="reader-body">
+<h2>Testing APIs — Postman, curl, and Automated Checks</h2>
+<p class="goal">Prove the endpoint before the frontend exists</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=wEOLZq-7DYs" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Learn Postman for API Testing (Step-by-Step Tutorial)</b><span>YouTube</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Test the API before the UI</a></li>
+<li><a href="#sub-2">2. A request is method, URL, headers, body</a></li>
+<li><a href="#sub-3">3. What to check on every endpoint</a></li>
+<li><a href="#sub-4">4. From manual to automated</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can test any API with Postman and curl, write a small automated API test, and explain why testing the API first saves frontend debugging time.</div>
+<h4 id="sub-1">1. Test the API before the UI</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=wEOLZq-7DYs" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When a feature breaks, the first question is whether the API or the frontend is at fault. Testing the endpoint directly answers it in seconds. Postman gives you a visual way to build requests, save them into collections, and share them; curl does the same from the terminal and in scripts. Both beat guessing from a broken UI.</p><h4 id="sub-2">2. A request is method, URL, headers, body</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=wEOLZq-7DYs" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Every API call is four things: the method, the URL with any path or query parameters, headers like Content-Type and Authorization, and the body. Set each deliberately in Postman, save the request, and you have a regression check you can re-run after every server change. Skillzify's tutor endpoint is one saved request away from a full test.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><h4 id="sub-3">3. What to check on every endpoint</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=wEOLZq-7DYs" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Happy path returns the right status and shape. Missing fields return 400. Bad auth returns 401. Too many requests return 429. An oversized body is rejected. Each of these is a one-line test in Postman or a script, and together they form a contract the frontend can rely on.</p><h4 id="sub-4">4. From manual to automated</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=wEOLZq-7DYs" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Postman collections can run as a suite with assertions on status and body, and the same checks can live as automated tests using a library like supertest against the Express app. Manual testing finds bugs once; automated tests find them every time the code changes.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre># Health check
+curl http://localhost:3000/api/health
+# Tutor call with a JSON body
+curl -X POST http://localhost:3000/api/tutor \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What is a closure?"}'
+# Same call, show headers and status
+curl -i -X POST http://localhost:3000/api/tutor \
+  -H "Content-Type: application/json" \
+  -d '{}'</pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>In Postman, create a collection for your Express app with requests for the health check, a valid tutor call, an empty-body call, and a call with a bad token. Save the expected status for each, run the collection, and record the results.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why test an API directly instead of only through the frontend?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">It isolates the fault: if the endpoint works in Postman but not in the UI, the bug is in the frontend; if it fails in Postman too, it is the server.</p></div>
+<div class="quiz-q"><p class="qq">What four things define an API request?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Method, URL, headers, and body. Getting any one wrong is the most common cause of a failing call.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">How do you test a rate-limited endpoint?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Send requests until the limit fires and confirm a 429 with the right message, then confirm requests succeed again after the window resets.</p></div>
+<div class="interview-q"><p class="iq">What is the difference between manual API testing and automated API tests?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Manual testing in Postman or curl finds a bug once; automated tests run the same checks on every change, so regressions are caught immediately.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="3-7.html">← Lesson 3.7</a>
+<a class="nav-btn next" href="3-9.html">Lesson 3.9 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

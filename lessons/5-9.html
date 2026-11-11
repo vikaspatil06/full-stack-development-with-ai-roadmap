@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 5.9 — Reliability: Failover, Key Rotation &amp; Cost — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="5.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m5.html">AI Engineering — From Gemini Calls to RAG Systems ★</a> &nbsp;›&nbsp; Lesson 5.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 5.9 • AI Engineering — From Gemini Calls to RAG Systems ★ • 45 min</span></div>
+<div class="reader-body">
+<h2>Reliability: Failover, Key Rotation &amp; Cost</h2>
+<p class="goal">The engineering that keeps a free-tier AI product alive</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=yFokwfBrklg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>What Happens When Your API Has No Rate Limit?</b><span>API Rate Limiting</span></p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Everything fails; design the order of falling back</a></li>
+<li><a href="#sub-2">2. Key rotation: quota as a pool</a></li>
+<li><a href="#sub-3">3. Cost estimation: arithmetic before architecture</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can design a failover chain across models and keys, explain Skillzify's rotation and caps as one system, and estimate the cost of an AI feature before building it.</div>
+<h4 id="sub-1">1. Everything fails; design the order of falling back</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=yFokwfBrklg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Skillzify's server tries a <b>primary Gemini model</b>, and on failure (quota, overload, error) walks a failover list across 6 models — 2.5-flash family, flash-lite variants and newer releases. The principle: a slightly weaker model's answer beats an error page. Failover order is a product decision — order by (quality × availability), and log which rung served each request, or you'll never know your real reliability.</p>
+<h4 id="sub-2">2. Key rotation: quota as a pool</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=yFokwfBrklg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p>Free-tier quotas attach per key/project. Skillzify holds several keys (<code>GEMINI_API_KEYS</code>) and rotates, multiplying headroom (verified capacity ~1,080 calls/day across keys). Rotation pairs with Module 3.4's per-user caps: caps stop one user draining the pool; rotation sizes the pool.</p>
+<h4 id="sub-3">3. Cost estimation: arithmetic before architecture</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=yFokwfBrklg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<p>Run this napkin math for every AI feature <i>before</i> building it. It tells you your cap values, whether streaming is worth it, and when a feature needs a paid tier. Also design for model churn: Skillzify's primary model auto-routes to a successor on a set date — pinning your product to one model name forever is a scheduled outage.</p>
+<div class="callout why"><b>Retry discipline</b>Retry transient failures (5xx, timeouts) with a small backoff, once or twice. Never retry validation errors or refusals — you'll pay to fail repeatedly. And every retry counts against caps and cost.</div>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>cost/day ≈ users × calls/user × (input + output tokens) × price/token
+Example: 200 users × 10 calls × 1,500 tokens ≈ 3M tokens/day</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Write the failover logic for your /api/explain route: try model A with key 1; on 429/5xx, try model A key 2; then model B key 1; log which combination served. Simulate failures by making the first key deliberately invalid and prove the chain still answers.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why is a weaker model's answer usually better than an error?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">The feature's value is the answer; a slightly lower-quality successful response preserves the user experience, and you can log and tune quality separately from availability.</p></div>
+<div class="quiz-q"><p class="qq">Caps and key rotation solve different problems — which is which?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Caps bound demand per user (cost/abuse control). Rotation expands supply (pooled quota across keys). You need both: pooled supply is still finite.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Your AI feature must stay up on a free tier. Architecture?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Per-user caps and rate limits on my server, a pool of API keys with rotation, model failover ordered by quality/availability, logged fallback rates, and graceful degradation messaging when everything is down.</p></div>
+<div class="interview-q"><p class="iq">How do you estimate an LLM feature's running cost?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Users × calls per user × average tokens per call × price per token — computed per day/month before building, then validated against real usage logs.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="5-8.html">← Lesson 5.8</a>
+<a class="nav-btn next" href="5-10.html">Lesson 5.10 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

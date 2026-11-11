@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 6.6 — Mermaid Advanced — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="6.6">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m6.html">Product Tools — Editor, In-Browser Runtime &amp; Diagrams</a> &nbsp;›&nbsp; Lesson 6.6</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 6.6 • Product Tools — Editor, In-Browser Runtime &amp; Diagrams • 25 min</span></div>
+<div class="reader-body">
+<h2>Mermaid Advanced</h2>
+<p class="goal">Subgraphs, styling, interaction — diagrams that behave like UI</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=nLqfCN0KoXw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>How Do Robots Make Decisions? Programming 101 with Mermaid</b><span>GriebZ</span></p>
+<p class="shared-note">Shared with Lesson 6.5 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Subgraphs group ideas, styles direct the eye</a></li>
+<li><a href="#sub-2">2. Diagrams can be interactive</a></li>
+<li><a href="#sub-3">3. Render failures are a product problem</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can write Mermaid diagrams with subgraphs and custom styles, make nodes clickable, handle render errors gracefully, and choose the right diagram type for the idea.</div>
+<h4 id="sub-1">1. Subgraphs group ideas, styles direct the eye</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=nLqfCN0KoXw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A flat flowchart of twenty nodes is unreadable; subgraphs fix that by grouping related nodes into labelled boxes — input, processing, output — so the reader sees structure before detail. Styling goes further: class definitions colour nodes by role, so decision points, errors and success paths are recognisable at a glance. Skillzify's flowchart generator emits subgraphs for function boundaries and colours error paths differently, which is why generated diagrams stay readable as programs grow.</p><h4 id="sub-2">2. Diagrams can be interactive</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=nLqfCN0KoXw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Mermaid nodes support click bindings: a node can link to a URL or trigger a callback. In Skillzify that means a flowchart node can jump to the lesson that explains the concept it represents — the diagram becomes navigation, not just a picture. Direction matters too: top-to-bottom suits processes, left-to-right suits timelines, and switching direction is one word in the diagram source. When a diagram renders badly, the fix is usually direction or grouping, not more nodes.</p><h4 id="sub-3">3. Render failures are a product problem</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=nLqfCN0KoXw" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Mermaid parses a text syntax, and invalid syntax fails at render time — in front of the user. Never let a render error become a blank page: catch the failure, show the offending line, and keep the source visible so it can be fixed. Security level matters as well: Mermaid's default settings can execute embedded interaction, so Skillzify renders with a strict security level and sanitises generated source before it ever reaches the renderer.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>One diagram source, three powers: structure from subgraphs, meaning from classes, and behaviour from click bindings.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>flowchart TD
+  subgraph Input
+    A[Read code] --&gt; B[Parse to AST]
+  end
+  subgraph Output
+    B --&gt; C[Build JSON]
+    C --&gt; D[Render diagram]
+  end
+  B --&gt; E[Syntax error]
+  classDef error fill:#7f1d1d,color:#fff;
+  class E error;
+  click D "https://skillzify.example.com/lessons/mermaid" "Open the lesson"</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Write a Mermaid flowchart for the Skillzify flowchart pipeline — Python code in, JSON in the middle, diagram out — using two subgraphs, one styled error node, and a click binding on the render node. Then deliberately break the syntax, confirm your page shows a helpful error with the source intact, and fix it.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">When should you use subgraphs instead of adding more nodes to a flat diagram?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">When nodes form natural groups — input, processing, output — so the reader sees structure before detail and the diagram stays readable at twenty-plus nodes.</p></div>
+<div class="quiz-q"><p class="qq">Why must Mermaid render errors be caught and shown, not left blank?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">A blank page hides the problem. Showing the error and the source lets the user fix the one broken line instead of guessing.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Flowchart, sequence diagram, class diagram — how do you choose?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">By what you need to show: control flow, interaction over time, or static structure. The idea picks the diagram, not the other way round.</p></div>
+<div class="interview-q"><p class="iq">Why does rendering user-generated Mermaid need a strict security level?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Mermaid can bind interactions from diagram source, so untrusted source could inject behaviour. Strict mode and sanitisation keep diagrams pictures, not code.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="6-5.html">← Lesson 6.5</a>
+<a class="nav-btn next" href="6-7.html">Lesson 6.7 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>

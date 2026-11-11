@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark"/>
+<link rel="icon" href="data:,"/>
+<title>Lesson 8.9 — Monitoring &amp; Analytics Deep — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css"/>
+</head>
+<body data-page="lesson" data-lesson="8.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span> Full Stack + AI — Study Lessons</a>
+<nav class="nav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../index.html#how">How to study</a><a href="../index.html#timeline">Schedule</a><a href="../index.html#mastery">Mastery check</a>
+<span class="xp-badge" data-xp-badge>0 XP</span></nav></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m8.html">DevOps, Cloud &amp; Shipping Like a Professional</a> &nbsp;›&nbsp; Lesson 8.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 8.9 • DevOps, Cloud &amp; Shipping Like a Professional • 25 min</span></div>
+<div class="reader-body">
+<h2>Monitoring &amp; Analytics Deep</h2>
+<p class="goal">Uptime, alerts, funnels — knowing before your users tell you</p>
+<h3 class="lesson-sec" id="watch">1 · Watch</h3>
+<div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Deploying Django + React on Render in 2026: Complete Tutorial (Free &amp; Easy)</b><span>Code Live Cam</span></p>
+<p class="shared-note">Shared with Lesson 8.6 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
+</div>
+<h3 class="lesson-sec" id="read">2 · Read</h3>
+<ol class="sub-index">
+<li><a href="#sub-1">1. Monitoring answers: is it up, and is it healthy?</a></li>
+<li><a href="#sub-2">2. Analytics funnels find the broken step</a></li>
+<li><a href="#sub-3">3. The incident runbook</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can set up uptime checks and log alerts, read a GA4 funnel to find where learners drop off, and write an incident runbook for the Skillzify backend.</div>
+<h4 id="sub-1">1. Monitoring answers: is it up, and is it healthy?</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Uptime checks ping your service from outside and tell you when it is down — ideally before a learner does. Log alerts go further: they watch for patterns, like a spike in 500 errors or a sudden rise in Gemini failures, and notify you. The difference matters: a service can be up and still broken, answering every request with an error page. Skillzify's staging needs both — a health endpoint the checker pings, and an alert on error rate — because the tutor failing silently is worse than the site being down, since nobody reports what they assume is their own mistake.</p><h4 id="sub-2">2. Analytics funnels find the broken step</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A funnel is a sequence of steps with a conversion rate at each one: visited a lesson, started it, finished it, earned XP. Where the funnel narrows sharply, something is broken — a confusing exercise, a slow page, a tutor that fails on one topic. GA4 builds these from events, so the events you emit decide what you can learn: a lesson_complete event with the lesson ID is worth ten pageview counts. Read funnels weekly, not daily — small numbers are noise, and a single day's dip is usually a timetable, not a bug.</p><h4 id="sub-3">3. The incident runbook</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When something breaks at midnight, you should not be inventing a process. A runbook lists the symptoms, the first three checks, the rollback step, and who to tell. For Skillzify it reads: check Render status and logs, check the Gemini key and quota, check Firestore rules and status, then roll back the last deploy if the breakage started with it. Write it while things work, test it during a real incident, and update it after — a runbook that has never been used is a draft, not a plan.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Monitoring is not about dashboards — it is about the time between something breaking and someone who can fix it knowing.</p>
+<h3 class="lesson-sec" id="code">3 · Code</h3>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre><code>// Emit the events your funnel needs — one per meaningful action
+function trackLessonComplete(lessonId, section, xpEarned) {
+  gtag("event", "lesson_complete", {
+    lesson_id: lessonId,
+    section: section,
+    xp: xpEarned
+  });
+}
+// Funnel: lesson_view -&gt; lesson_start -&gt; lesson_complete -&gt; xp_earned
+// A sharp drop between two steps names the broken step.</code></pre></div>
+<h3 class="lesson-sec" id="practice">4 · Practice</h3>
+<div class="callout build"><b>Your task</b>Set up a free uptime check on the Skillzify staging URL and a log alert for 500 errors. In GA4, build a funnel from lesson view to lesson complete and identify the sharpest drop. Write a one-page incident runbook for the backend with the first three checks and the rollback step.</div>
+<h3 class="lesson-sec" id="check">5 · Check</h3>
+<p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each.</p>
+<div class="quiz-q"><p class="qq">Why is an uptime check alone not enough monitoring?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button>
+<p class="quiz-answer">A service can be up and still broken — returning errors on every request. You also need error-rate alerts and health checks that verify real behaviour.</p></div>
+<div class="quiz-q"><p class="qq">What makes a funnel useful, and what makes it noise?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button>
+<p class="quiz-answer">Useful when each step is a real user action and the sample is large; noise when numbers are tiny or steps are pageviews instead of meaningful events.</p></div>
+<h3 class="lesson-sec" id="interview">6 · Interview</h3>
+<div class="interview-q"><p class="iq">Your error rate spikes at 2 AM. What is your first move?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Follow the runbook: check deploy recency and logs, identify whether it started with a release, and roll back first — diagnose after users are unblocked.</p></div>
+<div class="interview-q"><p class="iq">How do you choose what to alert on versus what to dashboard?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Alert on things needing a human now — downtime, error spikes. Dashboard the rest — trends you review weekly, like funnel conversion.</p></div>
+<h3 class="lesson-sec" id="notes">7 · Notes</h3>
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="8-8.html">← Lesson 8.8</a>
+<button class="nav-btn next" disabled>Course complete 🎉</button>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 93 lessons • 10 modules • Starts 27 Nov 2026, after exams end 26 Nov • 25-week plan to 20 May 2027 • DSA track runs in parallel throughout — this site covers the full-stack + AI lessons.</div></footer>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+</body>
+</html>
