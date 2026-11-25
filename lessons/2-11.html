@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 2.11 — Python OOP Deep — Dunder Methods, Dataclasses &amp; Protocols — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="2.11">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m2.html">Python Fluency — The Language Skillzify Teaches &amp; Uses</a> &nbsp;›&nbsp; Lesson 2.11</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 2.11 • Python Fluency — The Language Skillzify Teaches &amp; Uses • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Python OOP Deep — Dunder Methods, Dataclasses &amp; Protocols</h2>
+<p class="goal">Classes that behave like built-ins</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=QzA7TrsX_Ao" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>The Dataclass Hack That Saves Hours of Coding - Advanced OOPS</b><span>SP Learning Labs</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Dunder methods: the protocol behind the syntax</a></li>
+<li><a href="#sub-2">2. Dataclasses: kill the boilerplate</a></li>
+<li><a href="#sub-3">3. Protocols: duck typing, checked</a></li>
+<li><a href="#sub-4">4. Properties: attributes with a gatekeeper</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can implement dunder methods like __repr__, __eq__ and __len__, replace boilerplate classes with @dataclass, type duck-typed interfaces with typing.Protocol, and expose controlled attributes with properties.</div>
+<h4 id="sub-1">1. Dunder methods: the protocol behind the syntax</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=QzA7TrsX_Ao" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Python's operators are method calls in disguise. <code>len(obj)</code> calls <code>__len__</code>, <code>obj == other</code> calls <code>__eq__</code>, printing calls <code>__repr__</code> or <code>__str__</code>, and <code>for x in obj</code> calls <code>__iter__</code>. Implementing these double-underscore methods makes your classes behave like built-in types everywhere — in f-strings, in sets, in sorted(). Two rules matter most: <code>__repr__</code> should be an unambiguous developer representation (ideally valid Python that recreates the object), and defining <code>__eq__</code> without <code>__hash__</code> makes instances unhashable, which surprises everyone exactly once.</p><h4 id="sub-2">2. Dataclasses: kill the boilerplate</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=QzA7TrsX_Ao" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Most classes exist to hold data, and hand-writing <code>__init__</code>, <code>__repr__</code> and <code>__eq__</code> for each is pure boilerplate. The <code>@dataclass</code> decorator generates all three from annotated fields, with options like <code>frozen=True</code> for immutability (which also restores hashability) and <code>field(default_factory=list)</code> for mutable defaults — never use a bare list as a default, or every instance shares it. A dataclass is still a normal class: add methods freely, and reach for <code>__post_init__</code> when fields need validation or derivation at construction.</p><h4 id="sub-3">3. Protocols: duck typing, checked</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=QzA7TrsX_Ao" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Python has always allowed duck typing: if it has the right methods, it fits, whatever its class. <code>typing.Protocol</code> makes that contract explicit and checkable: declare a protocol with the methods you need, and any class with those methods satisfies it — no inheritance required. A type checker then verifies callers only pass objects with the right shape. This is structural typing, and it is how you write flexible code (anything drawable, anything with a read method) without a tangle of abstract base classes.</p><h4 id="sub-4">4. Properties: attributes with a gatekeeper</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=QzA7TrsX_Ao" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A property looks like a plain attribute from outside but runs code on access: the getter computes or validates, the setter rejects bad values. The pattern is a private <code>_xp</code> field behind a public <code>xp</code> property that refuses negatives. Properties let you start with a plain attribute and add validation later without changing any calling code — the Pythonic answer to the getter/setter ceremony other languages force from day one. Use them when an invariant must hold; do not wrap every attribute by reflex.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Lesson:
+    id: str
+    title: str
+    xp: int = 20
+    tags: tuple = ()
+
+class Progress:
+    def __init__(self):
+        self._xp = 0
+
+    @property
+    def xp(self):
+        return self._xp
+
+    @xp.setter
+    def xp(self, value):
+        if value &lt; 0:
+            raise ValueError("xp cannot be negative")
+        self._xp = value
+
+    def __repr__(self):
+        return f"Progress(xp={self._xp})"</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Write a Lesson dataclass with frozen=True and confirm two equal lessons compare equal and can live in a set. Then write a Progress class with an xp property that rejects negatives and a __repr__, and try assigning a negative value to see the error. Finish by defining a small Protocol for anything with a render method and passing two unrelated classes through it.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">What happens when you define __eq__ but not __hash__?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Instances become unhashable, so they cannot be used in sets or as dict keys. Defining __eq__ sets __hash__ to None unless you also define it (or use a frozen dataclass).</p></div>
+<div class="quiz-q"><p class="qq">Why must mutable dataclass defaults use default_factory?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">A bare list default would be shared by every instance, so appending to one object's list would change them all. default_factory creates a fresh value per instance.</p></div>
+<div class="quiz-q"><p class="qq">How does a Protocol differ from an abstract base class?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">A protocol is structural: any class with the right methods satisfies it without inheriting anything. An ABC requires explicit subclassing. Protocols formalise duck typing.</p></div>
+<div class="quiz-q"><p class="qq">When is a property worth adding over a plain attribute?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">When an invariant must hold — validation, clamping, or a computed value — or when you need to add that logic later without changing callers.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “Dunder method”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">A double-underscore method like __len__ or __eq__ that Python calls for operators and built-ins, letting classes behave like built-in types.</p></div>
+<div class="quiz-q"><p class="qq">What is “__repr__”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">The unambiguous developer representation of an object, ideally valid Python that recreates it.</p></div>
+<div class="quiz-q"><p class="qq">What is “Dataclass”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">A class decorated with @dataclass that generates __init__, __repr__ and __eq__ from annotated fields.</p></div>
+<div class="quiz-q"><p class="qq">What is “frozen dataclass”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">An immutable dataclass whose instances are hashable and cannot be modified after creation.</p></div>
+<div class="quiz-q"><p class="qq">What is “Protocol”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">A structural interface from typing: any class with the declared methods satisfies it, with no inheritance required.</p></div>
+<div class="quiz-q"><p class="qq">What is “Property”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">An attribute that runs getter and setter code on access, enforcing invariants behind plain attribute syntax.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Explain __repr__ versus __str__.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">__repr__ is the unambiguous developer representation, ideally recreating the object; __str__ is the friendly user-facing text. If only one is defined, define __repr__ — Python falls back to it for str.</p></div>
+<div class="interview-q"><p class="iq">Why choose a dataclass over a hand-written class?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">It generates __init__, __repr__ and __eq__ from the field declarations, removing boilerplate and its bugs, with options for immutability and ordering when needed.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="2-10.html">← Lesson 2.10</a>
+<a class="nav-btn next" href="3-1.html">Lesson 3.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

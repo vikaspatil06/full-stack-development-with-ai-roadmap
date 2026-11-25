@@ -3,20 +3,21 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="color-scheme" content="dark"/>
+<meta name="color-scheme" content="dark light"/>
 <link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
 <title>Lesson D.3 — Strings &amp; Hashing — Full Stack + AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/style.css?v=3"/>
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
 </head>
 <body data-page="lesson" data-lesson="D.3">
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
 <nav class="nav" id="siteNav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div>
-</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.3</p>
 <article class="reader lesson-page">
@@ -26,8 +27,8 @@
 <p class="goal">Hash maps turn O(n²) into O(n)</p>
 <h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
 <div class="acc-body"><div class="watch-box">
-<a class="yt-btn" href="https://www.youtube.com/watch?v=vCRD36bG8xQ" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
-<p class="watch-meta"><b>Strings | Lecture 12 | Java Placement Series</b><span>Apna College</span></p>
+<a class="yt-btn" href="https://www.youtube.com/watch?v=KEs5UyBJ39g" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Hashing | Maps | Time Complexity | Collisions | Division Rule of Hashing | Strivers A2Z DSA Course</b><span>takeUforward</span></p>
 </div></div>
 <h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
 <div class="acc-body">
@@ -38,7 +39,7 @@
 <li><a href="#sub-4">4. Sliding window on strings</a></li>
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can use frequency maps and sliding windows to solve string problems in linear time, and explain the cost of string immutability when you build results.</div>
-<h4 id="sub-1">1. Strings are immutable arrays of characters</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=vCRD36bG8xQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>In most languages a string cannot be changed in place: every concatenation builds a new string, so building a result with += inside a loop costs O(n²). The fix is to collect pieces in a list and join them once, which is O(n). The same immutability makes strings hashable and safe as dictionary keys, which is exactly why the hashing patterns in this lesson work. Treat a string as an array of characters with a few extra operations, and its behaviour stops being surprising.</p><h4 id="sub-2">2. Hashing: the frequency-map habit</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=vCRD36bG8xQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A hash map stores key-value pairs with average O(1) lookup, and the frequency map is its most-used interview form: one pass to count characters or numbers, then answer any question about duplicates, anagrams or complements from the counts. Two Sum is the canonical example — for each number, check whether its complement is already in the map. The habit to build is asking, whenever you see a nested loop, whether a map could remember what the inner loop is searching for.</p><h4 id="sub-3">3. Anagrams, grouping, and the two-sum trick</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=vCRD36bG8xQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Two strings are anagrams when their character counts match, so the signature of a string — its sorted form or its 26-count tuple — becomes a hash-map key that groups anagrams together. The same complement trick from Two Sum generalises: any problem asking whether a pair or group satisfies a condition is a candidate for one pass plus a map. Watch the key choice, though: using a sorted string as a key costs O(k log k) per word, while a count tuple is O(k).</p><h4 id="sub-4">4. Sliding window on strings</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=vCRD36bG8xQ" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When a problem asks for the longest or smallest substring satisfying a condition, the window is the pattern: a right pointer expands, a left pointer shrinks when the condition breaks, and a map tracks what is inside. Longest substring without repeats is the template — expand until a duplicate appears, then move left past the previous occurrence. The window never moves backwards, so the whole scan is O(n), and the only state you maintain is the map and the best answer seen.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+<h4 id="sub-1">1. Strings are immutable arrays of characters</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=KEs5UyBJ39g" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>In most languages a string cannot be changed in place: every concatenation builds a new string, so building a result with += inside a loop costs O(n²). The fix is to collect pieces in a list and join them once, which is O(n). The same immutability makes strings hashable and safe as dictionary keys, which is exactly why the hashing patterns in this lesson work. Treat a string as an array of characters with a few extra operations, and its behaviour stops being surprising.</p><h4 id="sub-2">2. Hashing: the frequency-map habit</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=KEs5UyBJ39g" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A hash map stores key-value pairs with average O(1) lookup, and the frequency map is its most-used interview form: one pass to count characters or numbers, then answer any question about duplicates, anagrams or complements from the counts. Two Sum is the canonical example — for each number, check whether its complement is already in the map. The habit to build is asking, whenever you see a nested loop, whether a map could remember what the inner loop is searching for.</p><h4 id="sub-3">3. Anagrams, grouping, and the two-sum trick</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=KEs5UyBJ39g" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Two strings are anagrams when their character counts match, so the signature of a string — its sorted form or its 26-count tuple — becomes a hash-map key that groups anagrams together. The same complement trick from Two Sum generalises: any problem asking whether a pair or group satisfies a condition is a candidate for one pass plus a map. Watch the key choice, though: using a sorted string as a key costs O(k log k) per word, while a count tuple is O(k).</p><h4 id="sub-4">4. Sliding window on strings</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=KEs5UyBJ39g" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When a problem asks for the longest or smallest substring satisfying a condition, the window is the pattern: a right pointer expands, a left pointer shrinks when the condition breaks, and a map tracks what is inside. Longest substring without repeats is the template — expand until a duplicate appears, then move left past the previous occurrence. The window never moves backwards, so the whole scan is O(n), and the only state you maintain is the map and the best answer seen.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
 </div>
 <h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
 <div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
@@ -59,6 +60,18 @@
 </div>
 <h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
 <div class="acc-body"><div class="callout build"><b>Your task</b>Solve Valid Anagram, Group Anagrams, Longest Substring Without Repeating Characters, Longest Repeating Character Replacement and Minimum Window Substring. For each failed or 45+ minute attempt, log the pattern, what went wrong, and a re-solve date 3 days out.</div>
+<div class="challenge"><h4>💻 Coding challenge — solve it here (+5 XP)</h4>
+<p>Write isAnagram(a, b) returning true when the two strings are anagrams (same letters, any order).</p>
+<p class="muted-note">Complete the TODO in the editor below, then press Run &amp; check — your output is compared with the expected answer.</p>
+<textarea class="challenge-editor" rows="7" spellcheck="false" aria-label="Your solution code">function isAnagram(a, b) {
+  // TODO: count letters with a Map or object
+  return false;
+}</textarea>
+<button class="run-btn challenge-run" type="button">▶ Run &amp; check</button>
+<p class="challenge-status"></p>
+<div class="run-output challenge-output" aria-live="polite"></div>
+<script type="application/json" class="challenge-data">{"starter":"function isAnagram(a, b) {\n  // TODO: count letters with a Map or object\n  return false;\n}","test":"console.log(isAnagram(\"listen\", \"silent\"));\nconsole.log(isAnagram(\"rat\", \"car\"));","expected":"true\nfalse"}</script>
+</div>
 <div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
 <p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Strings</a></p>
 <p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
@@ -78,6 +91,26 @@
 <div class="quiz-q"><p class="qq">In the sliding-window template, why does the left pointer never move backwards?</p>
 <button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
 <p class="quiz-answer">The window only grows or slides forward, so each character enters and leaves the window once — that is what makes the scan O(n).</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “Frequency map”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">A hash map counting how often each key appears — the core tool for anagram, duplicate and complement problems.</p></div>
+<div class="quiz-q"><p class="qq">What is “Hash map”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">A key-value store with average O(1) insert and lookup; collisions can degrade it to O(n) in the worst case.</p></div>
+<div class="quiz-q"><p class="qq">What is “Sliding window”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">Two pointers marking a substring that grows and shrinks in one pass, giving O(n) solutions for substring problems.</p></div>
+<div class="quiz-q"><p class="qq">What is “Anagram signature”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A canonical key for a string — sorted letters or a 26-count tuple — shared by all its anagrams.</p></div>
+<div class="quiz-q"><p class="qq">What is “String immutability”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">Strings cannot be changed in place; every edit creates a new string, so repeated concatenation is O(n²).</p></div>
+<div class="quiz-q"><p class="qq">What is “Complement trick”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">For each value x, look up target − x in a map instead of scanning for a partner — the heart of Two Sum.</p></div>
 <p class="quiz-score" id="quizScore"></p>
 <button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
 <h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
@@ -101,8 +134,8 @@
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
-<script src="../assets/js/data.js?v=3"></script>
-<script src="../assets/js/app.js?v=3"></script>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
 </body>
 </html>

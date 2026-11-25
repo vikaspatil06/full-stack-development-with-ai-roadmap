@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 9.1 — React Hooks Deep — useEffect, useContext &amp; Custom Hooks — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="9.1">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m9.html">M9 — Industry Add-Ons</a> &nbsp;›&nbsp; Lesson 9.1</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 9.1 • M9 — Industry Add-Ons • 40 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>React Hooks Deep — useEffect, useContext &amp; Custom Hooks</h2>
+<p class="goal">State, effects and reuse without classes</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=ZIvdUkCb4Sg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Essential React Hooks Explained (With Code Examples) in 7 minutes</b><span>Rusiru Gunaratne</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Why hooks exist: the class lifecycle problem</a></li>
+<li><a href="#sub-2">2. useEffect: dependencies and cleanup</a></li>
+<li><a href="#sub-3">3. useContext and useRef</a></li>
+<li><a href="#sub-4">4. Custom hooks: reuse the logic, not the markup</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can use useEffect with correct dependencies and cleanup, share state with useContext, hold DOM references with useRef, and extract reusable logic into custom hooks.</div>
+<h4 id="sub-1">1. Why hooks exist: the class lifecycle problem</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=ZIvdUkCb4Sg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Before hooks, React components that needed state or side effects had to be classes, and related logic was split across lifecycle methods: fetching data in <code>componentDidMount</code>, updating it in <code>componentDidUpdate</code>, and cleaning up in <code>componentWillUnmount</code>. One feature ended up scattered across three places. Hooks let a plain function component own state with <code>useState</code> and run side effects with <code>useEffect</code>, so all the code for one concern sits together in one place.</p><p>Skillzify v2 solves the same problem without a framework: its vanilla JavaScript manually re-renders lists and progress after every change. Hooks are the framework answer to that exact pain — instead of you remembering to update the DOM, you describe what the UI should look like for a given state and React updates it for you.</p><h4 id="sub-2">2. useEffect: dependencies and cleanup</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=ZIvdUkCb4Sg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p><code>useEffect</code> runs after render. The dependency array decides when it re-runs: an empty array means once on mount, an array with values means whenever those values change, and no array means after every render. The function you optionally return is the cleanup: React calls it before re-running the effect and when the component unmounts. Timers, subscriptions and event listeners must always be cleaned up, or they leak and fire twice.</p><p>The most common beginner bug is a missing dependency: the effect reads a variable but never re-runs when it changes, so the UI shows stale data. Treat the dependency array as a promise — every reactive value the effect reads belongs in it.</p><h4 id="sub-3">3. useContext and useRef</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=ZIvdUkCb4Sg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p><code>useContext</code> reads shared data — the signed-in user, the theme, the XP total — from a provider high in the tree, without passing props through every component in between. It is the right tool for truly global, slowly-changing values, and the wrong tool for fast-changing state, because every consumer re-renders when the context value changes. <code>useRef</code> holds a mutable value that survives re-renders without causing one: a DOM node to focus, a timer id, or a previous value. Changing a ref never re-renders, which is exactly what you want for values the screen does not display.</p><h4 id="sub-4">4. Custom hooks: reuse the logic, not the markup</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=ZIvdUkCb4Sg" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A custom hook is just a function whose name starts with <code>use</code> and which calls other hooks. <code>useFetch</code> packages the fetch-loading-error dance; <code>useLocalStorage</code> packages reading and writing persisted state. The rule that makes it all work: hooks are always called unconditionally at the top level, in the same order every render, because React tracks them by call order. In Skillzify, the equivalent shared helpers live in one JavaScript file every page loads — custom hooks are the same idea, but tied to component state.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>import { useState, useEffect } from "react";
+
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() =&gt; {
+    let cancelled = false;
+    setLoading(true);
+    fetch(url)
+      .then((r) =&gt; r.json())
+      .then((json) =&gt; { if (!cancelled) { setData(json); setLoading(false); } })
+      .catch((e) =&gt; { if (!cancelled) { setError(e); setLoading(false); } });
+    return () =&gt; { cancelled = true; };
+  }, [url]);
+  return { data, error, loading };
+}</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Build a small React component that loads a list of lessons from a JSON file with a custom useFetch hook, shows a loading message, then the list. Add a useLocalStorage hook that remembers the last opened lesson across refreshes. Then deliberately remove url from the dependency array, change the URL, and observe the stale-data bug before fixing it.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">What does the cleanup function returned from useEffect do?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">React calls it before re-running the effect and when the component unmounts. It is where you cancel subscriptions, clear timers and ignore in-flight fetches so nothing leaks.</p></div>
+<div class="quiz-q"><p class="qq">Why must hooks be called unconditionally at the top level?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">React tracks hooks by call order between renders. A conditional hook would shift that order, so state would be matched to the wrong hook.</p></div>
+<div class="quiz-q"><p class="qq">When is useContext the wrong choice for state?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">When the value changes frequently, because every consumer re-renders on each change. Fast-changing state belongs in local state or a store with selective subscriptions.</p></div>
+<div class="quiz-q"><p class="qq">What is the difference between useState and useRef?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">useState triggers a re-render when it changes and is for values the UI displays. useRef persists a mutable value across renders without re-rendering, for DOM nodes, timers and previous values.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “useEffect”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">A hook that runs side effects after render, re-running when its dependency array values change, with an optional cleanup function.</p></div>
+<div class="quiz-q"><p class="qq">What is “Dependency array”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">The list of reactive values an effect depends on; React re-runs the effect when any of them changes.</p></div>
+<div class="quiz-q"><p class="qq">What is “Cleanup function”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">The function returned from useEffect, called before re-running the effect and on unmount — where timers and subscriptions are torn down.</p></div>
+<div class="quiz-q"><p class="qq">What is “useContext”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A hook that reads a value from the nearest context provider, avoiding prop drilling for global, slowly-changing data.</p></div>
+<div class="quiz-q"><p class="qq">What is “useRef”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">A hook holding a mutable value that persists across renders without causing one — used for DOM nodes, timers and previous values.</p></div>
+<div class="quiz-q"><p class="qq">What is “Custom hook”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">A function starting with use that calls other hooks to package reusable stateful logic, like useFetch or useLocalStorage.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Explain the useEffect dependency array to a beginner.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">It lists the values the effect depends on. React re-runs the effect only when one of them changes; an empty array means run once on mount. Every reactive value the effect reads should be listed, or the effect will use stale data.</p></div>
+<div class="interview-q"><p class="iq">How would you stop a fetch from updating state after the component unmounts?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Use a cancelled flag or an AbortController in the effect cleanup. The cleanup runs on unmount, sets the flag or aborts the request, and the response handler checks it before calling setState.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="8-9.html">← Lesson 8.9</a>
+<a class="nav-btn next" href="9-2.html">Lesson 9.2 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

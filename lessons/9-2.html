@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 9.2 — TypeScript Intro — Types for JavaScript Developers — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="9.2">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m9.html">M9 — Industry Add-Ons</a> &nbsp;›&nbsp; Lesson 9.2</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 9.2 • M9 — Industry Add-Ons • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>TypeScript Intro — Types for JavaScript Developers</h2>
+<p class="goal">Catch the bug before it runs</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=30LWjhZzg50" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Learn TypeScript – Full Tutorial</b><span>freeCodeCamp.org</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Why TypeScript: errors at write time, not run time</a></li>
+<li><a href="#sub-2">2. The basic types and annotations</a></li>
+<li><a href="#sub-3">3. Interfaces, type aliases and generics</a></li>
+<li><a href="#sub-4">4. tsconfig and migrating a file</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can add types to JavaScript code, choose between interfaces and type aliases, write a simple generic function, configure tsconfig, and migrate one JavaScript file to TypeScript.</div>
+<h4 id="sub-1">1. Why TypeScript: errors at write time, not run time</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=30LWjhZzg50" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>JavaScript only discovers type errors when the code runs — a misspelled property returns <code>undefined</code> silently, and passing a string where a number belongs produces <code>NaN</code> far from the cause. TypeScript adds a static type layer that is checked before the code ever runs, then compiles away to plain JavaScript. The editor underlines the mistake as you type, and renaming a field updates every use automatically.</p><p>Skillzify v2 is untyped vanilla JavaScript, so a renamed lesson field or a wrong argument shape is only found by clicking through pages. TypeScript would catch exactly that class of bug: a lesson object missing its <code>xp</code> field, or a function called with a string instead of a number, fails the build instead of failing silently in a learner's browser.</p><h4 id="sub-2">2. The basic types and annotations</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=30LWjhZzg50" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>You annotate variables, parameters and return values: <code>string</code>, <code>number</code>, <code>boolean</code>, arrays like <code>string[]</code>, and unions like <code>string | number</code> for values that can be either. TypeScript also infers types from initial values, so most variables need no annotation at all — annotate function boundaries and let inference handle the rest. The <code>any</code> type opts out of checking entirely and should be treated as a warning sign, not a convenience.</p><h4 id="sub-3">3. Interfaces, type aliases and generics</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=30LWjhZzg50" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Both <code>interface</code> and <code>type</code> describe object shapes. Interfaces can be extended and merged, which suits public object contracts; type aliases can also name unions, tuples and primitives, which makes them more flexible. In practice: use interface for object shapes you expect to extend, type for everything else, and be consistent. Generics let a function or type work over many types while staying checked — a <code>first&lt;T&gt;</code> function returns whatever element type the array holds, instead of collapsing everything to <code>any</code>.</p><h4 id="sub-4">4. tsconfig and migrating a file</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=30LWjhZzg50" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>The <code>tsconfig.json</code> file controls strictness and output. The setting that matters most is <code>strict: true</code>, which turns on null checks and other safety rules; migrating a file means renaming it to <code>.ts</code>, fixing the errors the checker reports from the outside in, and adding types at the boundaries first. Migrate leaf files before central ones, keep <code>allowJs</code> on so untyped files still compile, and never migrate by sprinkling <code>any</code> — that keeps the cost of TypeScript and throws away the benefit.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>interface Lesson {
+  id: string;
+  title: string;
+  xp: number;
+}
+
+function totalXp(lessons: Lesson[]): number {
+  return lessons.reduce((sum, l) =&gt; sum + l.xp, 0);
+}
+
+function first&lt;T&gt;(items: T[]): T | undefined {
+  return items[0];
+}
+
+const lessons: Lesson[] = [{ id: "b-1", title: "Intro", xp: 20 }];
+console.log(totalXp(lessons), first(lessons)?.title);</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Take a small JavaScript file with a lessons array and a totalXp function, rename it to .ts, and add a Lesson interface plus typed function signatures. Then deliberately pass a lesson missing its xp field and a string where a number belongs, and read the compiler errors. Finish by turning on strict mode in tsconfig and fixing what it reports.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">What does TypeScript compile to, and when are types checked?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">It compiles to plain JavaScript with all types erased. Types are checked at build time by the compiler, never at run time — there is no type information left in the output.</p></div>
+<div class="quiz-q"><p class="qq">Why is any dangerous?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">any disables type checking for that value, so errors pass silently and spread to everything the value touches. It removes the benefit of TypeScript while keeping its cost.</p></div>
+<div class="quiz-q"><p class="qq">When do you choose an interface over a type alias?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">For object shapes you expect to extend or merge, like component props or API models. Type aliases are better for unions, tuples and naming primitive combinations.</p></div>
+<div class="quiz-q"><p class="qq">What does a generic type parameter buy you over any?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">It preserves the relationship between input and output types: first of a string array returns a string, checked by the compiler, instead of an unchecked any.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “Type annotation”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">A declared type on a variable, parameter or return value, checked by the compiler and erased from the output JavaScript.</p></div>
+<div class="quiz-q"><p class="qq">What is “Type inference”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">TypeScript deducing a type from the initial value, so most variables need no explicit annotation.</p></div>
+<div class="quiz-q"><p class="qq">What is “Union type”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">A type that allows one of several types, written with a pipe, like string | number.</p></div>
+<div class="quiz-q"><p class="qq">What is “Interface”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A named object shape that can be extended and declaration-merged; the standard way to type objects and props.</p></div>
+<div class="quiz-q"><p class="qq">What is “Generic”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">A type parameter that lets code work over many types while keeping them checked, like a first&amp;lt;T&amp;gt; function.</p></div>
+<div class="quiz-q"><p class="qq">What is “strict mode”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">The tsconfig flag that enables the full set of safety checks, including strict null checking.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Your team says TypeScript slows them down. What is your honest answer?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">It adds upfront annotation cost, repaid by catching contract errors at build time, safer refactors, and editor autocomplete across the codebase. The trade favours any project that will live longer than a prototype.</p></div>
+<div class="interview-q"><p class="iq">How do you migrate a large JavaScript codebase to TypeScript?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Incrementally: enable allowJs, rename leaf files first, type the boundaries, keep strict mode on for new files, and fix errors file by file rather than in one big-bang rewrite.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="9-1.html">← Lesson 9.1</a>
+<a class="nav-btn next" href="9-3.html">Lesson 9.3 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

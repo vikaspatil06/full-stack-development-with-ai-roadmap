@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 3.10 — Node Testing Deep — node:test, Supertest &amp; Coverage — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="3.10">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m3.html">Backend — Node.js &amp; Express, Properly</a> &nbsp;›&nbsp; Lesson 3.10</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 3.10 • Backend — Node.js &amp; Express, Properly • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Node Testing Deep — node:test, Supertest &amp; Coverage</h2>
+<p class="goal">Test the API without a browser</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=IvO0fJ_Iff8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Testing APIs with Vitest &amp; Supertest | Node.js Backend #9</b><span>RKTech Learn</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. node:test: the runner you already have</a></li>
+<li><a href="#sub-2">2. Supertest: HTTP calls without a network</a></li>
+<li><a href="#sub-3">3. Mocking the outside world</a></li>
+<li><a href="#sub-4">4. Coverage: finding the untested branches</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can write tests with the built-in node:test runner, exercise Express routes with Supertest, mock external calls, and generate and read a coverage report.</div>
+<h4 id="sub-1">1. node:test: the runner you already have</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=IvO0fJ_Iff8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Since Node 18, a test runner ships with Node itself: <code>node --test</code> discovers files matching the test patterns, runs them, and reports pass or fail with no dependencies to install. Tests are plain functions using <code>test()</code> and <code>describe()</code> from <code>node:test</code>, with assertions from <code>node:assert/strict</code>. For a small service this is often all you need — no framework weight, no version churn — and it runs identically in CI because it is part of the runtime you already deploy.</p><h4 id="sub-2">2. Supertest: HTTP calls without a network</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=IvO0fJ_Iff8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Testing an Express route by starting a real server and curling it is slow and flaky. Supertest instead hands your app object a fake HTTP layer: you write <code>request(app).post("/api/tutor").send({...})</code> and assert on the status and JSON body, all in-process. The app never binds a port, tests run in parallel safely, and a failure shows the exact response. The one structural requirement: export the app separately from the code that listens, so tests can import the app without starting a server — a refactor Skillzify's server would need before its first route test.</p><h4 id="sub-3">3. Mocking the outside world</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=IvO0fJ_Iff8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A route that calls Gemini must not call the real Gemini in tests: it is slow, costs quota, and returns different text every time. Mock at the boundary — replace the API client with a stub that returns a fixed reply, and assert your route handles success, empty input and upstream failure. <code>node:test</code> includes <code>mock.fn()</code> for this. The discipline from unit testing applies unchanged: mock external services, never the code under test, and keep one clearly-labelled live smoke test separate if you need end-to-end confidence.</p><h4 id="sub-4">4. Coverage: finding the untested branches</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=IvO0fJ_Iff8" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Node's built-in coverage (<code>node --experimental-test-coverage</code>, or c8 for richer reports) shows which lines and branches your tests executed. Read it as a map of blind spots: the error branch of the rate limiter, the 400 path of a validator — the code most likely to break in production and least likely to be exercised by hand. As with any coverage tool, the number itself is not the goal; the goal is that every risky behaviour has a test that would fail if it broke.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>import { test } from "node:test";
+import assert from "node:assert/strict";
+import request from "supertest";
+import app from "../app.js";
+
+test("POST /api/tutor rejects an empty question", async () =&gt; {
+  const res = await request(app)
+    .post("/api/tutor")
+    .send({ question: "" });
+  assert.equal(res.status, 400);
+});
+
+test("POST /api/tutor answers a valid question", async () =&gt; {
+  const res = await request(app)
+    .post("/api/tutor")
+    .send({ question: "What is a closure?" });
+  assert.equal(res.status, 200);
+  assert.ok(res.body.reply.length &gt; 0);
+});</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Take a small Express app, refactor it so the app is exported separately from the listen call, and write Supertest tests for one route: the success case, the empty-input 400 case, and one mocked upstream-failure case. Run them with node --test, then run with coverage and identify one untested branch worth covering.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why must the app be exported separately from listen for Supertest?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Supertest imports the app and drives it in-process without binding a port. If importing the file also starts a server, tests collide on ports and cannot run in parallel.</p></div>
+<div class="quiz-q"><p class="qq">What does node:test give you that needs no installation?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">A built-in runner with test(), describe() and mocking, discovered by node --test — part of the runtime since Node 18, so CI needs no extra dependencies.</p></div>
+<div class="quiz-q"><p class="qq">Why mock the Gemini call in route tests?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">The real call is slow, costs quota and returns varying text, making tests flaky. A stub returns a fixed reply so the test checks your route's behaviour deterministically.</p></div>
+<div class="quiz-q"><p class="qq">How should a coverage report be read?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">As a map of blind spots — untested error branches and edge cases — not as a score to maximise. The goal is tests that fail when risky behaviour breaks.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “node:test”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">Node's built-in test runner (since Node 18): test(), describe() and mocking with no dependencies, run via node --test.</p></div>
+<div class="quiz-q"><p class="qq">What is “Supertest”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">A library that drives an Express app in-process with fake HTTP requests, asserting on status and body without a real server.</p></div>
+<div class="quiz-q"><p class="qq">What is “App/listen split”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">Exporting the Express app separately from the listen call so tests can import it without binding a port.</p></div>
+<div class="quiz-q"><p class="qq">What is “Stub”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A fake implementation of an external dependency returning fixed results, used to keep tests deterministic.</p></div>
+<div class="quiz-q"><p class="qq">What is “mock.fn()”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">node:test's built-in mock function for replacing dependencies and asserting how they were called.</p></div>
+<div class="quiz-q"><p class="qq">What is “Coverage report”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">A listing of which lines and branches tests executed — used to find untested risky code, not as a target.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">How do you test an Express API without starting a server?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Export the app separately from listen, then use Supertest to send in-process requests and assert on status and body. No ports, no network, parallel-safe.</p></div>
+<div class="interview-q"><p class="iq">node:test versus Jest or Vitest — how do you choose?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">node:test is zero-dependency and part of the runtime, ideal for backend services. Jest and Vitest add richer matchers, snapshots and frontend tooling, worth it when the project needs them.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="3-9.html">← Lesson 3.9</a>
+<a class="nav-btn next" href="4-1.html">Lesson 4.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

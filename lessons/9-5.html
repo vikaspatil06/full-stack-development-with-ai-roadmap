@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 9.5 — System Design Basics for Interviews — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="9.5">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m9.html">M9 — Industry Add-Ons</a> &nbsp;›&nbsp; Lesson 9.5</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 9.5 • M9 — Industry Add-Ons • 40 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>System Design Basics for Interviews</h2>
+<p class="goal">Requirements first, boxes second</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=F2FmTdLtb_4" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>System Design Concepts Course and Interview Prep</b><span>freeCodeCamp.org</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Start with requirements, not boxes</a></li>
+<li><a href="#sub-2">2. Estimate the scale, then design the API and data</a></li>
+<li><a href="#sub-3">3. Caching, queues and the scaling levers</a></li>
+<li><a href="#sub-4">4. Talking through trade-offs</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can walk through a system design interview in order — requirements, scale estimates, API, data model, caching and queues — and talk through trade-offs out loud.</div>
+<h4 id="sub-1">1. Start with requirements, not boxes</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=F2FmTdLtb_4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Every design interview opens the same way: clarify what the system must do before drawing anything. Functional requirements are the features — shorten a URL, redirect to the original, count clicks. Non-functional requirements are the qualities — how many users, how fast, how available, how consistent. Skipping this step is the most common failure: candidates design for a scale and a feature set nobody asked for. Spend the first minutes asking questions and writing the requirements down where the interviewer can see them.</p><h4 id="sub-2">2. Estimate the scale, then design the API and data</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=F2FmTdLtb_4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Rough numbers drive every later decision. A URL shortener with 100 million new links a month writes about 40 per second but might read 4,000 per second — a read-heavy system, which immediately suggests caching. Then define the API: <code>POST /shorten</code> with a long URL returns a short code, <code>GET /{code}</code> redirects. Then the data model: one table mapping code to long URL, plus a clicks counter. The short code itself is usually a base-62 encoding of an auto-incrementing id, which guarantees uniqueness without checking.</p><h4 id="sub-3">3. Caching, queues and the scaling levers</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=F2FmTdLtb_4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Three levers solve most scaling questions. Caching stores hot data close to the reader: popular short links in Redis, so most redirects never touch the database — the trade-off is staleness when data changes. Queues move slow work off the request path: click analytics go onto a queue and are processed asynchronously, so the redirect stays fast. Horizontal scaling adds more stateless servers behind a load balancer, which works precisely because the servers hold no session state. Name the lever, then name its cost — that pairing is what interviewers listen for.</p><h4 id="sub-4">4. Talking through trade-offs</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=F2FmTdLtb_4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>There is no single right answer in system design, only justified ones. For every choice, say what you gain and what you give up: a cache buys latency and costs freshness; a queue buys responsiveness and costs complexity; strong consistency buys correctness and costs availability under failure. Skillzify makes the same calls at small scale — Firebase for auth and data instead of running its own database, Render for hosting instead of managing servers. Being able to explain why those were reasonable choices at that scale is the whole skill, scaled up.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>POST /shorten        { "url": "https://example.com/very/long" }
+-&gt; 201 Created      { "code": "aB3x9", "short": "https://sho.rt/aB3x9" }
+
+GET /aB3x9
+-&gt; 302 Found        Location: https://example.com/very/long
+
+-- data model --
+links(code VARCHAR PRIMARY KEY, long_url TEXT, clicks BIGINT)
+-- code = base62(id); reads served from Redis cache, writes to SQL</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Design a URL shortener on paper in 30 minutes: write the functional and non-functional requirements, estimate reads and writes per second for 10 million users, define the two API endpoints, sketch the data model, and add one cache and one queue with a sentence on what each costs. Then explain the whole design out loud in five minutes as if to an interviewer.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why clarify requirements before drawing any architecture?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Scale and feature decisions depend on them. Designing before knowing the read/write ratio or latency needs means optimising for a system nobody asked for.</p></div>
+<div class="quiz-q"><p class="qq">Why is base-62 encoding of an id a good short-code strategy?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">Ids are unique by construction, so encoding them gives unique codes with no collision checks, and base-62 keeps the codes short using letters and digits.</p></div>
+<div class="quiz-q"><p class="qq">What does a cache cost you, in one word?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">Freshness: cached data can be stale after the underlying value changes, so you trade correctness-at-this-instant for speed.</p></div>
+<div class="quiz-q"><p class="qq">Why must servers be stateless to scale horizontally?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">A load balancer can send any request to any server, so no server can hold session data another server would need. State moves to the database or cache.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “Functional requirements”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">What the system must do: the features and behaviours users can observe.</p></div>
+<div class="quiz-q"><p class="qq">What is “Non-functional requirements”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">How well it must do it: scale, latency, availability and consistency targets.</p></div>
+<div class="quiz-q"><p class="qq">What is “Scale estimate”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">Rough arithmetic — users, requests per second, storage — that decides which design levers are needed.</p></div>
+<div class="quiz-q"><p class="qq">What is “Cache”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A fast store for hot data, like Redis, that trades freshness for latency on read-heavy paths.</p></div>
+<div class="quiz-q"><p class="qq">What is “Queue”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">A buffer that moves slow work off the request path for asynchronous processing, trading simplicity for responsiveness.</p></div>
+<div class="quiz-q"><p class="qq">What is “Horizontal scaling”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">Adding more stateless servers behind a load balancer instead of making one server bigger.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Design a URL shortener. Where do you start?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Requirements first: shorten, redirect, click counts, and the expected scale. Then estimate reads versus writes, define the API, choose the data model and code generation, and add caching for hot links with a stated staleness trade-off.</p></div>
+<div class="interview-q"><p class="iq">When would you add a queue to a design, and what does it cost?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">When work is slow or bursty and does not need to finish inside the request — analytics, emails, image processing. It costs complexity: retries, ordering and failure handling become your problem.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="9-4.html">← Lesson 9.4</a>
+<a class="nav-btn next" href="9-6.html">Lesson 9.6 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

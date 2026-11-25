@@ -1,6 +1,6 @@
 /* Build script for the multi-page Full Stack + AI study site.
    Reads data/ (original MODULES+EXTRA, new lesson batches, YouTube link JSONs),
-   merges + renumbers to 93 lessons across 10 modules, and writes:
+   merges + renumbers to 127 lessons across 12 modules, and writes:
    index.html, modules/*.html, lessons/*.html, assets/js/data.js, assets/css/style.css.
    Run: node build.js   (from ~/workspace/full-stack-ai-roadmap/)
    Node only: exec file writes are blocked for python/bash in this sandbox, Node fs works. */
@@ -28,6 +28,9 @@ const ytBas = load('youtube-links-basics.json');
 const ytDeep = load('youtube-links-new-deep.json');
 const dsaData = load('dsa-lessons.json');
 const ytDsa = load('youtube-links-dsa.json');
+const batchC = load('new-lessons-batch-c.json');
+const ytBatchC = load('youtube-links-batch-c.json');
+const ytFixes = load('youtube-links-fixes.json');
 
 /* ---------------- renumbering (original id -> new id, verified by title) ---------------- */
 const RENUMBER = {
@@ -70,9 +73,10 @@ const WEEKS = {
   M1: 'Weeks 5–6 • 25 Dec – 7 Jan', M2: 'Weeks 7–8 • 8 – 21 Jan',
   M3: 'Weeks 9–11 • 22 Jan – 11 Feb', M4: 'Weeks 12–13 • 12 – 25 Feb',
   M5: 'Weeks 14–17 • 26 Feb – 25 Mar', M6: 'Week 18 • 26 Mar – 1 Apr',
-  M7: 'Weeks 19–21 • 2 – 22 Apr', M8: 'Weeks 22–25 • 23 Apr – 20 May'
+  M7: 'Weeks 19–21 • 2 – 22 Apr', M8: 'Weeks 22–25 • 23 Apr – 20 May',
+  M9: 'Weeks 26–28 • 21 May – 9 Jun'
 };
-const MODULE_ORDER = ['B', 'D', 'M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8'];
+const MODULE_ORDER = ['B', 'D', 'M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'];
 const MODULES = [];
 MODULES.push({
   key: 'B', id: 'B', badge: 'B', cat: 'basics', track: 'basics',
@@ -95,6 +99,12 @@ for (const m of MODULES0) {
     meta: [WEEKS[key], m.meta[1]]
   });
 }
+MODULES.push({
+  key: 'M9', id: 'M9', badge: '9', cat: 'industry', track: 'industry',
+  title: 'M9 — Industry Add-Ons',
+  desc: 'The industry layer on top of the Skillzify stack: React hooks, TypeScript, SQL deep, Vitest/Jest testing, system design for interviews, AWS basics, Docker Compose, Next.js, WebSockets and web performance. The tools job descriptions ask for, sequenced after the core stack.',
+  meta: [WEEKS.M9, 'Skills: React • TypeScript • SQL • AWS • Next.js • Testing']
+});
 const MODULE_BY_KEY = {};
 for (const m of MODULES) MODULE_BY_KEY[m.key] = m;
 
@@ -113,6 +123,7 @@ function trackFor(id) {
   if (mod === '4') return 'database';
   if (mod === '5') return 'ai';
   if (mod === '7') return 'android';
+  if (mod === '9') return 'industry';
   return 'devops';
 }
 function moduleKeyFor(id) {
@@ -152,6 +163,10 @@ for (const L of batchA.lessons.concat(batchB.lessons)) {
 const ytDsaById = {};
 for (const v of ytDsa) ytDsaById[v.id] = { url: v.youtube_url, title: v.video_title, channel: v.channel };
 if (Object.keys(ytDsaById).length !== 12) fail('expected 12 DSA videos, got ' + Object.keys(ytDsaById).length);
+/* batch C videos (research) — keyed by lesson id, never invented */
+const ytBatchCById = {};
+for (const v of ytBatchC) ytBatchCById[v.id] = { url: v.youtube_url, title: v.video_title, channel: v.channel };
+if (Object.keys(ytBatchCById).length !== 22) fail('expected 22 batch-C videos, got ' + Object.keys(ytBatchCById).length);
 /* direct videos from batches (incl. Basics) */
 for (const L of newLessons) {
   if (L.youtube_url) {
@@ -192,17 +207,23 @@ for (const L of newLessons) {
     ytByNew[L.id] = resolveShared(L.id, target);
   }
 }
+/* batch C videos: direct from the research file */
+for (const L of batchC.lessons) {
+  const v = ytBatchCById[L.id];
+  if (!v || !v.url) fail('no batch-C video for ' + L.id);
+  ytByNew[L.id] = { url: v.url, title: v.title, channel: v.channel, sharedWith: null };
+}
 
 /* ---------------- mastery ---------------- */
 const MASTERY = {};
-for (const src of [batchA.mastery, batchB.mastery, dsaData.mastery]) {
+for (const src of [batchA.mastery, batchB.mastery, dsaData.mastery, batchC.mastery]) {
   for (const k of Object.keys(src)) MASTERY[k] = src[k];
 }
 for (const key of MODULE_ORDER) {
   if (!MASTERY[key] || MASTERY[key].length !== 3) fail('mastery missing/not 3 points for ' + key);
 }
 
-/* ---------------- assemble the 93 lessons ---------------- */
+/* ---------------- assemble the 127 lessons ---------------- */
 function splitBody(body) {
   /* returns {readHtml, pres:[inner html of each <pre>...</pre>]} */
   const pres = [];
@@ -272,14 +293,38 @@ for (const L of dsaData.lessons) {
     cards: L.cards, striver: L.striver, leetcode: L.leetcode
   });
 }
-/* order: B, D, M0..M8, numeric within module */
+/* batch C lessons (Nov 2026 round): M9 industry add-ons, DSA patterns, depth singles */
+if (!batchC.lessons || batchC.lessons.length !== 22) fail('expected 22 batch-C lessons, got ' + (batchC.lessons ? batchC.lessons.length : 0));
+for (const L of batchC.lessons) {
+  if (moduleKeyFor(L.id) !== L.module) fail('batch-C lesson ' + L.id + ' module field is ' + L.module);
+  if (!L.cards || L.cards.length !== 6) fail('batch-C lesson ' + L.id + ' cards != 6');
+  if (L.id.indexOf('D.') === 0 && (!L.striver || !L.striver.url || !L.leetcode || L.leetcode.length !== 5)) fail('batch-C DSA lesson ' + L.id + ' missing striver/leetcode links');
+  LESSONS.push({
+    id: L.id, oldId: null, source: 'new',
+    title: L.t, sub: L.sub, mins: L.mins, goal: L.goal, body: L.body,
+    task: L.task, checks: L.checks, interview: L.interview || null, mistakes: null,
+    cards: L.cards, striver: L.striver || null, leetcode: L.leetcode || null
+  });
+}
+/* YouTube fixes (Nov 2026 round): researched replacements override weak/shared
+   videos. Applied last, after every lesson's video is registered. Null entries
+   keep the current video (and its Shared flag). */
+let fixesApplied = 0;
+for (const f of ytFixes) {
+  if (!f.youtube_url) continue;
+  if (!ytByNew[f.id]) fail('youtube fix for unknown lesson ' + f.id);
+  ytByNew[f.id] = { url: f.youtube_url, title: f.video_title, channel: f.channel, sharedWith: null };
+  fixesApplied++;
+}
+console.log('YouTube fixes applied: ' + fixesApplied + ' / ' + ytFixes.length);
+/* order: B, D, M0..M9, numeric within module */
 LESSONS.sort(function (a, b) {
   const ka = MODULE_ORDER.indexOf(moduleKeyFor(a.id));
   const kb = MODULE_ORDER.indexOf(moduleKeyFor(b.id));
   if (ka !== kb) return ka - kb;
   return parseInt(a.id.split('.')[1], 10) - parseInt(b.id.split('.')[1], 10);
 });
-if (LESSONS.length !== 105) fail('expected 105 lessons, got ' + LESSONS.length);
+if (LESSONS.length !== 127) fail('expected 127 lessons, got ' + LESSONS.length);
 const seenIds = {};
 for (const L of LESSONS) {
   if (seenIds[L.id]) fail('duplicate lesson id ' + L.id);
@@ -296,21 +341,21 @@ for (const L of LESSONS) {
   L.pres = split.pres;
   L.subtopics = subtopicsFrom(L.body);
   if (L.subtopics.length < 3 || L.subtopics.length > 4) console.log('WARN subtopics ' + L.id + ': ' + L.subtopics.length);
-  if (!L.checks || L.checks.length !== 2) fail('checks != 2 for ' + L.id);
+  if (!L.checks || L.checks.length < 2 || L.checks.length > 5) fail('checks not in 2..5 for ' + L.id);
   if (!L.interview || L.interview.length !== 2) console.log('WARN interview missing/short for ' + L.id);
   if (L.goal.indexOf('<') !== -1 || L.task.indexOf('<') !== -1) console.log('WARN goal/task contains < for ' + L.id);
 }
 const perModule = {};
 for (const L of LESSONS) perModule[L.module] = (perModule[L.module] || 0) + 1;
 console.log('per-module counts:', JSON.stringify(perModule));
-const EXPECTED_COUNTS = { B: 10, D: 12, M0: 10, M1: 9, M2: 10, M3: 9, M4: 9, M5: 10, M6: 8, M7: 9, M8: 9 };
+const EXPECTED_COUNTS = { B: 10, D: 17, M0: 11, M1: 10, M2: 11, M3: 10, M4: 9, M5: 11, M6: 9, M7: 10, M8: 9, M9: 10 };
 for (const k of MODULE_ORDER) {
   if (perModule[k] !== EXPECTED_COUNTS[k]) fail('module ' + k + ' count ' + perModule[k] + ', expected ' + EXPECTED_COUNTS[k]);
 }
 
 /* ---------------- data.js ---------------- */
 const fsai = {
-  total: 105,
+  total: 127,
   modules: MODULES.map(function (m) {
     return { id: m.key, badge: m.badge, title: m.title, desc: m.desc, meta: m.meta, track: m.track, count: perModule[m.key] };
   }),
@@ -320,6 +365,7 @@ const fsai = {
       mins: L.mins, track: L.track, url: L.url,
       yt: { url: L.yt.url, title: L.yt.title, channel: L.yt.channel },
       subtopics: L.subtopics,
+      checks: L.checks,
       cards: L.cards || null,
       striver: L.striver || null,
       leetcode: L.leetcode || null
@@ -337,19 +383,20 @@ const PLAY_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13
 function head(title, cssPath) {
   return '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8"/>\n' +
     '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>\n' +
-    '<meta name="color-scheme" content="dark"/>\n<link rel="icon" href="data:,"/>\n' +
+    '<meta name="color-scheme" content="dark light"/>\n<link rel="icon" href="data:,"/>\n' +
+    '<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>\n' +
     '<title>' + esc(title) + '</title>\n' +
     '<link rel="preconnect" href="https://fonts.googleapis.com">\n' +
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
     '<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">\n' +
-    '<link rel="stylesheet" href="' + cssPath + '?v=3"/>\n</head>\n';
+    '<link rel="stylesheet" href="' + cssPath + '?v=4"/>\n</head>\n';
 }
 function topbar(homePrefix) {
   const h = homePrefix;
   return '<header class="topbar"><div class="topbar-inner">\n' +
     '<a class="brand" href="' + h + 'index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>\n' +
     '<nav class="nav" id="siteNav" aria-label="Site sections">\n' +
-    '<a href="' + h + 'index.html#dashboard">Dashboard</a><a href="' + h + 'index.html#lessons">Lessons</a>' +
+    '<a href="' + h + 'index.html#dashboard">Dashboard</a><a href="' + h + 'index.html#lessons">Lessons</a><a href="' + h + 'practice.html">Practice</a>' +
     '<div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button>' +
     '<div class="nav-drop-menu" id="modDropMenu" role="menu">' +
     '<a href="' + h + 'modules/b.html" role="menuitem">Basics — Start From Zero</a>' +
@@ -363,16 +410,17 @@ function topbar(homePrefix) {
     '<a href="' + h + 'modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a>' +
     '<a href="' + h + 'modules/m7.html" role="menuitem">M7 — Android</a>' +
     '<a href="' + h + 'modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a>' +
+    '<a href="' + h + 'modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a>' +
     '</div></div>\n' +
-    '</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>\n';
+    '</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>\n';
 }
 function footer() {
   return '<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • ' +
-    '105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • ' +
+    '127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • ' +
     'Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>\n';
 }
 function scripts(prefix) {
-  return '<script src="' + prefix + 'assets/js/data.js?v=3"></script>\n<script src="' + prefix + 'assets/js/app.js?v=3"></script>\n</body>\n</html>\n';
+  return '<script src="' + prefix + 'assets/js/data.js?v=4"></script>\n<script src="' + prefix + 'assets/js/app.js?v=4"></script>\n</body>\n</html>\n';
 }
 function ytBtnSmall(yt) {
   return '<a class="yt-btn yt-btn-sm" href="' + esc(yt.url) + '" target="_blank" rel="noopener" title="' + esc(yt.title) + ' — ' + esc(yt.channel) + '">' + PLAY_SVG + 'Watch</a>';
@@ -408,16 +456,17 @@ function moduleCard(m, prefix) {
 /* ---------------- index.html (dashboard home) ---------------- */
 const TIMELINE = [
   ['Wk 1–2', '27 Nov – 10 Dec', 'Basics (B.1–B.10) + DSA Phase 1 (D.1–D.2)', 'HTML, CSS, JS and Python from zero, plus Git and VS Code. DSA: complexity + arrays & two pointers, 45–60 min/day, light weeks — December events. Sunday: first LeetCode contest.', '10 + 2 lessons'],
-  ['Wk 3–4', '11 – 24 Dec', 'Module 0 — Foundations (0.1–0.10) + DSA (D.3–D.4)', 'How pages load, HTTP & DNS, rendering, semantic HTML, CSS, forms, animation, accessibility. DSA: strings & hashing, recursion. Hacktopia 18–20 Dec — short sessions only.', '10 + 2 lessons'],
-  ['Wk 5–6', '25 Dec – 7 Jan', 'Module 1 — JS Deep (1.1–1.9) + DSA Phase 2 (D.5–D.6)', 'Closures, this & prototypes, async & fetch, the event loop, DOM events, state, then React. DSA: linked lists, stacks & queues. 2–3 LeetCode problems a day.', '9 + 2 lessons'],
-  ['Wk 7–8', '8 – 21 Jan', 'Module 2 — Python (2.1–2.10) + DSA (D.7–D.8)', 'Core Python, data structures, OOP, files & JSON pipelines, NumPy/Pandas, pytest. DSA: sorting & binary search, trees & BST. Saturday: re-solve the week’s mistakes.', '10 + 2 lessons'],
-  ['Wk 9–11', '22 Jan – 11 Feb', 'Module 3 — Node & Express (3.1–3.9) + DSA Phase 3 (D.9–D.10)', 'Event loop, routing & middleware, REST design, auth & JWT, rate limits, testing, GraphQL. DSA: heaps, graphs BFS/DFS. Take the full 3 weeks.', '9 + 2 lessons'],
+  ['Wk 3–4', '11 – 24 Dec', 'Module 0 — Foundations (0.1–0.11) + DSA (D.3–D.4)', 'How pages load, HTTP & DNS, rendering, semantic HTML, CSS, forms, animation, accessibility, Grid & Flexbox deep. DSA: strings & hashing, recursion. Hacktopia 18–20 Dec — short sessions only.', '11 + 2 lessons'],
+  ['Wk 5–6', '25 Dec – 7 Jan', 'Module 1 — JS Deep (1.1–1.10) + DSA Phase 2 (D.5–D.6)', 'Closures, this & prototypes, async & fetch, the event loop, DOM events, state, DOM deep, then React. DSA: linked lists, stacks & queues. 2–3 LeetCode problems a day.', '10 + 2 lessons'],
+  ['Wk 7–8', '8 – 21 Jan', 'Module 2 — Python (2.1–2.11) + DSA (D.7–D.8)', 'Core Python, data structures, OOP and OOP deep, files & JSON pipelines, NumPy/Pandas, pytest. DSA: sorting & binary search, trees & BST. Saturday: re-solve the week’s mistakes.', '11 + 2 lessons'],
+  ['Wk 9–11', '22 Jan – 11 Feb', 'Module 3 — Node & Express (3.1–3.10) + DSA Phase 3 (D.9–D.10)', 'Event loop, routing & middleware, REST design, auth & JWT, rate limits, testing deep, GraphQL. DSA: heaps, graphs BFS/DFS. Take the full 3 weeks.', '10 + 2 lessons'],
   ['Wk 12–13', '12 – 25 Feb', 'Module 4 — Firebase + SQL (4.1–4.9) + DSA Phase 4 (D.11–D.12)', 'Auth, Firestore modelling & queries, merge rules, security rules, offline persistence, SQL contrast. DSA: DP, then interview simulation — re-solve the whole mistake log from memory.', '9 + 2 lessons'],
-  ['Wk 14–17', '26 Feb – 25 Mar', 'Module 5 — AI Engineering ★ (5.1–5.10) + DSA maintenance', 'LLM concepts → Gemini API → prompt patterns → structured output → embeddings & RAG → failover & guardrails. DSA: daily timed sets (2 problems, 60 min, 3×/week) + Sunday contests. The core month.', '10 lessons'],
-  ['Wk 18', '26 Mar – 1 Apr', 'Module 6 — Editor & Runtime (6.1–6.8) + mock interviews', 'WASM/Pyodide, CodeMirror, Mermaid, DevTools debugging, performance profiling. DSA: mock interviews — explain your approach out loud, record yourself.', '8 lessons'],
-  ['Wk 19–21', '2 – 22 Apr', 'Module 7 — Android (7.1–7.9) + company-tagged problems', 'Kotlin → Compose → coroutines → navigation → Room → Firebase Android → Play Store. DSA: company-tagged LeetCode for wherever you’re applying.', '9 lessons'],
+  ['Wk 14–17', '26 Feb – 25 Mar', 'Module 5 — AI Engineering ★ (5.1–5.11) + DSA patterns (D.13–D.17)', 'LLM concepts → Gemini API → prompt patterns → structured output → embeddings & RAG → failover, guardrails and AI agents. DSA patterns: sliding window, two pointers deep, greedy, bit manipulation, tries — plus timed sets (2 problems, 60 min, 3×/week) and Sunday contests. The core month.', '11 + 5 lessons'],
+  ['Wk 18', '26 Mar – 1 Apr', 'Module 6 — Editor & Runtime (6.1–6.9) + mock interviews', 'WASM/Pyodide, CodeMirror, Monaco, Mermaid, DevTools debugging, performance profiling. DSA: mock interviews — explain your approach out loud, record yourself.', '9 lessons'],
+  ['Wk 19–21', '2 – 22 Apr', 'Module 7 — Android (7.1–7.10) + company-tagged problems', 'Kotlin → Compose → coroutines → navigation → Room and Room deep → Firebase Android → Play Store. DSA: company-tagged LeetCode for wherever you’re applying.', '10 lessons'],
   ['Wk 22–25', '23 Apr – 20 May', 'Module 8 — DevOps & Shipping (8.1–8.9) + interview sprint', 'Git strategies, Actions CI/CD, Docker, Render, secrets & monitoring. DSA: mediums in ~25 minutes, explaining clearly. Timed for Summer 2027 internship applications.', '9 lessons'],
-  ['Wk 26–28', '21 May – 9 Jun', 'Capstone & applications — Skillzify Mini + final DSA pass', 'Rebuild a Skillzify Mini end-to-end from a blank page, deploy it, and run a final full re-solve of the mistake log. Applications out before the summer window closes.', 'Capstone']
+  ['Wk 26–28', '21 May – 9 Jun', 'Module 9 — Industry Add-Ons (9.1–9.10) + interview sprint', 'React hooks, TypeScript, SQL deep, Vitest/Jest testing, system design, AWS basics, Docker Compose, Next.js, WebSockets, web performance. The job-description layer — one lesson every two days, DSA timed sets alongside.', '10 lessons'],
+  ['Wk 29–31', '10 – 30 Jun', 'Capstone & applications — Skillzify Mini + final DSA pass', 'Rebuild a Skillzify Mini end-to-end from a blank page, deploy it, and run a final full re-solve of the mistake log. Applications out before the summer window closes.', 'Capstone']
 ];
 function buildHome() {
   let h = head('Full Stack Development with AI — Study Lessons', 'assets/css/style.css');
@@ -428,12 +477,12 @@ function buildHome() {
     '<div class="eyebrow">For Vikas • Starts 27 Nov 2026 • After exams end 26 Nov</div>\n' +
     '<h1>Full study lessons for the whole Skillzify stack — with AI.</h1>\n' +
     '<p class="lead">This is no longer just a roadmap. Every module is now a set of <b>complete written lessons</b>: watch the video, read the concept explained in plain language, see the real code, how that exact idea works inside Skillzify v2, a hands-on practice task, and self-check questions with answers. Read a lesson, do the task, check yourself — then move on.</p>\n' +
-    '<div class="chips"><span class="chip">11 modules • 105 lessons</span><span class="chip">28 weeks • 27 Nov 2026 – 9 Jun 2027</span><span class="chip">Video + reading + practice in every lesson</span><span class="chip">DSA daily, in the same plan</span></div>\n' +
-    '<div class="ctas"><a class="btn btn-primary" href="lessons/b-1.html">Open Lesson B.1 — HTML Base</a><a class="btn btn-secondary" href="#timeline">See the week-by-week schedule ↓</a></div>\n' +
+    '<div class="chips"><span class="chip">12 modules • 127 lessons</span><span class="chip">31 weeks • 27 Nov 2026 – 30 Jun 2027</span><span class="chip">Video + reading + practice in every lesson</span><span class="chip">DSA daily, in the same plan</span></div>\n' +
+    '<div class="ctas"><a class="btn btn-primary" href="lessons/b-1.html">Open Lesson B.1 — HTML Base</a><a class="btn btn-secondary" href="practice.html">🎯 Practice quizzes</a><a class="btn btn-secondary" href="#timeline">See the week-by-week schedule ↓</a></div>\n' +
     '<p style="font-size:13.5px;color:var(--faint);margin-top:14px;max-width:560px">The rule for every lesson: <b style="color:var(--text)">Watch → read it → say it back in your own words → do the practice task → answer the self-checks.</b> If you can’t explain it, you haven’t learned it yet.</p>\n' +
     '</div>\n' +
     '<aside class="stack-card" aria-label="Course overview">\n' +
-    '<h3>What you’re studying</h3><p>105 lessons across the 7 layers of Skillzify, plus DSA as a full module of its own and the industry add-ons (React, SQL, RAG, AWS concepts). Progress, XP, notes and quiz results save in this browser, on this device.</p>\n' +
+    '<h3>What you’re studying</h3><p>127 lessons across the 7 layers of Skillzify, plus DSA as a full module of its own and the industry add-ons (React, TypeScript, SQL, AWS, Next.js, testing). Progress, XP, notes and quiz results save in this browser, on this device.</p>\n' +
     '<div class="layer"><b>DSA</b><span>Striver A2Z • LeetCode • Mistake log</span></div>\n' +
     '<div class="layer"><b>Browser</b><span>HTML • CSS • Vanilla JS</span></div>\n' +
     '<div class="layer"><b>In-browser Python</b><span>Pyodide • CodeMirror • Mermaid</span></div>\n' +
@@ -442,7 +491,7 @@ function buildHome() {
     '<div class="layer"><b>AI</b><span>Gemini API • RAG • Evals</span></div>\n' +
     '<div class="layer"><b>Mobile</b><span>Kotlin • Jetpack Compose</span></div>\n' +
     '<div class="layer"><b>Shipping</b><span>GitHub Actions • Render • GA4</span></div>\n' +
-    '<div class="progress-box"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800"><span>Lessons completed</span><span id="progText">0 / 105</span></div><div class="progress-bar"><div class="progress-fill" id="progFill"></div></div></div>\n' +
+    '<div class="progress-box"><div style="display:flex;justify-content:space-between;font-size:13px;font-weight:800"><span>Lessons completed</span><span id="progText">0 / 127</span></div><div class="progress-bar"><div class="progress-fill" id="progFill"></div></div></div>\n' +
     '</aside></div></section>\n';
   /* dashboard */
   h += '<section class="section" id="dashboard">\n<h2>Your study dashboard</h2><p class="sub">Progress, XP and quiz results are saved in this browser on this device, so you can close the tab and pick up where you left off.</p>\n' +
@@ -451,14 +500,15 @@ function buildHome() {
     '<svg width="170" height="170" viewBox="0 0 170 170"><circle class="ring-bg" cx="85" cy="85" r="74"></circle><circle class="ring-fg" id="ringFg" cx="85" cy="85" r="74" stroke-dasharray="464.96" stroke-dashoffset="464.96"></circle></svg>\n' +
     '<div class="ring-center"><div><b id="ringPct">0%</b><span>Complete</span></div></div></div>\n' +
     '<div style="width:100%">\n<div class="dash-stats">\n' +
-    '<div class="stat"><b id="statLessons">0 / 105</b><span>Lessons done</span></div>\n' +
+    '<div class="stat"><b id="statLessons">0 / 127</b><span>Lessons done</span></div>\n' +
     '<div class="stat stat-xp"><b id="statXp">0 XP</b><span>XP earned</span></div>\n' +
     '<div class="stat"><b id="statStreak">0 days</b><span>Study streak</span></div>\n' +
     '<div class="stat"><b id="statQuiz">0 passed</b><span>Self-checks passed</span></div>\n' +
     '</div>\n<div class="xp-level"><div class="xp-level-head"><span id="xpLevelName">Level 1 · Novice</span><span id="xpLevelText">0 / 100 XP to Explorer</span></div><div class="xp-level-bar"><div class="xp-level-fill" id="xpLevelFill"></div></div></div>\n' +
-    '<div class="dsa-box"><div class="dsa-box-head"><span><b>DSA progress</b> — Striver A2Z + LeetCode</span><span id="dsaProgText">0 / 12 DSA lessons done</span></div><div class="progress-bar"><div class="progress-fill" id="dsaProgFill"></div></div><div class="dsa-today" id="dsaToday"></div></div>\n' +
+    '<div class="dsa-box"><div class="dsa-box-head"><span><b>DSA progress</b> — Striver A2Z + LeetCode</span><span id="dsaProgText">0 / 17 DSA lessons done</span></div><div class="progress-bar"><div class="progress-fill" id="dsaProgFill"></div></div><div class="dsa-today" id="dsaToday"></div></div>\n' +
+    '<div class="daily-box" id="dailyChallenge"></div>\n' +
     '<div class="next-up" id="nextUp"></div>\n</div>\n' +
-    '<p class="dash-note">How XP works: <b>+20 XP</b> per completed lesson, <b>+5 XP</b> per self-check you mark “I knew it”. Streak counts consecutive days with at least one completed lesson. Finishing all 11 module mastery checks is the real graduation — the XP is just the scoreboard. DSA lessons earn XP exactly like full-stack lessons.</p>\n' +
+    '<p class="dash-note">How XP works: <b>+20 XP</b> per completed lesson, <b>+5 XP</b> per self-check you mark “I knew it”, <b>+5 XP</b> per passed coding challenge and daily challenge. Streak counts consecutive days with at least one completed lesson. Finishing all 12 module mastery checks is the real graduation — the XP is just the scoreboard. DSA lessons earn XP exactly like full-stack lessons.</p>\n' +
     '</div></section>\n';
   /* how to study (verbatim from original) */
   h += '<section class="section" id="how">\n<h2>How to study each lesson</h2><p class="sub">You already shipped this stack once — with help. These lessons exist so every file in Skillzify becomes a file you could write from a blank page.</p>\n' +
@@ -468,14 +518,14 @@ function buildHome() {
     '<div class="card"><span class="num">03 — CHECK YOURSELF</span><h3>Self-checks with answers</h3><p>Tap a self-check question to reveal the answer only after you’ve said yours out loud. Then keep your daily 30–45 min of Striver DSA running in parallel — it’s a separate track.</p></div>\n' +
     '</div></section>\n';
   /* lessons */
-  h += '<section class="section" id="lessons">\n<h2>Lessons — 11 modules, 105 lessons</h2><p class="sub">Work through them in order; each module builds on the last. Tap any lesson to open its own page — video, explanation, code, Skillzify connection, practice task and self-checks. DSA sits right after Basics in the journey — one DSA lesson a week, daily LeetCode on top.</p>\n';
+  h += '<section class="section" id="lessons">\n<h2>Lessons — 12 modules, 127 lessons</h2><p class="sub">Work through them in order; each module builds on the last. Tap any lesson to open its own page — video, explanation, code, Skillzify connection, practice task and self-checks. DSA sits right after Basics in the journey — one DSA lesson a week, daily LeetCode on top.</p>\n';
   h += '<div class="journey" aria-label="Module journey path">\n';
-  const journeyLabels = { B: 'Basics', D: 'DSA', M0: 'Foundations', M1: 'JS Deep', M2: 'Python', M3: 'Node', M4: 'Firebase', M5: 'AI ★', M6: 'Tools', M7: 'Android', M8: 'DevOps' };
+  const journeyLabels = { B: 'Basics', D: 'DSA', M0: 'Foundations', M1: 'JS Deep', M2: 'Python', M3: 'Node', M4: 'Firebase', M5: 'AI ★', M6: 'Tools', M7: 'Android', M8: 'DevOps', M9: 'Industry' };
   for (const m of MODULES) {
     h += '<a class="jnode" href="modules/' + m.key.toLowerCase() + '.html"><span class="jdot">' + esc(m.badge) + '</span><small>' + esc(journeyLabels[m.key]) + '</small><span class="jbar"><i style="width:0%"></i></span></a>\n';
   }
   h += '</div>\n';
-  h += '<div class="search-row">\n<input class="search-input" id="searchInput" type="search" placeholder="Search all 105 lessons — try “merge rules”, “RAG”, “Pyodide”, “coroutines”…" aria-label="Search lessons">\n<span class="search-count">Search covers titles and subtopics</span>\n</div>\n<div id="searchResults"></div>\n';
+  h += '<div class="search-row">\n<input class="search-input" id="searchInput" type="search" placeholder="Search all 127 lessons — try “merge rules”, “RAG”, “Pyodide”, “coroutines”…" aria-label="Search lessons">\n<span class="search-count">Search covers titles and subtopics</span>\n</div>\n<div id="searchResults"></div>\n';
   h += '<div class="filters" role="group" aria-label="Filter modules">\n' +
     '<button class="filter-btn active" data-filter="all">All modules</button>\n' +
     '<button class="filter-btn" data-filter="basics">Basics</button>\n' +
@@ -485,9 +535,10 @@ function buildHome() {
     '<button class="filter-btn" data-filter="database">Database</button>\n' +
     '<button class="filter-btn" data-filter="ai">AI</button>\n' +
     '<button class="filter-btn" data-filter="android">Android</button>\n' +
-    '<button class="filter-btn" data-filter="devops">DevOps &amp; Cloud</button></div>\n' +
+    '<button class="filter-btn" data-filter="devops">DevOps &amp; Cloud</button>\n' +
+    '<button class="filter-btn" data-filter="industry">Industry</button></div>\n' +
     '<label class="filter-select-wrap" for="filterSelect">Filter: <select id="filterSelect" aria-label="Filter modules">\n' +
-    '<option value="all">All modules</option><option value="basics">Basics</option><option value="dsa">DSA</option><option value="frontend">Frontend</option><option value="backend">Backend</option><option value="database">Database</option><option value="ai">AI</option><option value="android">Android</option><option value="devops">DevOps &amp; Cloud</option>\n</select></label>\n';
+    '<option value="all">All modules</option><option value="basics">Basics</option><option value="dsa">DSA</option><option value="frontend">Frontend</option><option value="backend">Backend</option><option value="database">Database</option><option value="ai">AI</option><option value="android">Android</option><option value="devops">DevOps &amp; Cloud</option><option value="industry">Industry</option>\n</select></label>\n';
   h += '<div id="moduleList">\n';
   for (const m of MODULES) h += moduleCard(m, '');
   h += '</div>\n<p id="noResults" class="hidden" style="color:var(--muted);font-size:14px">No modules in this filter.</p>\n</section>\n';
@@ -536,6 +587,78 @@ function buildModule(m) {
   h += '</div></div>\n<p style="margin-top:16px"><a href="../index.html">← Back to dashboard</a></p>\n</section>\n</main>\n' + footer() + scripts('../');
   return h;
 }
+
+/* ---------------- coding challenges (DSA lessons, JS runner) ---------------- */
+const CHALLENGES = {
+  'D.1': { prompt: 'Write countOps(n) so it returns the number of operations a nested loop over n items performs (n × n).',
+    starter: 'function countOps(n) {\n  // TODO: return n * n\n  return 0;\n}',
+    test: 'console.log(countOps(5));\nconsole.log(countOps(10));',
+    expected: '25\n100' },
+  'D.2': { prompt: 'Write twoSum(nums, target) returning the two indices [i, j] whose values add up to target. Use a hash map for O(n).',
+    starter: 'function twoSum(nums, target) {\n  // TODO: use a Map of value -> index\n  return [];\n}',
+    test: 'console.log(twoSum([2, 7, 11, 15], 9).join(","));\nconsole.log(twoSum([3, 2, 4], 6).join(","));',
+    expected: '0,1\n1,2' },
+  'D.3': { prompt: 'Write isAnagram(a, b) returning true when the two strings are anagrams (same letters, any order).',
+    starter: 'function isAnagram(a, b) {\n  // TODO: count letters with a Map or object\n  return false;\n}',
+    test: 'console.log(isAnagram("listen", "silent"));\nconsole.log(isAnagram("rat", "car"));',
+    expected: 'true\nfalse' },
+  'D.4': { prompt: 'Write sumTo(n) recursively: return 1 + 2 + ... + n. Base case: n === 0 returns 0.',
+    starter: 'function sumTo(n) {\n  // TODO: recursive case + base case\n  return 0;\n}',
+    test: 'console.log(sumTo(5));\nconsole.log(sumTo(10));',
+    expected: '15\n55' },
+  'D.5': { prompt: 'Write sumList(head) that walks a linked list ({val, next}) and returns the sum of all values.',
+    starter: 'function sumList(head) {\n  // TODO: walk node by node, adding val\n  return 0;\n}',
+    test: 'const list = { val: 1, next: { val: 2, next: { val: 3, next: null } } };\nconsole.log(sumList(list));',
+    expected: '6' },
+  'D.6': { prompt: 'Write isValid(s) returning true when brackets (), [], {} are balanced and correctly nested. Use a stack.',
+    starter: 'function isValid(s) {\n  // TODO: push openers, pop on matching closers\n  return false;\n}',
+    test: 'console.log(isValid("()[]{}"));\nconsole.log(isValid("(]"));',
+    expected: 'true\nfalse' },
+  'D.7': { prompt: 'Write binarySearch(arr, target) returning the index of target in a sorted array, or -1. Halve the range each step.',
+    starter: 'function binarySearch(arr, target) {\n  // TODO: lo/hi pointers, mid each step\n  return -1;\n}',
+    test: 'console.log(binarySearch([1, 3, 5, 7, 9], 7));\nconsole.log(binarySearch([1, 3, 5, 7, 9], 4));',
+    expected: '3\n-1' },
+  'D.8': { prompt: 'Write inorder(root) returning an array of values from an in-order traversal of a binary tree ({val, left, right}).',
+    starter: 'function inorder(root) {\n  // TODO: left subtree, then val, then right subtree\n  return [];\n}',
+    test: 'const tree = { val: 2, left: { val: 1, left: null, right: null }, right: { val: 3, left: null, right: null } };\nconsole.log(inorder(tree).join(","));',
+    expected: '1,2,3' },
+  'D.9': { prompt: 'Write kthLargest(nums, k) returning the k-th largest value (k = 1 means the maximum).',
+    starter: 'function kthLargest(nums, k) {\n  // TODO: sort descending (or use a heap) and pick index k - 1\n  return 0;\n}',
+    test: 'console.log(kthLargest([3, 2, 1, 5, 6, 4], 2));\nconsole.log(kthLargest([3, 2, 3, 1, 2, 4, 5, 5, 6], 4));',
+    expected: '5\n4' },
+  'D.10': { prompt: 'Write bfs(graph, start) returning nodes in breadth-first order. graph is an object of node -> neighbour array.',
+    starter: 'function bfs(graph, start) {\n  // TODO: queue + visited set\n  return [];\n}',
+    test: 'const g = { A: ["B", "C"], B: ["D"], C: ["D"], D: [] };\nconsole.log(bfs(g, "A").join(","));',
+    expected: 'A,B,C,D' },
+  'D.11': { prompt: 'Write climbStairs(n): the number of ways to climb n stairs taking 1 or 2 steps at a time. Use DP (it is Fibonacci in disguise).',
+    starter: 'function climbStairs(n) {\n  // TODO: ways[i] = ways[i-1] + ways[i-2]\n  return 0;\n}',
+    test: 'console.log(climbStairs(3));\nconsole.log(climbStairs(5));',
+    expected: '3\n8' },
+  'D.12': { prompt: 'Interview drill: write maxSubarray(nums) returning the largest sum of any contiguous subarray (Kadane’s algorithm).',
+    starter: 'function maxSubarray(nums) {\n  // TODO: track best-ending-here and best-so-far\n  return 0;\n}',
+    test: 'console.log(maxSubarray([-2, 1, -3, 4, -1, 2, 1, -5, 4]));\nconsole.log(maxSubarray([5, 4, -1, 7, 8]));',
+    expected: '6\n23' },
+  'D.13': { prompt: 'Write maxWindowSum(nums, k): the maximum sum of any k consecutive elements, using a sliding window.',
+    starter: 'function maxWindowSum(nums, k) {\n  // TODO: first window sum, then slide: add entering, subtract leaving\n  return 0;\n}',
+    test: 'console.log(maxWindowSum([2, 1, 5, 1, 3, 2], 3));\nconsole.log(maxWindowSum([2, 3, 4, 1, 5], 2));',
+    expected: '9\n7' },
+  'D.14': { prompt: 'Write isPalindrome(s) ignoring case and non-alphanumeric characters, using two pointers moving inward.',
+    starter: 'function isPalindrome(s) {\n  // TODO: clean the string, then compare from both ends\n  return false;\n}',
+    test: 'console.log(isPalindrome("A man, a plan, a canal: Panama"));\nconsole.log(isPalindrome("race a car"));',
+    expected: 'true\nfalse' },
+  'D.15': { prompt: 'Write minCoins(amount, coins): fewest coins for amount using the greedy choice (largest coin first). Coins are canonical, e.g. [1, 5, 10, 25].',
+    starter: 'function minCoins(amount, coins) {\n  // TODO: sort descending, take as many of each coin as fit\n  return 0;\n}',
+    test: 'console.log(minCoins(41, [1, 5, 10, 25]));\nconsole.log(minCoins(63, [1, 5, 10, 25]));',
+    expected: '4\n6' },
+  'D.16': { prompt: 'Write singleNumber(nums): every value appears twice except one. Find it with XOR (x ^ x = 0, x ^ 0 = x).',
+    starter: 'function singleNumber(nums) {\n  // TODO: XOR everything together\n  return 0;\n}',
+    test: 'console.log(singleNumber([4, 1, 2, 1, 2]));\nconsole.log(singleNumber([2, 2, 1]));',
+    expected: '4\n1' },
+  'D.17': { prompt: 'Build a tiny Trie: insert(word) and startsWith(prefix) returning true when any inserted word starts with prefix.',
+    starter: 'class Trie {\n  constructor() { this.root = {}; }\n  insert(word) {\n    // TODO: walk/create a node per character, mark end with "$"\n  }\n  startsWith(prefix) {\n    // TODO: walk the prefix; true if the whole path exists\n    return false;\n  }\n}',
+    test: 'const t = new Trie();\nt.insert("apple");\nconsole.log(t.startsWith("app"));\nconsole.log(t.startsWith("apx"));',
+    expected: 'true\nfalse' }
+};
 
 /* ---------------- lesson pages ---------------- */
 function buildLesson(L, idx) {
@@ -586,6 +709,18 @@ function buildLesson(L, idx) {
   h += '</div>\n';
   /* 5. Practice */
   h += '<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>\n<div class="acc-body"><div class="callout build"><b>Your task</b>' + esc(L.task) + '</div>\n';
+  if (CHALLENGES[L.id]) {
+    const ch = CHALLENGES[L.id];
+    const chJson = JSON.stringify({ starter: ch.starter, test: ch.test, expected: ch.expected }).replace(/<\//g, '<\\/');
+    h += '<div class="challenge"><h4>💻 Coding challenge — solve it here (+5 XP)</h4>\n' +
+      '<p>' + esc(ch.prompt) + '</p>\n' +
+      '<p class="muted-note">Complete the TODO in the editor below, then press Run &amp; check — your output is compared with the expected answer.</p>\n' +
+      '<textarea class="challenge-editor" rows="7" spellcheck="false" aria-label="Your solution code">' + esc(ch.starter) + '</textarea>\n' +
+      '<button class="run-btn challenge-run" type="button">▶ Run &amp; check</button>\n' +
+      '<p class="challenge-status"></p>\n' +
+      '<div class="run-output challenge-output" aria-live="polite"></div>\n' +
+      '<script type="application/json" class="challenge-data">' + chJson + '</script>\n</div>\n';
+  }
   if (L.striver) {
     h += '<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>\n' +
       '<p>Spine: <a href="' + esc(L.striver.url) + '" target="_blank" rel="noopener">Striver A2Z — ' + esc(L.striver.section) + '</a></p>\n' +
@@ -603,6 +738,16 @@ function buildLesson(L, idx) {
       '<button class="quiz-knew qbtn" data-qi="' + i + '">I knew it (+5 XP)</button>' +
       '<button class="quiz-missed qbtn" data-qi="' + i + '">Didn\'t know it</button>\n' +
       '<p class="quiz-answer">' + esc(L.checks[i][1]) + '</p></div>\n';
+  }
+  if (L.cards && L.cards.length) {
+    h += '<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>\n<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>\n';
+    for (let i = 0; i < L.cards.length; i++) {
+      h += '<div class="quiz-q"><p class="qq">What is “' + esc(L.cards[i][0]) + '”?</p>\n' +
+        '<button class="quiz-reveal qbtn">Reveal answer</button>' +
+        '<button class="quiz-knew qbtn" data-qi="f' + i + '">I knew it (+5 XP)</button>' +
+        '<button class="quiz-missed qbtn" data-qi="f' + i + '">Didn\'t know it</button>\n' +
+        '<p class="quiz-answer">' + esc(L.cards[i][1]) + '</p></div>\n';
+    }
   }
   h += '<p class="quiz-score" id="quizScore"></p>\n<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>\n';
   /* 7. Interview */
@@ -630,6 +775,19 @@ function buildLesson(L, idx) {
   if (next) h += '<a class="nav-btn next" href="' + fileFor(next.id) + '">Lesson ' + esc(next.id) + ' →</a>\n';
   else h += '<button class="nav-btn next" disabled>Course complete 🎉</button>\n';
   h += '</div>\n</article>\n</main>\n' + footer() + scripts('../');
+  return h;
+}
+
+/* ---------------- practice page ---------------- */
+function buildPractice() {
+  let h = head('Practice Quizzes — Full Stack + AI Study Lessons', 'assets/css/style.css');
+  h += '<body data-page="practice">\n' + topbar('');
+  h += '<main class="wrap">\n';
+  h += '<p class="crumb"><a href="index.html">Home</a> &nbsp;›&nbsp; Practice</p>\n';
+  h += '<section class="section"><h1 class="practice-title">🎯 Practice quizzes</h1>\n' +
+    '<p class="sub">Mixed self-checks from every lesson — say your answer out loud, reveal, then grade yourself honestly. “I knew it” earns +5 XP and syncs with the lesson pages, so your dashboard score stays true.</p>\n' +
+    '<div id="practiceRoot"></div>\n' +
+    '<p style="margin-top:16px"><a href="index.html">← Back to dashboard</a></p>\n</section>\n</main>\n' + footer() + scripts('');
   return h;
 }
 
@@ -854,6 +1012,68 @@ const CSS_ADD = [
 '.dsa-practice h4{margin:0 0 6px;font-size:15px}',
 '.dsa-practice ul{margin:6px 0 0}',
 '',
+'/* ---- Design refresh + light theme + practice (Nov 2026 round) ---- */',
+'.reader-body p{line-height:1.75;font-size:16px}',
+'.reader-body h4{margin:26px 0 8px;font-size:17px;letter-spacing:-.01em}',
+'.card,.module,.stat,.search-hit,.practice-mod{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}',
+'.card:hover,.search-hit:hover,.practice-mod:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--teal)}',
+'.module:hover{border-color:var(--teal);box-shadow:var(--shadow)}',
+'.btn,.qbtn,.filter-btn,.mod-toggle,.review-star,.yt-btn{transition:background .15s ease,border-color .15s ease,transform .15s ease}',
+'.btn:active,.qbtn:active,.filter-btn:active{transform:scale(.98)}',
+':focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}',
+'.code-block pre{border-radius:12px;padding:16px;font-size:13.5px;line-height:1.65;overflow-x:auto}',
+'.tok-kw{color:#c792ea;font-weight:600}',
+'.tok-str{color:#c3e88d}',
+'.tok-num{color:#f78c6c}',
+'.tok-com{color:#637777;font-style:italic}',
+'.tok-fn{color:#82aaff}',
+'.tok-tag{color:#f07178;font-weight:600}',
+'.tok-attr{color:#ffcb6b}',
+'.tok-prop{color:#89ddff}',
+'.theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);font-size:17px;line-height:1;flex:0 0 auto;cursor:pointer;margin-right:8px}',
+'.theme-toggle:hover{border-color:var(--teal)}',
+'.daily-box{margin-top:12px;background:linear-gradient(160deg,#10231f,#0a1a17);border:1px solid #1e4d4a;border-radius:14px;padding:12px 14px}',
+'.daily-head{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:800}',
+'.daily-head span:last-child{color:var(--faint)}',
+'.daily-q{font-size:15px;font-weight:700;margin:8px 0 2px;color:var(--text)}',
+'.daily-from{font-size:13px;color:var(--faint);margin:0 0 8px}',
+'.daily-actions{display:flex;gap:8px;flex-wrap:wrap}',
+'.daily-actions .qbtn{margin:0}',
+'.daily-answer{margin-top:10px}',
+'.bonus-head{margin:22px 0 4px;font-size:15px;color:var(--teal)}',
+'.challenge{margin-top:14px;background:var(--bg2);border:1px solid #3b2a6b;border-radius:14px;padding:14px 16px}',
+'.challenge h4{margin:0 0 6px;font-size:15px}',
+'.challenge-editor{width:100%;box-sizing:border-box;background:#060d1d;color:#bfdbfe;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-family:"JetBrains Mono",monospace;font-size:13.5px;line-height:1.6;margin:8px 0}',
+'.challenge-status{font-size:13px;font-weight:800;color:var(--faint);margin:8px 0 0}',
+'.practice-title{font-size:30px;letter-spacing:-.03em;margin:0 0 8px}',
+'.practice-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:14px}',
+'.practice-mod{display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;color:var(--text);font-family:inherit}',
+'.practice-mod b{font-size:15px}',
+'.practice-mod span{font-size:12.5px;color:var(--faint);font-weight:700}',
+'.practice-head{display:flex;justify-content:space-between;gap:12px;font-size:14px;font-weight:800;margin:14px 0 8px}',
+'.practice-head span{color:var(--faint)}',
+'.practice-from{font-size:13px;color:var(--faint);margin:2px 0 6px}',
+'.practice-q{margin-top:14px}',
+'.practice-results h3{font-size:22px;margin:16px 0 10px}',
+'.practice-perfect{font-weight:800;color:var(--teal)}',
+'.practice-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}',
+'',
+'/* Light theme: same brand, bright surfaces (dark stays the default) */',
+'[data-theme="light"]{--bg:#f4f6fb;--bg2:#ffffff;--card:#ffffff;--line:#d8e0ee;--text:#0f172a;--muted:#334155;--faint:#64748b;--teal:#0d9488;--teal-bg:#ccfbf1;--teal-dark:#0f766e;--amber:#d97706;--amber-bg:#fef3c7;--navy:#e0e7ff;--code-bg:#0f172a;--code-text:#bfdbfe;--shadow:0 10px 30px rgba(15,23,42,.12)}',
+'[data-theme="light"] .nav-drop-menu{background:#ffffff;box-shadow:0 18px 30px rgba(15,23,42,.18)}',
+'[data-theme="light"] .nav{background:#ffffff}',
+'[data-theme="light"] .fc-back{background:#ccfbf1;border-color:#5eead4}',
+'[data-theme="light"] .fc-back span{color:#134e4a}',
+'[data-theme="light"] .dsa-box{background:linear-gradient(160deg,#ede9fe,#f5f3ff);border-color:#c4b5fd}',
+'[data-theme="light"] .daily-box{background:linear-gradient(160deg,#ccfbf1,#f0fdfa);border-color:#5eead4}',
+'[data-theme="light"] .stat-xp{background:linear-gradient(160deg,#fef3c7,#fffbeb);border-color:#fcd34d}',
+'[data-theme="light"] .stat-xp b{color:#b45309}',
+'[data-theme="light"] .challenge{background:#f5f3ff;border-color:#c4b5fd}',
+'[data-theme="light"] .challenge-editor{background:#0f172a;color:#bfdbfe}',
+'[data-theme="light"] .run-output{background:#0f172a;color:#bfdbfe}',
+'[data-theme="light"] .xp-level-bar{background:rgba(15,23,42,.12)}',
+'[data-theme="light"] .tok-kw{color:#c792ea}',
+'',
 ''
 ].join('\n');
 css = css.replace(/\s+$/, '') + '\n' + CSS_ADD;
@@ -866,6 +1086,8 @@ fs.writeFileSync(path.join(ROOT, 'assets', 'css', 'style.css'), css);
 console.log('wrote assets/css/style.css (' + css.length + ' chars)');
 fs.writeFileSync(path.join(ROOT, 'index.html'), buildHome());
 console.log('wrote index.html');
+fs.writeFileSync(path.join(ROOT, 'practice.html'), buildPractice());
+console.log('wrote practice.html');
 for (const m of MODULES) {
   fs.writeFileSync(path.join(ROOT, 'modules', m.key.toLowerCase() + '.html'), buildModule(m));
 }
@@ -881,16 +1103,32 @@ const shared = LESSONS.filter(function (L) { return L.yt.sharedWith; });
 console.log('\nSHARED videos (' + shared.length + '):');
 for (const L of shared) console.log('  ' + L.id + ' ' + L.title + '  -> shares ' + L.yt.sharedWith + ' (' + L.yt.url + ')');
 const WEAK = [
-  ['4.4', 'original 4.3 video is an Apple-platforms Firestore video — off-topic for Sync & Merge Rules'],
-  ['6.3', 'original 6.2 video is a craftzdog demo project, not a CodeMirror tutorial'],
-  ['2.6', 'original 2.3 video is a Task Manager build, not a generators tutorial'],
-  ['1.7', 'original 1.3 video is "How React Thinks" — a documentary, loose fit for State & Data-Driven Rendering'],
-  ['7.8', 'original 7.4 video title is "(643) The Complete Android Course..." — odd/weak title'],
-  ['8.6', 'original 8.3 video is Django+React on Render, not a general hosting-models video'],
-  ['5.9', 'original 5.4 video is about API rate limiting, loose fit for Reliability/Failover/Key Rotation'],
-  ['4.5', 'shares 4.2 — no dedicated offline-persistence video found'],
-  ['B.10', 'channel shown as "YouTube" — channel unverified']
+  ['4.4', 'still the Apple-platforms Firestore video — no dedicated sync/merge video found (fix null)'],
+  ['7.8', 'still the odd-title video — Chaquopy tutorials exist but channels unverifiable (fix null)'],
+  ['8.6', 'still Django+React on Render — best-fit hosting-models video channel unverifiable (fix null)'],
+  ['5.9', 'still the rate-limiting video — failover/key-rotation video channel unverifiable (fix null)'],
+  ['1.5', 'still shares 3.1 — deep event-loop video exists but channel unverifiable (fix null)'],
+  ['3.3', 'still shares 3.2 — middleware video full title never surfaced (fix null)'],
+  ['3.7', 'still shares 3.4 — error-handling video channel unverifiable (fix null)'],
+  ['4.3', 'still shares 4.2 — Firestore series episode has no individual watch URL (fix null)'],
+  ['4.5', 'still shares 4.2 — no dedicated offline-persistence video (fix null)'],
+  ['6.4', 'still shares 6.3 — no dedicated CodeMirror 6 extensions tutorial (fix null)'],
+  ['8.7', 'still shares 8.6 — Render deploy videos channels unverifiable (fix null)'],
+  ['9.6', 'channel name brand-derived from description, not verbatim-verified'],
+  ['6.9', 'Monaco is 1 of 3 editors covered — weakest batch-C match, kept (it does teach Monaco)'],
+  ['9.3', 'covers window functions only, not indexes/transactions'],
+  ['D.14', 'covers 3Sum/two-pointers, fast & slow not explicit'],
+  ['3.10', 'uses Vitest + Supertest rather than node:test'],
+  ['5.8', 'covers vector DBs/embeddings; prompt caching not covered'],
+  ['D.3', 'replacement is hashing-focused; strings aspect thin'],
+  ['6.3', 'replacement is a ~12-hour full build (CodeMirror 6 central but long)'],
+  ['6.2', 'replacement is a PyScript first-look (PyScript runs on Pyodide)'],
+  ['0.7', 'replacement is a small channel (~277 views), only dedicated verifiable tutorial found'],
+  ['8.2', 'replacement covers branching/PR workflows, not Git Flow vs trunk-based comparison'],
+  ['D.12', 'replacement channel shown as handle @sans_aura'],
+  ['5.8', 'replacement channel shown as handle @are_agi'],
+  ['7.4', 'replacement channel shown as handle @siddhubhaiya2881']
 ];
 console.log('\nWEAK / off-topic links (kept as-is, flagged only):');
 for (const w of WEAK) console.log('  ' + w[0] + ': ' + w[1]);
-console.log('\nBUILD DONE: 105 lessons, 11 modules.');
+console.log('\nBUILD DONE: 127 lessons, 12 modules.');

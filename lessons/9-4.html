@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 9.4 — Testing with Vitest &amp; Jest — Unit and Integration Tests — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="9.4">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m9.html">M9 — Industry Add-Ons</a> &nbsp;›&nbsp; Lesson 9.4</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 9.4 • M9 — Industry Add-Ons • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Testing with Vitest &amp; Jest — Unit and Integration Tests</h2>
+<p class="goal">Proof the code works, not hope</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=cchqeWY0Nak" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Setting up vite, React, TypeScript, eslint, prettier, vitest, testing-library and react-router</b><span>Coding Garden</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. The test pyramid: many small, few big</a></li>
+<li><a href="#sub-2">2. describe, it, expect: the shape of a test</a></li>
+<li><a href="#sub-3">3. Mocking and testing async code</a></li>
+<li><a href="#sub-4">4. Coverage: a map, not a target</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can write unit and integration tests with describe, it and expect, mock dependencies, test async code, and read a coverage report without worshipping it.</div>
+<h4 id="sub-1">1. The test pyramid: many small, few big</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=cchqeWY0Nak" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Tests come in sizes. Unit tests check one function in isolation and run in milliseconds. Integration tests check several pieces together — a route handler plus its validation, for example. End-to-end tests drive the whole app through a browser and are slow and brittle. The pyramid says: many unit tests, fewer integration tests, very few end-to-end tests. Inverting it gives a suite that is slow, flaky and painful to maintain.</p><p>Skillzify's Node server currently has no test suite, so every change is verified by hand. The first tests worth writing are the pure, high-risk functions: the rate limiter, the input validation, and the XP and level calculations — the code where a silent bug hurts every learner at once.</p><h4 id="sub-2">2. describe, it, expect: the shape of a test</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=cchqeWY0Nak" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Vitest and Jest share the same vocabulary. <code>describe</code> groups related tests, <code>it</code> (or <code>test</code>) names one behaviour, and <code>expect</code> asserts an outcome with matchers like <code>toBe</code>, <code>toEqual</code> and <code>toThrow</code>. A good test name reads as a sentence about behaviour: returns 400 when the question is empty. Arrange the inputs, act by calling the code, assert the result — and keep each test about one behaviour so a failure points at one cause.</p><h4 id="sub-3">3. Mocking and testing async code</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=cchqeWY0Nak" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A mock replaces a real dependency with a controlled fake: a fake Gemini response instead of a live API call, a fixed clock instead of the real time. Mocking keeps tests fast, deterministic and free of network flakiness — but mock the boundaries, not the thing under test, or you end up testing your mocks. Async code is tested by awaiting it: mark the test <code>async</code> and <code>await</code> the promise, or assert with <code>resolves</code> and <code>rejects</code> matchers. A test that forgets to await passes vacuously while the real assertion never runs.</p><h4 id="sub-4">4. Coverage: a map, not a target</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=cchqeWY0Nak" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Coverage reports which lines and branches your tests executed. It is excellent for finding untested code and useless as a quality score: 100 percent coverage with weak assertions proves nothing, and chasing the last few percent usually means testing trivia. Use coverage to ask where are we blind, then write tests for the risky behaviour there — error paths, boundaries, and the branches a refactor is most likely to break.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>import { describe, it, expect, vi } from "vitest";
+
+function levelFor(xp) {
+  if (xp &lt; 100) return "Beginner";
+  if (xp &lt; 300) return "Intermediate";
+  return "Advanced";
+}
+
+describe("levelFor", () =&gt; {
+  it("returns Beginner below 100 XP", () =&gt; {
+    expect(levelFor(50)).toBe("Beginner");
+  });
+  it("returns Advanced at 300 XP", () =&gt; {
+    expect(levelFor(300)).toBe("Advanced");
+  });
+});</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Set up Vitest in a small Node project and write tests for a levelFor function covering all three bands plus the exact boundary values 100 and 300. Then write one async test that mocks a fetch call with vi.fn and asserts the resolved value. Run the suite with coverage and note which lines, if any, are untested.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why should most tests be unit tests rather than end-to-end tests?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Unit tests are fast, deterministic and pinpoint failures to one function. End-to-end tests are slow and brittle, so the pyramid keeps them few.</p></div>
+<div class="quiz-q"><p class="qq">What is the danger of mocking too much?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">You end up testing your mocks instead of the real behaviour, so tests pass while the integrated code is broken. Mock only external boundaries like network and time.</p></div>
+<div class="quiz-q"><p class="qq">Why can an async test pass without testing anything?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">If the test does not await the promise, the assertion runs after the test has already finished, so it never actually executes.</p></div>
+<div class="quiz-q"><p class="qq">What does 100 percent coverage actually prove?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">Only that every line ran during the tests — not that the assertions were meaningful. Coverage finds blind spots; it does not measure correctness.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “Test pyramid”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">Many unit tests, fewer integration tests, very few end-to-end tests — a shape that keeps suites fast and failures localised.</p></div>
+<div class="quiz-q"><p class="qq">What is “Unit test”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">A test of one function or module in isolation, with dependencies replaced by fakes.</p></div>
+<div class="quiz-q"><p class="qq">What is “Integration test”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">A test of several real pieces working together, like a route handler with its validation and database layer.</p></div>
+<div class="quiz-q"><p class="qq">What is “Mock”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A controlled fake replacing a real dependency, used to keep tests fast, deterministic and offline.</p></div>
+<div class="quiz-q"><p class="qq">What is “Matcher”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">An assertion helper on expect, like toBe, toEqual or rejects, that states the expected outcome.</p></div>
+<div class="quiz-q"><p class="qq">What is “Coverage”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">A report of which lines and branches tests executed — a map of blind spots, not a quality score.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">What would you test first in an untested codebase?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">The pure, high-risk logic with wide blast radius: validation, calculations, rate limits and error paths — the code where one bug affects every user, and which is cheap to unit test.</p></div>
+<div class="interview-q"><p class="iq">How do you test code that calls an external API?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Mock the API boundary with a fake response so the test is fast and deterministic, test success and failure shapes, and keep one or two real integration tests separate from the unit suite.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="9-3.html">← Lesson 9.3</a>
+<a class="nav-btn next" href="9-5.html">Lesson 9.5 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

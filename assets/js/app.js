@@ -11,13 +11,14 @@
   S.mastery = S.mastery || {}; S.last = S.last || null;
   S.review = S.review || {}; S.acc = S.acc || {}; S.modCollapsed = S.modCollapsed || {};
   S.quizScore = S.quizScore || {};
+  S.chal = S.chal || {}; S.daily = S.daily || {};
 
   function pad(n) { return String(n).padStart(2, '0'); }
   function dayStr(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
   function today() { return dayStr(new Date()); }
   function doneCount() { return Object.keys(S.done).length; }
   function quizCount() { return Object.keys(S.quiz).length; }
-  function xp() { return doneCount() * 20 + quizCount() * 5; }
+  function xp() { return doneCount() * 20 + quizCount() * 5 + Object.keys(S.chal).length * 5 + Object.keys(S.daily).length * 5; }
   var LEVELS = [[0, 'Novice'], [100, 'Explorer'], [250, 'Coder'], [500, 'Builder'], [800, 'Pythonista'], [1200, 'Full-Stack'], [1800, 'Master']];
   function levelFor(v) { var cur = LEVELS[0], nxt = null; for (var i = 0; i < LEVELS.length; i++) { if (v >= LEVELS[i][0]) cur = LEVELS[i]; else { nxt = LEVELS[i]; break; } } return { idx: LEVELS.indexOf(cur) + 1, name: cur[1], floor: cur[0], next: nxt }; }
   function streak() {
@@ -68,7 +69,11 @@
       Object.keys(S.quizScore).forEach(function (k) { if (k.indexOf(lessonId + ':') === 0) { delete S.quizScore[k]; changed = true; } });
       Object.keys(S.quiz).forEach(function (k) { if (k.indexOf(lessonId + ':') === 0) { delete S.quiz[k]; changed = true; } });
       save(S); return changed;
-    }
+    },
+    markChallenge: function (lessonId) { if (S.chal[lessonId]) return false; S.chal[lessonId] = true; save(S); return true; },
+    isChallenge: function (lessonId) { return !!S.chal[lessonId]; },
+    markDaily: function () { var t = today(); if (S.daily[t]) return false; S.daily[t] = true; save(S); return true; },
+    dailyDone: function () { return !!S.daily[today()]; }
   };
   window.FSAI_PROG = PROG;
 
@@ -114,6 +119,7 @@
     initFilters();
     initModuleCards();
     renderDsaHome();
+    renderDailyChallenge();
     renderReviewList();
     updateXpBadges();
   }
@@ -131,7 +137,7 @@
       var mins = 45;
       today.innerHTML = next
         ? '<b>DSA today — 45–60 min</b><span>Next: <a href="' + next.url + '">Lesson ' + esc(next.id) + ' — ' + esc(next.title) + '</a> (' + next.mins + ' min) · then 2–3 LeetCode problems on that pattern. Sunday: weekly contest + review.</span>'
-        : '<b>DSA today — 45–60 min</b><span>All 12 DSA lessons done — re-solve your mistake log from memory, or run a timed set (2 problems, 60 min).</span>';
+        : '<b>DSA today — 45–60 min</b><span>All ' + dsa.length + ' DSA lessons done — re-solve your mistake log from memory, or run a timed set (2 problems, 60 min).</span>';
     }
   }
 
@@ -285,7 +291,7 @@
           scoreEl.textContent = known === total ? 'Score: ' + known + ' / ' + total + ' — perfect, you know this cold 🎉' : 'Score: ' + known + ' / ' + total + ' — review the ones you missed, then retry.';
           scoreEl.classList.add('show');
         } else {
-          scoreEl.textContent = 'Score: ' + known + ' / ' + total + ' so far — answer both questions to finish.';
+          scoreEl.textContent = 'Score: ' + known + ' / ' + total + ' so far — answer all questions to finish.';
           scoreEl.classList.add('show');
         }
       }
@@ -357,7 +363,9 @@
     }
     initAccordions(id);
     initFlashcards(id);
+    initHighlight();
     initRunner();
+    initChallenges(id);
     initReviewStar(id);
     updateXpBadges();
   }
@@ -526,12 +534,246 @@
     }
   }
 
+  /* ---------- Theme (dark default, light optional; persisted per device) ---------- */
+  var THEME_KEY = 'fsai_theme';
+  function currentTheme() {
+    try { return localStorage.getItem(THEME_KEY) === 'light' ? 'light' : 'dark'; } catch (e) { return 'dark'; }
+  }
+  function applyTheme(t) {
+    document.documentElement.setAttribute('data-theme', t);
+    var btn = document.getElementById('themeToggle');
+    if (btn) {
+      btn.textContent = t === 'light' ? '🌙' : '☀️';
+      btn.setAttribute('aria-label', t === 'light' ? 'Switch to dark theme' : 'Switch to light theme');
+      btn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
+    }
+  }
+  function initTheme() {
+    applyTheme(currentTheme());
+    var btn = document.getElementById('themeToggle');
+    if (btn) btn.addEventListener('click', function () {
+      var next = currentTheme() === 'light' ? 'dark' : 'light';
+      try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+      applyTheme(next);
+      toast(next === 'light' ? 'Light theme on ☀️' : 'Dark theme on 🌙');
+    });
+  }
+
+  /* ---------- Lightweight syntax highlighting (JS / Python / HTML / CSS) ---------- */
+  function detectLang(code) {
+    var t = code.trim();
+    if (/^<\/?[a-zA-Z][^>]*>/.test(t) || /<div|<span|<p>|<a\s|<html|<body/.test(t)) return 'html';
+    if (/^\s*(def |import |from |print\(|class \w+\s*:|@\w+|#)/m.test(t) && !/console\.log|=>/.test(t)) return 'python';
+    if (/[.#]?[\w-]+\s*\{[^}]*:.*;\s*\}/s.test(t) && !/function|const|let|var/.test(t)) return 'css';
+    return 'js';
+  }
+  var HL = {
+    js: { kw: /\b(const|let|var|function|return|if|else|for|while|do|class|extends|new|await|async|try|catch|throw|switch|case|break|continue|typeof|instanceof|in|of|this|null|undefined|true|false|import|from|export|default)\b/g, com: /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/g, str: /('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\]|\\.)*`)/g },
+    python: { kw: /\b(def|class|return|if|elif|else|for|while|import|from|as|with|try|except|finally|raise|lambda|yield|pass|break|continue|and|or|not|in|is|None|True|False|async|await|global|nonlocal)\b/g, com: /(#[^\n]*)/g, str: /('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|'''[\s\S]*?'''|"""[\s\S]*?""")/g },
+    css: { kw: /(@media|@keyframes|@import|!important)\b/g, com: /(\/\*[\s\S]*?\*\/)/g, str: /('(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*")/g },
+    html: { kw: null, com: /(<!--[\s\S]*?-->)/g, str: /("[^"\n]*")/g }
+  };
+  function highlightCode(code, lang) {
+    var rules = HL[lang] || HL.js;
+    var tokens = [];
+    var work = code;
+    /* stash comments + strings first so keywords inside them are not re-wrapped */
+    var stash = function (re, cls) {
+      work = work.replace(re, function (m) { tokens.push('<span class="' + cls + '">' + m + '</span>'); return '\u0001' + (tokens.length - 1) + '\u0002'; });
+    };
+    if (rules.com) stash(rules.com, 'tok-com');
+    if (rules.str) stash(rules.str, 'tok-str');
+    work = work.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    if (lang === 'html') {
+      work = work.replace(/(&lt;\/?)([a-zA-Z][\w-]*)/g, '$1<span class="tok-tag">$2</span>');
+      work = work.replace(/([\w-]+)(=)/g, '<span class="tok-attr">$1</span>$2');
+    }
+    if (rules.kw) work = work.replace(rules.kw, '<span class="tok-kw">$&</span>');
+    work = work.replace(/\b(\d+(?:\.\d+)?)\b/g, '<span class="tok-num">$1</span>');
+    if (lang === 'js' || lang === 'python') work = work.replace(/\b([A-Za-z_]\w*)(?=\s*\()/g, '<span class="tok-fn">$1</span>');
+    if (lang === 'css') work = work.replace(/([\w-]+)(\s*:)/g, '<span class="tok-prop">$1</span>$2');
+    work = work.replace(/\u0001(\d+)\u0002/g, function (m, i) {
+      return tokens[+i].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&lt;span class=/g, '<span class=').replace(/&lt;\/span&gt;/g, '</span>');
+    });
+    return work;
+  }
+  function initHighlight() {
+    document.querySelectorAll('.code-block pre').forEach(function (pre) {
+      var code = pre.textContent || '';
+      if (!code.trim()) return;
+      try { pre.innerHTML = highlightCode(code, detectLang(code)); } catch (e) { /* leave plain on any error */ }
+    });
+  }
+
+  /* ---------- Daily challenge (dashboard; rotates by date) ---------- */
+  function renderDailyChallenge() {
+    var box = document.getElementById('dailyChallenge'); if (!box || !window.FSAI) return;
+    var lessons = FSAI.lessons.filter(function (l) { return l.checks && l.checks.length; });
+    if (!lessons.length) { box.style.display = 'none'; return; }
+    var dayNum = Math.floor(Date.now() / 86400000);
+    var lesson = lessons[dayNum % lessons.length];
+    var qi = dayNum % lesson.checks.length;
+    var q = lesson.checks[qi];
+    var done = PROG.dailyDone();
+    box.innerHTML = '<div class="daily-head"><b>🎯 Daily challenge</b><span>' + (done ? 'Done today ✓' : 'Answer for +5 XP') + '</span></div>' +
+      '<p class="daily-q">' + esc(q[0]) + '</p>' +
+      '<p class="daily-from">From <a href="' + lesson.url + '">Lesson ' + esc(lesson.id) + ' — ' + esc(lesson.title) + '</a></p>' +
+      '<div class="daily-actions"><button class="qbtn daily-reveal" type="button">Reveal answer</button>' +
+      '<button class="qbtn daily-knew" type="button"' + (done ? ' disabled' : '') + '>I knew it (+5 XP)</button>' +
+      '<button class="qbtn daily-missed" type="button"' + (done ? ' disabled' : '') + '>Didn\'t know it</button></div>' +
+      '<p class="quiz-answer daily-answer">' + esc(q[1]) + '</p>';
+    var ans = box.querySelector('.daily-answer');
+    box.querySelector('.daily-reveal').addEventListener('click', function () {
+      ans.classList.toggle('open');
+      this.textContent = ans.classList.contains('open') ? 'Hide answer' : 'Reveal answer';
+    });
+    var finish = function (known) {
+      if (PROG.dailyDone()) return;
+      PROG.markDaily();
+      if (known) { updateXpBadges(); toast('+5 XP — daily challenge done 🎯'); }
+      else toast('Daily challenge logged — open the lesson to revise.');
+      renderDailyChallenge();
+    };
+    box.querySelector('.daily-knew').addEventListener('click', function () { finish(true); });
+    box.querySelector('.daily-missed').addEventListener('click', function () { finish(false); });
+  }
+
+  /* ---------- Practice page (mixed module quizzes) ---------- */
+  function initPractice() {
+    var root = document.getElementById('practiceRoot'); if (!root || !window.FSAI) return;
+    var modules = FSAI.modules;
+    var state = { mod: null, queue: [], idx: 0, known: 0, answered: 0, missed: [] };
+    function questionsFor(modKey) {
+      var qs = [];
+      FSAI.lessons.filter(function (l) { return modKey === 'all' || l.module === modKey; }).forEach(function (l) {
+        (l.checks || []).forEach(function (c, i) { qs.push({ lesson: l, qi: i, q: c[0], a: c[1], kind: 'check' }); });
+        (l.cards || []).forEach(function (c, i) { qs.push({ lesson: l, qi: 'f' + i, q: 'What is “' + c[0] + '”?', a: c[1], kind: 'card' }); });
+      });
+      return qs;
+    }
+    function shuffle(arr) { for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; } return arr; }
+    function renderPicker() {
+      root.innerHTML = '<p class="sub">Pick a module for a mixed quiz — questions are drawn from every lesson’s self-checks and flashcards in that module. Marking “I knew it” earns +5 XP, synced with the lesson pages.</p>' +
+        '<div class="practice-grid">' +
+        '<button class="practice-mod" data-mod="all" type="button"><b>All modules</b><span>Mixed across the whole course</span></button>' +
+        modules.map(function (m) {
+          var n = questionsFor(m.id).length;
+          return '<button class="practice-mod" data-mod="' + m.id + '" type="button"><b>' + esc(m.title) + '</b><span>' + n + ' questions</span></button>';
+        }).join('') + '</div>';
+      root.querySelectorAll('.practice-mod').forEach(function (b) {
+        b.addEventListener('click', function () { startQuiz(b.getAttribute('data-mod')); });
+      });
+    }
+    function startQuiz(modKey) {
+      var pool = shuffle(questionsFor(modKey).slice());
+      state = { mod: modKey, queue: pool.slice(0, 10), idx: 0, known: 0, answered: 0, missed: [] };
+      if (!state.queue.length) { root.innerHTML = '<p class="search-empty">No questions in this module yet.</p>'; return; }
+      renderQuestion();
+    }
+    function renderQuestion() {
+      var item = state.queue[state.idx];
+      var modTitle = state.mod === 'all' ? 'All modules' : (modules.find(function (m) { return m.id === state.mod; }) || {}).title;
+      root.innerHTML = '<div class="practice-head"><b>' + esc(modTitle) + '</b><span>Question ' + (state.idx + 1) + ' / ' + state.queue.length + ' · Score ' + state.known + '</span></div>' +
+        '<div class="progress-bar"><div class="progress-fill" style="width:' + Math.round(state.idx / state.queue.length * 100) + '%"></div></div>' +
+        '<div class="quiz-q practice-q"><p class="qq">' + esc(item.q) + '</p>' +
+        '<p class="practice-from">From <a href="' + item.lesson.url + '">Lesson ' + esc(item.lesson.id) + ' — ' + esc(item.lesson.title) + '</a></p>' +
+        '<button class="qbtn p-reveal" type="button">Reveal answer</button>' +
+        '<button class="qbtn p-knew" type="button">I knew it (+5 XP)</button>' +
+        '<button class="qbtn p-missed" type="button">Didn\'t know it</button>' +
+        '<p class="quiz-answer p-answer">' + esc(item.a) + '</p></div>';
+      var ans = root.querySelector('.p-answer');
+      root.querySelector('.p-reveal').addEventListener('click', function () {
+        ans.classList.toggle('open');
+        this.textContent = ans.classList.contains('open') ? 'Hide answer' : 'Reveal answer';
+      });
+      var answer = function (known) {
+        state.answered++;
+        if (known) {
+          state.known++;
+          if (PROG.markQuiz(item.lesson.id, item.qi)) { updateXpBadges(); toast('+5 XP — nice!'); }
+          PROG.setQuizResult(item.lesson.id, item.qi, true);
+        } else {
+          PROG.setQuizResult(item.lesson.id, item.qi, false);
+          state.missed.push(item);
+        }
+        state.idx++;
+        if (state.idx >= state.queue.length) renderResults(); else renderQuestion();
+      };
+      root.querySelector('.p-knew').addEventListener('click', function () { answer(true); });
+      root.querySelector('.p-missed').addEventListener('click', function () { answer(false); });
+    }
+    function renderResults() {
+      var pct = Math.round(state.known / state.queue.length * 100);
+      var byLesson = {};
+      state.missed.forEach(function (m) { byLesson[m.lesson.id] = m.lesson; });
+      var missedHtml = state.missed.length
+        ? '<h3>Revise these</h3><div class="practice-missed">' + Object.keys(byLesson).map(function (id) {
+            var l = byLesson[id];
+            return '<a class="search-hit" href="' + l.url + '"><span class="hit-main"><b>Lesson ' + esc(l.id) + ' — ' + esc(l.title) + '</b><span>' + esc(l.moduleTitle) + '</span></span></a>';
+          }).join('') + '</div>'
+        : '<p class="practice-perfect">Perfect score — nothing to revise 🎉</p>';
+      root.innerHTML = '<div class="practice-results"><h3>Score: ' + state.known + ' / ' + state.queue.length + ' (' + pct + '%)</h3>' +
+        missedHtml +
+        '<div class="practice-actions"><button class="btn btn-primary" id="pAgain" type="button">↻ Another round</button><button class="btn btn-secondary" id="pBack" type="button">Choose another module</button></div></div>';
+      document.getElementById('pAgain').addEventListener('click', function () { startQuiz(state.mod); });
+      document.getElementById('pBack').addEventListener('click', renderPicker);
+    }
+    renderPicker();
+    updateXpBadges();
+  }
+
+  /* ---------- Coding challenges (DSA lessons; JS runner + expected output) ---------- */
+  function initChallenges(id) {
+    document.querySelectorAll('.challenge').forEach(function (box) {
+      var dataEl = box.querySelector('.challenge-data');
+      var runBtn = box.querySelector('.challenge-run');
+      var out = box.querySelector('.challenge-output');
+      var status = box.querySelector('.challenge-status');
+      if (!dataEl || !runBtn || !out) return;
+      var data;
+      try { data = JSON.parse(dataEl.textContent); } catch (e) { return; }
+      var editor = box.querySelector('.challenge-editor');
+      var paintStatus = function () {
+        if (status) status.textContent = PROG.isChallenge(id) ? '✓ Challenge passed — +5 XP earned' : 'Pass the challenge for +5 XP';
+      };
+      paintStatus();
+      runBtn.addEventListener('click', function () {
+        out.textContent = 'Running…'; out.classList.add('show');
+        var src = 'onmessage=function(e){var logs=[];var c={log:function(){logs.push(Array.prototype.slice.call(arguments).map(String).join(" "));},error:function(){logs.push("Error: "+Array.prototype.slice.call(arguments).map(String).join(" "));}};try{var fn=new Function("console",e.data);fn(c);postMessage({ok:true,logs:logs});}catch(err){postMessage({ok:false,logs:logs,error:String(err)});}};';
+        var worker;
+        try { worker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' }))); }
+        catch (e) { out.textContent = 'Run is not supported in this browser.'; return; }
+        var done = false;
+        var finish = function (msg, passed) {
+          if (done) return; done = true; worker.terminate();
+          out.textContent = msg;
+          if (passed && PROG.markChallenge(id)) { updateXpBadges(); toast('Challenge passed! +5 XP 🎉'); }
+          paintStatus();
+        };
+        var timer = setTimeout(function () { finish('⏱ Timed out after 2s — check for an infinite loop.', false); }, 2000);
+        worker.onmessage = function (e) {
+          clearTimeout(timer);
+          var d = e.data;
+          var got = (d.logs || []).join('\n').trim();
+          var want = String(data.expected || '').trim();
+          if (d.error) { finish('❌ ' + d.error + (got ? '\n' + got : ''), false); return; }
+          if (got === want) finish('✓ Output matches!\n' + got, true);
+          else finish('✗ Not yet.\nYour output:\n' + (got || '(nothing)') + '\nExpected:\n' + want, false);
+        };
+        worker.onerror = function () { clearTimeout(timer); finish('❌ Could not run this challenge.', false); };
+        worker.postMessage((editor ? editor.value : data.starter) + '\n' + data.test);
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     var page = document.body.getAttribute('data-page');
+    initTheme();
     initNav();
     updateXpBadges();
     if (page === 'home') initHome();
     else if (page === 'module') initModule();
     else if (page === 'lesson') initLesson();
+    else if (page === 'practice') initPractice();
   });
 })();

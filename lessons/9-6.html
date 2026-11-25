@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 9.6 — AWS Basics — EC2, S3, Lambda &amp; IAM — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="9.6">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m9.html">M9 — Industry Add-Ons</a> &nbsp;›&nbsp; Lesson 9.6</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 9.6 • M9 — Industry Add-Ons • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>AWS Basics — EC2, S3, Lambda &amp; IAM</h2>
+<p class="goal">The four services everything else stands on</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=adZ5wd6qKg0" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>AWS Full Course for Beginners: Stop Memorising Services, See How It Works [Free]</b><span>ChalkBrain</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. IAM: who can do what</a></li>
+<li><a href="#sub-2">2. S3: object storage for files</a></li>
+<li><a href="#sub-3">3. EC2: rented virtual servers</a></li>
+<li><a href="#sub-4">4. Lambda: functions without servers</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain what EC2, S3, Lambda and IAM each do, create a least-privilege IAM policy, and map each AWS service to the Render and Firebase equivalent Skillzify uses.</div>
+<h4 id="sub-1">1. IAM: who can do what</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=adZ5wd6qKg0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>IAM (Identity and Access Management) is AWS's permission system, and it comes first because everything else is gated by it. Users are people or applications with credentials; roles are identities that services assume temporarily, with no long-lived password; policies are JSON documents listing allowed actions on named resources. The governing principle is least privilege: grant exactly the actions needed, on exactly the resources needed, and nothing more. A policy that allows <code>s3:GetObject</code> on one bucket is safe; a policy that allows everything on everything is how breaches happen.</p><h4 id="sub-2">2. S3: object storage for files</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=adZ5wd6qKg0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>S3 stores objects — files plus metadata — in buckets, addressed by a key like a path. It is not a filesystem and not a database: you put whole objects and get whole objects, and it scales to effectively unlimited size with very high durability. Static websites, uploaded images, backups and build artifacts all live in S3. Buckets are private by default, and making one public is a deliberate, per-object or per-policy decision. Skillzify's equivalent is Firebase Storage for user files and the GitHub repository itself for static assets.</p><h4 id="sub-3">3. EC2: rented virtual servers</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=adZ5wd6qKg0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>EC2 gives you virtual machines — instances — in sizes from tiny to enormous, billed per second while they run. You choose the operating system image, the size, and the security group (a firewall rule set), then you own everything above the hypervisor: patching, scaling, backups. That control is the point and the cost. Skillzify runs on Render, which is the managed version of this idea: Render operates the machines and deploys your code, while EC2 hands you the machine and wishes you luck.</p><h4 id="sub-4">4. Lambda: functions without servers</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=adZ5wd6qKg0" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Lambda runs a single function in response to an event — an HTTP request, a file landing in S3, a timer — and bills only for the milliseconds it runs. There is no server to patch or scale; AWS starts copies as needed and shuts them down when idle. The trade-offs are cold starts on the first invocation, a 15-minute maximum runtime, and statelessness between calls. Firebase Cloud Functions is the same model in Google's cloud. The mapping to remember: EC2 is a rented computer, Lambda is rented execution, S3 is rented storage, and IAM decides who may rent what.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject", "s3:PutObject"],
+      "Resource": "arn:aws:s3:::skillzify-uploads/*"
+    }
+  ]
+}</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Create a free AWS account or use the IAM policy simulator: write a policy that allows only GetObject and PutObject on one named bucket, and check that it denies DeleteObject. Then list the four services from this lesson and, next to each, write the Render or Firebase equivalent Skillzify actually uses.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">What is the difference between an IAM user and an IAM role?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">A user is a permanent identity with credentials. A role is a temporary identity that a person or service assumes, with credentials that expire — the safer choice for applications.</p></div>
+<div class="quiz-q"><p class="qq">Why is S3 called object storage rather than a filesystem?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">You store and retrieve whole objects by key; there are no folders, no partial edits and no file locking like a real filesystem.</p></div>
+<div class="quiz-q"><p class="qq">When does Lambda beat EC2, and when does it lose?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">Lambda wins for event-driven, spiky work with no idle cost. It loses for long-running processes, steady high load, and anything needing local state between calls.</p></div>
+<div class="quiz-q"><p class="qq">What does least privilege mean in an IAM policy?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">Grant only the specific actions on the specific resources that are needed, and nothing else — so a leaked credential can do minimal damage.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “IAM”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">AWS Identity and Access Management: users, roles and policies controlling who can do what to which resources.</p></div>
+<div class="quiz-q"><p class="qq">What is “Least privilege”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">Granting only the actions and resources actually needed, so compromised credentials can do minimal damage.</p></div>
+<div class="quiz-q"><p class="qq">What is “S3 bucket”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">A container for objects (files plus metadata) addressed by key, private by default, built for durability at any scale.</p></div>
+<div class="quiz-q"><p class="qq">What is “EC2 instance”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A rented virtual machine whose size, image and firewall you choose and whose software you maintain.</p></div>
+<div class="quiz-q"><p class="qq">What is “Lambda”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">Serverless functions that run on events and bill per millisecond of execution, with no server to manage.</p></div>
+<div class="quiz-q"><p class="qq">What is “Security group”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">A virtual firewall attached to an instance, controlling which traffic may reach it.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Explain the four core AWS services to a beginner in one minute.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">IAM controls who can do what. S3 stores files as objects in buckets. EC2 rents virtual servers you manage. Lambda runs single functions on events with no server to manage. Everything else in AWS builds on these.</p></div>
+<div class="interview-q"><p class="iq">Your app stores user uploads and runs a small API. Which services do you pick?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">S3 for the uploads with a least-privilege IAM role, and Lambda behind an API gateway for the API if traffic is spiky, or a small EC2 or managed container if it is steady — with the trade-off stated either way.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="9-5.html">← Lesson 9.5</a>
+<a class="nav-btn next" href="9-7.html">Lesson 9.7 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

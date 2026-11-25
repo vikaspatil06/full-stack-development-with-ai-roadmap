@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson D.16 — Bit Manipulation — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="D.16">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.16</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson D.16 • DSA — Data Structures &amp; Algorithms • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Bit Manipulation</h2>
+<p class="goal">Think in ones and zeros</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=oPhzudyI3p4" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Part 16: Bit Manipulation: Complete One-Shot Mega Class | DSA with Java</b><span>EDUCATA</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. The four operations and what they mean</a></li>
+<li><a href="#sub-2">2. XOR cancellation: pairs disappear</a></li>
+<li><a href="#sub-3">3. n &amp; (n-1): erasing the lowest set bit</a></li>
+<li><a href="#sub-4">4. Counting bits and building intuition</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can use AND, OR, XOR and shifts fluently, apply the classic tricks — n &amp; (n-1), XOR cancellation, bit counting — and explain why each works.</div>
+<h4 id="sub-1">1. The four operations and what they mean</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=oPhzudyI3p4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Bitwise operators work on each bit independently. AND keeps a 1 only where both bits are 1 — used for masking, as in <code>n &amp; 1</code> to test oddness. OR sets a bit where either is 1 — used to turn flags on. XOR is 1 where the bits differ — the workhorse of this lesson. Shifts move bits left or right: <code>n &lt;&lt; 1</code> doubles n, <code>n &gt;&gt; 1</code> halves it. The mental shift is to stop seeing numbers and start seeing rows of switches: every trick below is just a statement about those switches.</p><h4 id="sub-2">2. XOR cancellation: pairs disappear</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=oPhzudyI3p4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>XOR has three properties that do all the work: <code>x ^ x = 0</code>, <code>x ^ 0 = x</code>, and it is commutative and associative, so order does not matter. XOR every element of an array where all values appear twice except one, and the pairs cancel to zero, leaving the single element — Single Number in one pass, O(n) time, O(1) space. The same idea finds the missing number in 0..n by XORing the range with the array. Whenever a problem says everything appears twice except, think XOR before reaching for a hash map.</p><h4 id="sub-3">3. n & (n-1): erasing the lowest set bit</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=oPhzudyI3p4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Subtracting 1 from n flips its lowest set bit to 0 and every bit below it to 1. ANDing n with n−1 therefore clears exactly the lowest set bit and leaves the rest untouched. That gives the fastest way to count set bits — loop while n is non-zero, clear one bit per iteration, count iterations — which runs in time proportional to the number of set bits, not the number of bits. It also tests powers of two in one line: a positive n is a power of two exactly when <code>n &amp; (n-1)</code> is zero, because powers of two have a single set bit.</p><h4 id="sub-4">4. Counting bits and building intuition</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=oPhzudyI3p4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Counting Bits asks for the popcount of every number up to n, and the DP relation falls out of the bit view: <code>bits[i] = bits[i &gt;&gt; 1] + (i &amp; 1)</code> — the count for i is the count for i halved, plus its lowest bit. To build fluency, practise the small moves until they are reflexes: test bit k with <code>n &amp; (1 &lt;&lt; k)</code>, set it with OR, clear it with AND against the complement, toggle it with XOR. Interview bit questions are rarely deep; they reward exactly this fluency plus the two big tricks above.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>def single_number(nums):
+    result = 0
+    for x in nums:
+        result ^= x
+    return result
+
+def count_bits(n):
+    count = 0
+    while n:
+        n &amp;= n - 1
+        count += 1
+    return count
+
+# XOR cancels pairs; n &amp; (n-1) clears the lowest set bit each round.</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Solve Single Number, Single Number II, Number of 1 Bits, Counting Bits and Missing Number. For each, write the bit-level reason the trick works in your log — not just the code. Then, on paper, compute n &amp; (n-1) for n = 12 (1100) and n = 10 (1010) and confirm which bit disappears.</div>
+<div class="challenge"><h4>💻 Coding challenge — solve it here (+5 XP)</h4>
+<p>Write singleNumber(nums): every value appears twice except one. Find it with XOR (x ^ x = 0, x ^ 0 = x).</p>
+<p class="muted-note">Complete the TODO in the editor below, then press Run &amp; check — your output is compared with the expected answer.</p>
+<textarea class="challenge-editor" rows="7" spellcheck="false" aria-label="Your solution code">function singleNumber(nums) {
+  // TODO: XOR everything together
+  return 0;
+}</textarea>
+<button class="run-btn challenge-run" type="button">▶ Run &amp; check</button>
+<p class="challenge-status"></p>
+<div class="run-output challenge-output" aria-live="polite"></div>
+<script type="application/json" class="challenge-data">{"starter":"function singleNumber(nums) {\n  // TODO: XOR everything together\n  return 0;\n}","test":"console.log(singleNumber([4, 1, 2, 1, 2]));\nconsole.log(singleNumber([2, 2, 1]));","expected":"4\n1"}</script>
+</div>
+<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
+<p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Bit Manipulation</a></p>
+<p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
+<ul>
+<li><a href="https://leetcode.com/problems/single-number/" target="_blank" rel="noopener">Single Number</a></li>
+<li><a href="https://leetcode.com/problems/single-number-ii/" target="_blank" rel="noopener">Single Number II</a></li>
+<li><a href="https://leetcode.com/problems/number-of-1-bits/" target="_blank" rel="noopener">Number of 1 Bits</a></li>
+<li><a href="https://leetcode.com/problems/counting-bits/" target="_blank" rel="noopener">Counting Bits</a></li>
+<li><a href="https://leetcode.com/problems/missing-number/" target="_blank" rel="noopener">Missing Number</a></li>
+</ul></div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why does XORing the whole array find the single unpaired element?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Pairs cancel because x ^ x = 0, and x ^ 0 = x, so after all cancellations only the unpaired element remains. Order does not matter because XOR is commutative and associative.</p></div>
+<div class="quiz-q"><p class="qq">What does n &amp; (n-1) do, exactly?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">It clears the lowest set bit of n and leaves all higher bits unchanged, because subtracting 1 flips that bit off and turns the bits below it on.</p></div>
+<div class="quiz-q"><p class="qq">How do you test whether n is a power of two in one expression?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">n &amp;gt; 0 and n &amp;amp; (n - 1) == 0: a power of two has exactly one set bit, and clearing it leaves zero.</p></div>
+<div class="quiz-q"><p class="qq">What is the DP relation for counting bits up to n?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">bits[i] = bits[i &amp;gt;&amp;gt; 1] + (i &amp;amp; 1): the popcount of i is the popcount of i halved plus its lowest bit.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “XOR”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">Bitwise exclusive-or: 1 where bits differ. x ^ x = 0 and x ^ 0 = x, so pairs cancel — the basis of Single Number.</p></div>
+<div class="quiz-q"><p class="qq">What is “Mask”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">A bit pattern used with AND to isolate specific bits, like n &amp;amp; 1 to test oddness.</p></div>
+<div class="quiz-q"><p class="qq">What is “n &amp; (n-1)”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">Clears the lowest set bit of n; the engine behind fast bit counting and the power-of-two test.</p></div>
+<div class="quiz-q"><p class="qq">What is “Popcount”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">The number of set bits in a number, computed by clearing bits one at a time or with a DP relation.</p></div>
+<div class="quiz-q"><p class="qq">What is “Shift”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">Moving bits left or right: left shift by 1 doubles, right shift by 1 halves (for non-negative numbers).</p></div>
+<div class="quiz-q"><p class="qq">What is “Set / clear / toggle bit k”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">OR with (1 &amp;lt;&amp;lt; k) sets it, AND with the complement clears it, XOR with (1 &amp;lt;&amp;lt; k) toggles it.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Find the element that appears once when all others appear twice, in O(1) space.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">XOR all elements. Pairs cancel to zero and the single element survives, giving O(n) time and O(1) space.</p></div>
+<div class="interview-q"><p class="iq">How do you count set bits faster than checking all 32 positions?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Repeatedly clear the lowest set bit with n &amp;amp;= n - 1 and count the iterations. The loop runs once per set bit, not once per bit position.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="d-15.html">← Lesson D.15</a>
+<a class="nav-btn next" href="d-17.html">Lesson D.17 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 /* Verify the built site. Run: node verify.js [port]
    Checks: all pages exist + HTTP 200, every lesson page's red Watch button
-   carries exactly its resolved YouTube URL, prev/next chain covers all 105
-   in order with no dead links/dups, data.js has 105 lessons with
+   carries exactly its resolved YouTube URL, prev/next chain covers all 127
+   in order with no dead links/dups, data.js has 127 lessons with
    titles/subtopics, no stale counts, required element IDs present. */
 'use strict';
 const fs = require('fs');
@@ -20,6 +20,9 @@ function check(ok, msg) {
 const orig = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'original-modules.json'), 'utf8'));
 const batchA = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'new-lessons-batch-a.json'), 'utf8'));
 const batchB = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'new-lessons-batch-b.json'), 'utf8'));
+const batchC = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'new-lessons-batch-c.json'), 'utf8'));
+const ytBatchC = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'youtube-links-batch-c.json'), 'utf8'));
+const ytFixes = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'youtube-links-fixes.json'), 'utf8'));
 
 /* expected resolved URLs: re-derive from build inputs independently */
 const RENUMBER = {
@@ -60,19 +63,22 @@ for (const L of batchA.lessons.concat(batchB.lessons)) {
     expected[L.id] = resolveShared(L.id, target);
   }
 }
+/* batch C videos + fixes overrides (applied last, mirroring build.js) */
+for (const v of ytBatchC) expected[v.id] = v.youtube_url;
+for (const f of ytFixes) { if (f.youtube_url) expected[f.id] = f.youtube_url; }
 
-const ORDER = ['B', 'D', 'M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8'];
+const ORDER = ['B', 'D', 'M0', 'M1', 'M2', 'M3', 'M4', 'M5', 'M6', 'M7', 'M8', 'M9'];
 const lessonIds = Object.keys(expected).sort(function (a, b) {
   const ka = ORDER.indexOf(a.indexOf('B.') === 0 ? 'B' : a.indexOf('D.') === 0 ? 'D' : 'M' + a.split('.')[0]);
   const kb = ORDER.indexOf(b.indexOf('B.') === 0 ? 'B' : b.indexOf('D.') === 0 ? 'D' : 'M' + b.split('.')[0]);
   if (ka !== kb) return ka - kb;
   return parseInt(a.split('.')[1], 10) - parseInt(b.split('.')[1], 10);
 });
-check(lessonIds.length === 105, 'expected URL map has 105 lessons (got ' + lessonIds.length + ')');
+check(lessonIds.length === 127, 'expected URL map has 127 lessons (got ' + lessonIds.length + ')');
 function fileFor(id) { return id.replace('.', '-').toLowerCase() + '.html'; }
 
 /* ---- file-level checks (no server needed) ---- */
-const files = ['index.html'].concat(
+const files = ['index.html', 'practice.html'].concat(
   ORDER.map(function (k) { return 'modules/' + k.toLowerCase() + '.html'; }),
   lessonIds.map(function (id) { return 'lessons/' + fileFor(id); }),
   ['assets/css/style.css', 'assets/js/data.js', 'assets/js/app.js', 'README.md']
@@ -90,7 +96,7 @@ for (const id of lessonIds) {
   if (m[1] === expected[id]) ytOk++;
   else ytBad.push(id + ': button=' + m[1] + ' expected=' + expected[id]);
 }
-check(ytOk === 105, 'red Watch button URL matches resolved URL for ' + ytOk + '/105' + (ytBad.length ? ' — ' + ytBad.slice(0, 5).join(' | ') : ''));
+check(ytOk === 127, 'red Watch button URL matches resolved URL for ' + ytOk + '/127' + (ytBad.length ? ' — ' + ytBad.slice(0, 5).join(' | ') : ''));
 
 /* prev/next chain */
 let chainOk = true, chainIssues = [];
@@ -108,45 +114,46 @@ for (let i = 0; i < lessonIds.length; i++) {
   if (!nextId && nextM) { chainOk = false; chainIssues.push(id + ' should have no next link'); }
   chainFiles.push(fileFor(id));
 }
-check(chainOk, 'prev/next chain covers all 105 in order, no dead links, no duplicates' + (chainIssues.length ? ' — ' + chainIssues.slice(0, 5).join(' | ') : ''));
-check(new Set(chainFiles).size === 105, '105 unique lesson files in chain');
+check(chainOk, 'prev/next chain covers all 127 in order, no dead links, no duplicates' + (chainIssues.length ? ' — ' + chainIssues.slice(0, 5).join(' | ') : ''));
+check(new Set(chainFiles).size === 127, '127 unique lesson files in chain');
 
 /* data.js validation */
 const sandbox = { window: {} };
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(path.join(ROOT, 'assets', 'js', 'data.js'), 'utf8'), sandbox);
 const FSAI = sandbox.window.FSAI;
-check(FSAI && FSAI.total === 105, 'data.js total is 105');
-check(FSAI.lessons.length === 105, 'data.js has 105 lessons');
-check(FSAI.modules.length === 11, 'data.js has 11 modules');
+check(FSAI && FSAI.total === 127, 'data.js total is 127');
+check(FSAI.lessons.length === 127, 'data.js has 127 lessons');
+check(FSAI.modules.length === 12, 'data.js has 12 modules');
 let dataBad = [];
 for (const L of FSAI.lessons) {
   if (!L.title || !L.sub || !L.url || !L.yt || !L.yt.url) dataBad.push(L.id + ': missing fields');
   if (!L.subtopics || L.subtopics.length < 3) dataBad.push(L.id + ': subtopics < 3');
   if (expected[L.id] && L.yt.url !== expected[L.id]) dataBad.push(L.id + ': data.js yt mismatch');
   if (L.module === 'D' && (!L.cards || L.cards.length < 4 || !L.striver || !L.leetcode || L.leetcode.length < 3)) dataBad.push(L.id + ': DSA cards/striver/leetcode missing');
+  if (!L.checks || L.checks.length < 2) dataBad.push(L.id + ': checks missing in data.js (practice page needs them)');
 }
 check(dataBad.length === 0, 'data.js lessons all have title/sub/url/yt/subtopics(>=3)' + (dataBad.length ? ' — ' + dataBad.slice(0, 5).join(' | ') : ''));
 const dataOrder = FSAI.lessons.map(function (l) { return l.id; });
 check(JSON.stringify(dataOrder) === JSON.stringify(lessonIds), 'data.js lesson order matches B -> D -> M8 chain');
 
 /* stale counts */
-const stalePats = ['37 lessons', '47 lessons', '93 lessons', '9 modules', '10 modules', '~20 weeks', '20 weeks', '25 weeks', 'mid-Apr 2027', '20 May 2027'];
+const stalePats = ['37 lessons', '47 lessons', '93 lessons', '105 lessons', '9 modules', '10 modules', '11 modules', '~20 weeks', '20 weeks', '25 weeks', '28 weeks', 'mid-Apr 2027', '20 May 2027', '9 Jun 2027'];
 let staleHits = [];
 for (const f of files) {
   if (f === 'README.md') continue;
   const txt = fs.readFileSync(path.join(ROOT, f), 'utf8');
   for (const p of stalePats) if (txt.indexOf(p) !== -1) staleHits.push(f + ': "' + p + '"');
 }
-check(staleHits.length === 0, 'no stale counts (37/47/93 lessons, 9/10 modules, ~20/20/25 weeks) in built pages' + (staleHits.length ? ' — ' + staleHits.join(' | ') : ''));
+check(staleHits.length === 0, 'no stale counts (37/47/93/105 lessons, 9/10/11 modules, 20/25/28 weeks) in built pages' + (staleHits.length ? ' — ' + staleHits.join(' | ') : ''));
 
 /* required IDs per app.js */
 const home = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
-for (const id of ['ringFg', 'ringPct', 'statLessons', 'statXp', 'statStreak', 'statQuiz', 'progText', 'progFill', 'nextUp', 'searchInput', 'searchResults', 'noResults', 'dsaProgFill', 'dsaProgText', 'dsaToday', 'reviewList', 'filterSelect', 'xpLevelName', 'xpLevelText', 'xpLevelFill']) {
+for (const id of ['ringFg', 'ringPct', 'statLessons', 'statXp', 'statStreak', 'statQuiz', 'progText', 'progFill', 'nextUp', 'searchInput', 'searchResults', 'noResults', 'dsaProgFill', 'dsaProgText', 'dsaToday', 'reviewList', 'filterSelect', 'xpLevelName', 'xpLevelText', 'xpLevelFill', 'dailyChallenge', 'themeToggle']) {
   check(home.indexOf('id="' + id + '"') !== -1, 'home has #' + id);
 }
 check(home.indexOf('data-page="home"') !== -1, 'home body[data-page=home]');
-check((home.match(/data-module-progress/g) || []).length === 11, 'home has 11 module progress blocks');
+check((home.match(/data-module-progress/g) || []).length === 12, 'home has 12 module progress blocks');
 check(home.indexOf('data-filter="dsa"') !== -1, 'home has DSA filter');
 check(home.indexOf('id="modDropBtn"') !== -1, 'home has Modules dropdown button');
 let modOk = true;
@@ -158,7 +165,7 @@ for (const k of ORDER) {
   if (t.indexOf('data-module="' + k + '"') === -1) { modOk = false; console.log('FAIL module ' + k + ' missing data-module'); }
   if ((t.match(/class="mastery-check"/g) || []).length !== 3) { modOk = false; console.log('FAIL module ' + k + ' mastery-check count != 3'); }
 }
-check(modOk, 'all 11 module pages have modProgFill/modProgText/startNextBtn/masteryCount/jumpSelect + 3 mastery checks');
+check(modOk, 'all 12 module pages have modProgFill/modProgText/startNextBtn/masteryCount/jumpSelect + 3 mastery checks');
 let lesOk = true, lesIssues = [];
 for (const id of lessonIds) {
   const t = fs.readFileSync(path.join(ROOT, 'lessons', fileFor(id)), 'utf8');
@@ -170,12 +177,13 @@ for (const id of lessonIds) {
   const missed = (t.match(/class="quiz-missed qbtn"/g) || []).length;
   const ans = (t.match(/class="quiz-answer"/g) || []).length;
   const iv = (t.match(/class="interview-reveal qbtn"/g) || []).length;
-  if (quiz !== 2 || knew !== 2 || missed !== 2 || ans !== 2 || iv !== 2) { lesOk = false; lesIssues.push(id + ' quiz/interview counts: reveal=' + quiz + ' knew=' + knew + ' missed=' + missed + ' ans=' + ans + ' iv=' + iv); }
+  if (quiz < 2 || knew !== quiz || missed !== quiz || ans !== quiz || iv !== 2) { lesOk = false; lesIssues.push(id + ' quiz/interview counts: reveal=' + quiz + ' knew=' + knew + ' missed=' + missed + ' ans=' + ans + ' iv=' + iv); }
   if ((t.match(/class="sub-yt"/g) || []).length < 3) { lesOk = false; lesIssues.push(id + ' subtopic yt-ref links < 3'); }
   if ((t.match(/data-acc="/g) || []).length !== 8) { lesOk = false; lesIssues.push(id + ' accordion sections != 8'); }
   if (id.indexOf('D.') === 0 && t.indexOf('dsa-practice') === -1) { lesOk = false; lesIssues.push(id + ' missing DSA practice box'); }
+  if (id.indexOf('D.') === 0 && t.indexOf('class="challenge"') === -1) { lesOk = false; lesIssues.push(id + ' missing coding challenge block'); }
 }
-check(lesOk, 'all 105 lesson pages have required IDs + 2 quiz (knew+missed) + 2 interview + flashcards + review star + 8 accordions' + (lesIssues.length ? ' — ' + lesIssues.slice(0, 5).join(' | ') : ''));
+check(lesOk, 'all 127 lesson pages have required IDs + quiz (knew+missed, 2+) + 2 interview + flashcards + review star + 8 accordions + DSA challenges' + (lesIssues.length ? ' — ' + lesIssues.slice(0, 5).join(' | ') : ''));
 
 /* original content preservation: every original goal/task/check text appears in its new page */
 let presOk = true, presIssues = [];
@@ -253,9 +261,9 @@ let navOk = true, navIssues = [];
 const samplePages = ['index.html', 'modules/d.html', 'lessons/d-1.html', 'lessons/8-4.html'];
 for (const f of samplePages) {
   const t = fs.readFileSync(path.join(ROOT, f), 'utf8');
-  if (t.indexOf('assets/css/style.css?v=3') === -1 && t.indexOf('../assets/css/style.css?v=3') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on style.css'); }
-  if (t.indexOf('assets/js/data.js?v=3') === -1 && t.indexOf('../assets/js/data.js?v=3') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on data.js'); }
-  if (t.indexOf('assets/js/app.js?v=3') === -1 && t.indexOf('../assets/js/app.js?v=3') === -1) { navOk = false; navIssues.push(f + ' missing ?v=2 on app.js'); }
+  if (t.indexOf('assets/css/style.css?v=4') === -1 && t.indexOf('../assets/css/style.css?v=4') === -1) { navOk = false; navIssues.push(f + ' missing ?v=4 on style.css'); }
+  if (t.indexOf('assets/js/data.js?v=4') === -1 && t.indexOf('../assets/js/data.js?v=4') === -1) { navOk = false; navIssues.push(f + ' missing ?v=4 on data.js'); }
+  if (t.indexOf('assets/js/app.js?v=4') === -1 && t.indexOf('../assets/js/app.js?v=4') === -1) { navOk = false; navIssues.push(f + ' missing ?v=4 on app.js'); }
   if (t.indexOf('>How to study</a>') !== -1 || t.indexOf('>Schedule</a>') !== -1 || t.indexOf('>Mastery check</a>') !== -1) { navOk = false; navIssues.push(f + ' still has a removed nav link'); }
   if (t.indexOf('aria-expanded="false">Show lessons') === -1 && f === 'index.html') { navOk = false; navIssues.push('index module cards not collapsed by default'); }
 }
@@ -264,7 +272,25 @@ if (cssTxt.indexOf('max-width:1100px') === -1) { navOk = false; navIssues.push('
 if (cssTxt.indexOf('.nav{flex-wrap:nowrap}') === -1 || cssTxt.indexOf('.brand{white-space:nowrap') === -1) { navOk = false; navIssues.push('style.css missing no-wrap navbar hardening'); }
 if (appTxt.indexOf('isModCollapsed(mod, true)') === -1) { navOk = false; navIssues.push('app.js module cards do not default collapsed'); }
 if (appTxt.indexOf('innerWidth > 1100') === -1) { navOk = false; navIssues.push('app.js resize handler still uses 860'); }
-check(navOk, 'navbar fix: ?v=3 on all assets, slim nav, 1100px breakpoint, cards collapsed by default' + (navIssues.length ? ' — ' + navIssues.join(' | ') : ''));
+check(navOk, 'navbar fix: ?v=4 on all assets, slim nav, 1100px breakpoint, cards collapsed by default' + (navIssues.length ? ' — ' + navIssues.join(' | ') : ''));
+
+/* ---- Nov 2026 round: theme, highlighter, practice, daily, challenges ---- */
+let featOk = true, featIssues = [];
+if (cssTxt.indexOf('[data-theme="light"]') === -1) { featOk = false; featIssues.push('style.css missing light theme'); }
+if (cssTxt.indexOf('.tok-kw{') === -1) { featOk = false; featIssues.push('style.css missing syntax token colours'); }
+if (cssTxt.indexOf('.challenge-editor{') === -1) { featOk = false; featIssues.push('style.css missing challenge editor styles'); }
+if (cssTxt.indexOf('.practice-mod{') === -1) { featOk = false; featIssues.push('style.css missing practice styles'); }
+if (cssTxt.indexOf('.daily-box{') === -1) { featOk = false; featIssues.push('style.css missing daily challenge styles'); }
+if (cssTxt.indexOf(':focus-visible{') === -1) { featOk = false; featIssues.push('style.css missing focus-visible styles'); }
+for (const fn of ['initTheme', 'initHighlight', 'initPractice', 'renderDailyChallenge', 'initChallenges', 'markChallenge', 'markDaily']) {
+  if (appTxt.indexOf(fn) === -1) { featOk = false; featIssues.push('app.js missing ' + fn); }
+}
+if (appTxt.indexOf("S.chal = S.chal || {}") === -1 || appTxt.indexOf("S.daily = S.daily || {}") === -1) { featOk = false; featIssues.push('app.js missing chal/daily stores'); }
+const practiceHtml = fs.readFileSync(path.join(ROOT, 'practice.html'), 'utf8');
+if (practiceHtml.indexOf('data-page="practice"') === -1) { featOk = false; featIssues.push('practice.html missing data-page=practice'); }
+if (practiceHtml.indexOf('id="practiceRoot"') === -1) { featOk = false; featIssues.push('practice.html missing #practiceRoot'); }
+if (home.indexOf('href="practice.html"') === -1) { featOk = false; featIssues.push('home missing Practice link'); }
+check(featOk, 'Nov 2026 features: light theme, syntax highlighting, practice page, daily challenge, coding challenges' + (featIssues.length ? ' — ' + featIssues.join(' | ') : ''));
 
 /* ---- Anchor offset: sections must land below the sticky topbar ---- */
 check(cssTxt.indexOf('scroll-padding-top:78px') !== -1 && cssTxt.indexOf('#dashboard,#lessons,#how,#mastery,#review,#timeline{scroll-margin-top:78px}') !== -1, 'anchor offset: scroll-padding + scroll-margin 78px on all home sections');
@@ -279,7 +305,7 @@ const server = http.createServer(function (req, res) {
   fs.createReadStream(fp).pipe(res);
 });
 server.listen(PORT, function () {
-  const urls = ['/'].concat(
+  const urls = ['/', '/practice.html'].concat(
     ORDER.map(function (k) { return '/modules/' + k.toLowerCase() + '.html'; }),
     lessonIds.map(function (id) { return '/lessons/' + fileFor(id); }),
     ['/assets/css/style.css', '/assets/js/data.js', '/assets/js/app.js']
@@ -291,7 +317,7 @@ server.listen(PORT, function () {
       res.resume();
       res.on('end', function () {
         if (++done === urls.length) {
-          check(bad.length === 0, 'HTTP 200 for ' + urls.length + ' URLs (index + 11 modules + 105 lessons + 3 assets)' + (bad.length ? ' — ' + bad.join(', ') : ''));
+          check(bad.length === 0, 'HTTP 200 for ' + urls.length + ' URLs (index + practice + 12 modules + 127 lessons + 3 assets)' + (bad.length ? ' — ' + bad.join(', ') : ''));
           server.close();
           console.log(failures === 0 ? '\nALL CHECKS PASSED' : '\n' + failures + ' CHECK(S) FAILED');
           process.exit(failures === 0 ? 0 : 1);

@@ -3,20 +3,21 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="color-scheme" content="dark"/>
+<meta name="color-scheme" content="dark light"/>
 <link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
 <title>Lesson 8.9 — Monitoring &amp; Analytics Deep — Full Stack + AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/style.css?v=3"/>
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
 </head>
 <body data-page="lesson" data-lesson="8.9">
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
 <nav class="nav" id="siteNav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div>
-</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m8.html">DevOps, Cloud &amp; Shipping Like a Professional</a> &nbsp;›&nbsp; Lesson 8.9</p>
 <article class="reader lesson-page">
@@ -26,9 +27,8 @@
 <p class="goal">Uptime, alerts, funnels — knowing before your users tell you</p>
 <h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
 <div class="acc-body"><div class="watch-box">
-<a class="yt-btn" href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
-<p class="watch-meta"><b>Deploying Django + React on Render in 2026: Complete Tutorial (Free &amp; Easy)</b><span>Code Live Cam</span></p>
-<p class="shared-note">Shared with Lesson 8.6 — no dedicated video exists for this exact subtopic, so this is the closest video for this lesson.</p>
+<a class="yt-btn" href="https://www.youtube.com/watch?v=-Y-RQtYLpHM" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Google Analytics 4 tutorial for beginners (2026 update) || GA4 tutorial for beginners || GA4 course</b><span>Analytics Mania</span></p>
 </div></div>
 <h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
 <div class="acc-body">
@@ -38,7 +38,7 @@
 <li><a href="#sub-3">3. The incident runbook</a></li>
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can set up uptime checks and log alerts, read a GA4 funnel to find where learners drop off, and write an incident runbook for the Skillzify backend.</div>
-<h4 id="sub-1">1. Monitoring answers: is it up, and is it healthy?</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Uptime checks ping your service from outside and tell you when it is down — ideally before a learner does. Log alerts go further: they watch for patterns, like a spike in 500 errors or a sudden rise in Gemini failures, and notify you. The difference matters: a service can be up and still broken, answering every request with an error page. Skillzify's staging needs both — a health endpoint the checker pings, and an alert on error rate — because the tutor failing silently is worse than the site being down, since nobody reports what they assume is their own mistake.</p><h4 id="sub-2">2. Analytics funnels find the broken step</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A funnel is a sequence of steps with a conversion rate at each one: visited a lesson, started it, finished it, earned XP. Where the funnel narrows sharply, something is broken — a confusing exercise, a slow page, a tutor that fails on one topic. GA4 builds these from events, so the events you emit decide what you can learn: a lesson_complete event with the lesson ID is worth ten pageview counts. Read funnels weekly, not daily — small numbers are noise, and a single day's dip is usually a timetable, not a bug.</p><h4 id="sub-3">3. The incident runbook</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=E4pG_SicfUo" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When something breaks at midnight, you should not be inventing a process. A runbook lists the symptoms, the first three checks, the rollback step, and who to tell. For Skillzify it reads: check Render status and logs, check the Gemini key and quota, check Firestore rules and status, then roll back the last deploy if the breakage started with it. Write it while things work, test it during a real incident, and update it after — a runbook that has never been used is a draft, not a plan.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Monitoring is not about dashboards — it is about the time between something breaking and someone who can fix it knowing.</p>
+<h4 id="sub-1">1. Monitoring answers: is it up, and is it healthy?</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=-Y-RQtYLpHM" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Uptime checks ping your service from outside and tell you when it is down — ideally before a learner does. Log alerts go further: they watch for patterns, like a spike in 500 errors or a sudden rise in Gemini failures, and notify you. The difference matters: a service can be up and still broken, answering every request with an error page. Skillzify's staging needs both — a health endpoint the checker pings, and an alert on error rate — because the tutor failing silently is worse than the site being down, since nobody reports what they assume is their own mistake.</p><h4 id="sub-2">2. Analytics funnels find the broken step</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=-Y-RQtYLpHM" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A funnel is a sequence of steps with a conversion rate at each one: visited a lesson, started it, finished it, earned XP. Where the funnel narrows sharply, something is broken — a confusing exercise, a slow page, a tutor that fails on one topic. GA4 builds these from events, so the events you emit decide what you can learn: a lesson_complete event with the lesson ID is worth ten pageview counts. Read funnels weekly, not daily — small numbers are noise, and a single day's dip is usually a timetable, not a bug.</p><h4 id="sub-3">3. The incident runbook</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=-Y-RQtYLpHM" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>When something breaks at midnight, you should not be inventing a process. A runbook lists the symptoms, the first three checks, the rollback step, and who to tell. For Skillzify it reads: check Render status and logs, check the Gemini key and quota, check Firestore rules and status, then roll back the last deploy if the breakage started with it. Write it while things work, test it during a real incident, and update it after — a runbook that has never been used is a draft, not a plan.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p><p>Monitoring is not about dashboards — it is about the time between something breaking and someone who can fix it knowing.</p>
 </div>
 <h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
 <div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
@@ -86,12 +86,12 @@ function trackLessonComplete(lessonId, section, xpEarned) {
 <div class="reader-foot">
 <button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
 <a class="nav-btn prev" href="8-8.html">← Lesson 8.8</a>
-<button class="nav-btn next" disabled>Course complete 🎉</button>
+<a class="nav-btn next" href="9-1.html">Lesson 9.1 →</a>
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
-<script src="../assets/js/data.js?v=3"></script>
-<script src="../assets/js/app.js?v=3"></script>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
 </body>
 </html>

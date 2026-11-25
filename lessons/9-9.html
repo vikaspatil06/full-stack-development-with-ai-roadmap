@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 9.9 — WebSockets &amp; Real-Time Apps — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="9.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m9.html">M9 — Industry Add-Ons</a> &nbsp;›&nbsp; Lesson 9.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 9.9 • M9 — Industry Add-Ons • 35 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>WebSockets &amp; Real-Time Apps</h2>
+<p class="goal">When the server needs to speak first</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=7U9SHQLMuqY" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>How to Build a Real-Time Chat App with Socket.io &amp; Node.js — Step by Step (2026)</b><span>1MxTushar</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. HTTP asks, WebSockets converse</a></li>
+<li><a href="#sub-2">2. Socket.io: events and rooms</a></li>
+<li><a href="#sub-3">3. Heartbeat, reconnection and honest failure</a></li>
+<li><a href="#sub-4">4. Scaling real-time: the sticky problem</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain when WebSockets beat HTTP polling, build events and rooms with Socket.io, handle heartbeat and reconnection, and describe the scaling limits of real-time connections.</div>
+<h4 id="sub-1">1. HTTP asks, WebSockets converse</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7U9SHQLMuqY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>HTTP is request-response: the client asks, the server answers, the connection closes. Anything live — a leaderboard updating, a chat message arriving, a collaborator's cursor moving — forces the client to poll repeatedly, wasting requests and still feeling laggy. A WebSocket upgrades one HTTP connection into a persistent two-way channel: either side can send a message at any time, with tiny overhead per message. The rule: if the server needs to speak first, or updates are frequent and small, it is a WebSocket problem.</p><p>Skillzify's leaderboard and progress pages currently refresh on page load. A live leaderboard — ranks shuffling as learners earn XP — or a presence indicator showing who is studying now are exactly the features WebSockets exist for.</p><h4 id="sub-2">2. Socket.io: events and rooms</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7U9SHQLMuqY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Raw WebSockets give you a pipe; Socket.io gives you a vocabulary. You emit named events with payloads — <code>socket.emit("xp:earned", { xp: 20 })</code> — and listen with <code>socket.on</code>. Rooms group connections so a message goes only to the right audience: everyone in the <code>lesson:b-1</code> room hears that lesson's discussion, nobody else does. Socket.io also handles the fallback to long-polling on hostile networks and automatic reconnection, which is why most teams use it instead of the raw API.</p><h4 id="sub-3">3. Heartbeat, reconnection and honest failure</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7U9SHQLMuqY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Persistent connections die quietly: laptops sleep, networks drop, proxies time out. A heartbeat — a tiny ping every few seconds, with a pong expected back — detects a dead connection within seconds instead of minutes. On disconnect, the client should reconnect with exponential backoff (wait 1s, then 2s, then 4s, with jitter) rather than hammering a recovering server, and rejoin its rooms and resync any missed state on reconnect. Design for the disconnect, because on real networks it is not an edge case; it is the weather.</p><h4 id="sub-4">4. Scaling real-time: the sticky problem</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=7U9SHQLMuqY" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>One server can hold tens of thousands of sockets, but beyond that you need several servers — and a message for a user connected to server B must reach them from server A. The standard answer is a pub/sub backbone like Redis: every server publishes events to shared channels and forwards what its own clients need. Load balancers also need sticky sessions so a client's reconnect lands sensibly. This is the honest cost of real-time: stateful connections are fundamentally harder to scale than stateless HTTP, so use them where liveness is the feature, not by default.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>import { Server } from "socket.io";
+
+const io = new Server(3000, { cors: { origin: "*" } });
+
+io.on("connection", (socket) =&gt; {
+  socket.on("lesson:join", (lessonId) =&gt; {
+    socket.join("lesson:" + lessonId);
+  });
+  socket.on("xp:earned", ({ lessonId, xp }) =&gt; {
+    io.to("lesson:" + lessonId).emit("xp:update", { xp });
+  });
+  socket.on("disconnect", () =&gt; {
+    console.log("client left", socket.id);
+  });
+});</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Build a tiny Socket.io server and page: a client joins a room named after a lesson id, and clicking an Earn XP button emits an event that every client in that room receives and displays. Open two browser windows in the same room and one in a different room, and confirm only the same-room windows update. Then kill and restart the server and watch the clients reconnect.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">When do WebSockets beat HTTP polling?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">When the server must push updates promptly or messages are frequent and small. Polling wastes requests and still lags; a WebSocket keeps one open channel for instant two-way messages.</p></div>
+<div class="quiz-q"><p class="qq">What is a Socket.io room for?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">It groups connections so an event reaches only the relevant audience — everyone viewing one lesson, for example — instead of broadcasting to all clients.</p></div>
+<div class="quiz-q"><p class="qq">Why use exponential backoff on reconnect?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">It spaces retries out so thousands of clients do not hammer a recovering server at the same instant, while still reconnecting quickly after brief drops.</p></div>
+<div class="quiz-q"><p class="qq">Why is scaling WebSockets harder than scaling HTTP?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">Connections are stateful and long-lived, so messages must be routed to the specific server holding each client, usually via a pub/sub backbone like Redis and sticky sessions.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “WebSocket”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">A persistent two-way connection upgraded from HTTP, letting either side send messages at any time with low overhead.</p></div>
+<div class="quiz-q"><p class="qq">What is “Polling”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">Repeatedly asking the server for updates over HTTP — simple, but wasteful and laggy compared with a push channel.</p></div>
+<div class="quiz-q"><p class="qq">What is “Socket.io event”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">A named message with a payload, sent with emit and received with on, forming the vocabulary of a real-time app.</p></div>
+<div class="quiz-q"><p class="qq">What is “Room”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A named group of connections that receive events together, like everyone viewing one lesson.</p></div>
+<div class="quiz-q"><p class="qq">What is “Heartbeat”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">Periodic ping/pong messages that detect dead connections quickly so they can be cleaned up and reconnected.</p></div>
+<div class="quiz-q"><p class="qq">What is “Pub/sub backbone”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">A shared message bus like Redis that relays events between multiple WebSocket servers so any client can be reached.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Design a live leaderboard. How do updates reach every viewer?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Clients open WebSocket connections and join a leaderboard room. When XP changes, the server emits an update event to the room; at scale, servers relay through Redis pub/sub so every connected viewer hears it.</p></div>
+<div class="interview-q"><p class="iq">How do you detect a dead WebSocket connection?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">With a heartbeat: periodic pings expecting pongs within a timeout. No pong means the connection is dead, so the server cleans it up and the client reconnects with backoff.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="9-8.html">← Lesson 9.8</a>
+<a class="nav-btn next" href="9-10.html">Lesson 9.10 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

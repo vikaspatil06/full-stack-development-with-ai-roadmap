@@ -3,20 +3,21 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="color-scheme" content="dark"/>
+<meta name="color-scheme" content="dark light"/>
 <link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
 <title>Lesson 2.6 — Generators, JSON &amp; File Pipelines — Full Stack + AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/style.css?v=3"/>
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
 </head>
 <body data-page="lesson" data-lesson="2.6">
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
 <nav class="nav" id="siteNav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div>
-</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m2.html">Python Fluency — The Language Skillzify Teaches &amp; Uses</a> &nbsp;›&nbsp; Lesson 2.6</p>
 <article class="reader lesson-page">
@@ -26,8 +27,8 @@
 <p class="goal">The exact skills inside flowchart-gen.py</p>
 <h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
 <div class="acc-body"><div class="watch-box">
-<a class="yt-btn" href="https://www.youtube.com/watch?v=6Vr8PgDtubA" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
-<p class="watch-meta"><b>Learn Advanced Python by Building a Task Manager | Part 2</b><span>Behind The Code</span></p>
+<a class="yt-btn" href="https://www.youtube.com/watch?v=bD05uGo_sVI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>Python Tutorial: Generators - How to use them and the benefits you receive</b><span>Corey Schafer</span></p>
 </div></div>
 <h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
 <div class="acc-body">
@@ -37,13 +38,13 @@
 <li><a href="#sub-3">3. Trace the real pipeline: code → flowchart</a></li>
 </ol>
 <div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can process data lazily with generators, move data in and out of JSON and files safely, and trace how Skillzify turns Python code into flowchart JSON.</div>
-<h4 id="sub-1">1. Generators: values on demand</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=6Vr8PgDtubA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<h4 id="sub-1">1. Generators: values on demand</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=bD05uGo_sVI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
 <p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
 <p>A normal function builds a whole list and returns it; a generator <b>yields</b> one item at a time. For big inputs — scanning thousands of lines of learner code — that is the difference between fine and out-of-memory. Rule of thumb: if the caller processes items one by one, yield them.</p>
-<h4 id="sub-2">2. JSON and files: Python's border with every other system</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=6Vr8PgDtubA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<h4 id="sub-2">2. JSON and files: Python's border with every other system</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=bD05uGo_sVI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
 <p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
 <p>The <code>with</code> block is a <b>context manager</b>: the file closes even if an exception hits mid-write. <code>json.load/dump</code> work on files; <code>loads/dumps</code> work on strings. This is the same JSON the browser sends your Express server in Module 3 — one format, every border.</p>
-<h4 id="sub-3">3. Trace the real pipeline: code → flowchart</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=6Vr8PgDtubA" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
+<h4 id="sub-3">3. Trace the real pipeline: code → flowchart</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=bD05uGo_sVI" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p>
 <p><code>flowchart-gen.py</code> reads Python code and emits a JSON list of nodes and edges; <code>flowchart-algo.py</code> does the same from pseudocode. The browser then renders that JSON with Mermaid (Module 6). Notice the architecture: Python never draws anything. It produces <b>structured data</b>, and a specialist renderer draws. Separating "decide" from "draw" is what makes both halves replaceable.</p>
 <div class="callout why"><b>Error handling habit</b>Wrap file and JSON work in try/except with specific exceptions (FileNotFoundError, json.JSONDecodeError) and a message that says which input failed. A crashed generator with no context is a debugging session; with context, it's a one-line fix.</div>
 <div class="callout build"><b>Watch out — common mistakes</b><ul>
@@ -101,8 +102,8 @@ data = json.loads(text_from_browser)      # str → Python objects</code></pre><
 </div>
 </article>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
-<script src="../assets/js/data.js?v=3"></script>
-<script src="../assets/js/app.js?v=3"></script>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
 </body>
 </html>

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson D.13 — Sliding Window Pattern — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="D.13">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/d.html">DSA — Data Structures &amp; Algorithms</a> &nbsp;›&nbsp; Lesson D.13</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson D.13 • DSA — Data Structures &amp; Algorithms • 40 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Sliding Window Pattern</h2>
+<p class="goal">Expand, shrink, never look back</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=9kdHxplyl5I" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>L1. Introduction to Sliding Window and 2 Pointers | Templates | Patterns</b><span>take U forward</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. What a window is</a></li>
+<li><a href="#sub-2">2. Fixed windows: size k never changes</a></li>
+<li><a href="#sub-3">3. Variable windows: grow until it breaks, then shrink</a></li>
+<li><a href="#sub-4">4. The template and its limits</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can tell fixed from variable windows, expand and shrink a window by the right rule, and write the sliding-window template from memory in Python.</div>
+<h4 id="sub-1">1. What a window is</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=9kdHxplyl5I" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A sliding window is a contiguous subarray or substring defined by two pointers, left and right, that only ever move forward. Instead of recomputing everything for each subarray — the O(n²) brute force — you maintain a running value as elements enter at the right and leave at the left. Each element enters once and leaves once, so the whole scan is O(n). The pattern fits any problem asking for the longest, shortest, or count of contiguous segments satisfying a condition.</p><h4 id="sub-2">2. Fixed windows: size k never changes</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=9kdHxplyl5I" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>In a fixed window the size is given: maximum sum of any k consecutive elements, or the average of every window of size k. The template is mechanical — build the first window's sum, record the answer, then slide: add the entering element, subtract the leaving one, record again. The classic bug is an off-by-one in the first window, so build it in its own loop before sliding, and test with k equal to the array length and k equal to 1.</p><h4 id="sub-3">3. Variable windows: grow until it breaks, then shrink</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=9kdHxplyl5I" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>In a variable window the size is the answer, not the input. The right pointer expands one step at a time, adding the new element to the window's state; while the condition is violated — a duplicate character, a sum too large, too many distinct values — the left pointer shrinks, removing elements until the condition holds again. Record the answer at the moment the window is valid: after shrinking for longest problems, and while valid for shortest ones. Stating exactly when you record is half the correctness argument.</p><h4 id="sub-4">4. The template and its limits</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=9kdHxplyl5I" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Memorise the skeleton below: expand, update state, shrink while invalid, record. The state is usually a sum, a frequency map, or a count of distinct values. The pattern needs the condition to be monotonic — shrinking must reliably restore validity — which is why it fails on arrays with negative numbers for sum conditions: removing an element might increase the sum, so the window logic breaks and prefix sums with a map take over instead. Recognising that boundary is as important as knowing the template.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>def longest_at_most_k_distinct(s, k):
+    counts = {}
+    left = best = 0
+    for right, ch in enumerate(s):
+        counts[ch] = counts.get(ch, 0) + 1
+        while len(counts) &gt; k:
+            old = s[left]
+            counts[old] -= 1
+            if counts[old] == 0:
+                del counts[old]
+            left += 1
+        best = max(best, right - left + 1)
+    return best
+
+# Expand right, shrink left while invalid: each index moves once, O(n).</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Solve Maximum Average Subarray I, Longest Substring Without Repeating Characters, Minimum Size Subarray Sum, Longest Repeating Character Replacement and Sliding Window Maximum. For each, write the window invariant — what the window contains and when you record the answer — as a comment before coding, and log any attempt where the shrink condition was wrong.</div>
+<div class="challenge"><h4>💻 Coding challenge — solve it here (+5 XP)</h4>
+<p>Write maxWindowSum(nums, k): the maximum sum of any k consecutive elements, using a sliding window.</p>
+<p class="muted-note">Complete the TODO in the editor below, then press Run &amp; check — your output is compared with the expected answer.</p>
+<textarea class="challenge-editor" rows="7" spellcheck="false" aria-label="Your solution code">function maxWindowSum(nums, k) {
+  // TODO: first window sum, then slide: add entering, subtract leaving
+  return 0;
+}</textarea>
+<button class="run-btn challenge-run" type="button">▶ Run &amp; check</button>
+<p class="challenge-status"></p>
+<div class="run-output challenge-output" aria-live="polite"></div>
+<script type="application/json" class="challenge-data">{"starter":"function maxWindowSum(nums, k) {\n  // TODO: first window sum, then slide: add entering, subtract leaving\n  return 0;\n}","test":"console.log(maxWindowSum([2, 1, 5, 1, 3, 2], 3));\nconsole.log(maxWindowSum([2, 3, 4, 1, 5], 2));","expected":"9\n7"}</script>
+</div>
+<div class="dsa-practice"><h4>DSA practice — Striver + LeetCode</h4>
+<p>Spine: <a href="https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/" target="_blank" rel="noopener">Striver A2Z — Sliding Window &amp; Two Pointer Combined Problems</a></p>
+<p>Solve these on LeetCode, then log every miss in your mistake log (pattern, what went wrong, re-solve date — redo after 3 days and again after 7):</p>
+<ul>
+<li><a href="https://leetcode.com/problems/maximum-average-subarray-i/" target="_blank" rel="noopener">Maximum Average Subarray I</a></li>
+<li><a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank" rel="noopener">Longest Substring Without Repeating Characters</a></li>
+<li><a href="https://leetcode.com/problems/minimum-size-subarray-sum/" target="_blank" rel="noopener">Minimum Size Subarray Sum</a></li>
+<li><a href="https://leetcode.com/problems/longest-repeating-character-replacement/" target="_blank" rel="noopener">Longest Repeating Character Replacement</a></li>
+<li><a href="https://leetcode.com/problems/sliding-window-maximum/" target="_blank" rel="noopener">Sliding Window Maximum</a></li>
+</ul></div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why is the sliding window O(n) rather than O(n²)?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Each element enters the window once and leaves once, because both pointers only move forward. Total pointer movement is 2n, not n².</p></div>
+<div class="quiz-q"><p class="qq">How do fixed and variable windows differ in structure?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">A fixed window has a given size k and slides by adding one element and removing one. A variable window grows and shrinks by a condition, and its size is part of the answer.</p></div>
+<div class="quiz-q"><p class="qq">In a longest-window problem, when do you record the answer?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">After shrinking, when the window is valid again — recording while invalid would count windows that break the condition.</p></div>
+<div class="quiz-q"><p class="qq">Why does the window fail for subarray-sum problems with negative numbers?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">Shrinking no longer reliably restores validity, because removing a negative element increases the sum. The monotonicity the pattern needs is gone; use prefix sums with a map.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “Sliding window”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">Two forward-only pointers defining a contiguous segment, maintained with running state so each element is processed once — O(n).</p></div>
+<div class="quiz-q"><p class="qq">What is “Fixed window”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">A window of given size k that slides by adding the entering element and removing the leaving one.</p></div>
+<div class="quiz-q"><p class="qq">What is “Variable window”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">A window that expands and shrinks by a validity condition; its size is part of the answer.</p></div>
+<div class="quiz-q"><p class="qq">What is “Window invariant”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">A statement of what the window contains and when the answer is recorded — the key to writing the shrink loop correctly.</p></div>
+<div class="quiz-q"><p class="qq">What is “Monotonic condition”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">A condition where shrinking always moves toward validity; required for the window pattern to work.</p></div>
+<div class="quiz-q"><p class="qq">What is “Frequency map state”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">A count map of what is inside the window, the usual state for distinct-count and anagram window problems.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">How do you recognise a sliding-window problem?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">It asks for the longest, shortest or count of contiguous subarrays or substrings satisfying a condition, and the condition is monotonic — shrinking the window can only help restore it.</p></div>
+<div class="interview-q"><p class="iq">Walk me through Minimum Window Substring at a high level.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Expand right until the window contains all required characters with enough counts, then shrink left as far as possible while it stays valid, recording the smallest valid window. Two frequency maps track need versus have.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="d-12.html">← Lesson D.12</a>
+<a class="nav-btn next" href="d-14.html">Lesson D.14 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

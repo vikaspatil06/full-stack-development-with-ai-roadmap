@@ -1,0 +1,1549 @@
+{
+ "lessons": [
+  {
+   "id": "9.1",
+   "module": "M9",
+   "t": "React Hooks Deep — useEffect, useContext & Custom Hooks",
+   "sub": "State, effects and reuse without classes",
+   "mins": 40,
+   "goal": "By the end you can use useEffect with correct dependencies and cleanup, share state with useContext, hold DOM references with useRef, and extract reusable logic into custom hooks.",
+   "body": "<h4>1. Why hooks exist: the class lifecycle problem</h4><p>Before hooks, React components that needed state or side effects had to be classes, and related logic was split across lifecycle methods: fetching data in <code>componentDidMount</code>, updating it in <code>componentDidUpdate</code>, and cleaning up in <code>componentWillUnmount</code>. One feature ended up scattered across three places. Hooks let a plain function component own state with <code>useState</code> and run side effects with <code>useEffect</code>, so all the code for one concern sits together in one place.</p><p>Skillzify v2 solves the same problem without a framework: its vanilla JavaScript manually re-renders lists and progress after every change. Hooks are the framework answer to that exact pain — instead of you remembering to update the DOM, you describe what the UI should look like for a given state and React updates it for you.</p><h4>2. useEffect: dependencies and cleanup</h4><p><code>useEffect</code> runs after render. The dependency array decides when it re-runs: an empty array means once on mount, an array with values means whenever those values change, and no array means after every render. The function you optionally return is the cleanup: React calls it before re-running the effect and when the component unmounts. Timers, subscriptions and event listeners must always be cleaned up, or they leak and fire twice.</p><p>The most common beginner bug is a missing dependency: the effect reads a variable but never re-runs when it changes, so the UI shows stale data. Treat the dependency array as a promise — every reactive value the effect reads belongs in it.</p><h4>3. useContext and useRef</h4><p><code>useContext</code> reads shared data — the signed-in user, the theme, the XP total — from a provider high in the tree, without passing props through every component in between. It is the right tool for truly global, slowly-changing values, and the wrong tool for fast-changing state, because every consumer re-renders when the context value changes. <code>useRef</code> holds a mutable value that survives re-renders without causing one: a DOM node to focus, a timer id, or a previous value. Changing a ref never re-renders, which is exactly what you want for values the screen does not display.</p><h4>4. Custom hooks: reuse the logic, not the markup</h4><p>A custom hook is just a function whose name starts with <code>use</code> and which calls other hooks. <code>useFetch</code> packages the fetch-loading-error dance; <code>useLocalStorage</code> packages reading and writing persisted state. The rule that makes it all work: hooks are always called unconditionally at the top level, in the same order every render, because React tracks them by call order. In Skillzify, the equivalent shared helpers live in one JavaScript file every page loads — custom hooks are the same idea, but tied to component state.</p><pre>import { useState, useEffect } from \"react\";\n\nfunction useFetch(url) {\n  const [data, setData] = useState(null);\n  const [error, setError] = useState(null);\n  const [loading, setLoading] = useState(true);\n  useEffect(() =&gt; {\n    let cancelled = false;\n    setLoading(true);\n    fetch(url)\n      .then((r) =&gt; r.json())\n      .then((json) =&gt; { if (!cancelled) { setData(json); setLoading(false); } })\n      .catch((e) =&gt; { if (!cancelled) { setError(e); setLoading(false); } });\n    return () =&gt; { cancelled = true; };\n  }, [url]);\n  return { data, error, loading };\n}</pre>",
+   "task": "Build a small React component that loads a list of lessons from a JSON file with a custom useFetch hook, shows a loading message, then the list. Add a useLocalStorage hook that remembers the last opened lesson across refreshes. Then deliberately remove url from the dependency array, change the URL, and observe the stale-data bug before fixing it.",
+   "checks": [
+    [
+     "What does the cleanup function returned from useEffect do?",
+     "React calls it before re-running the effect and when the component unmounts. It is where you cancel subscriptions, clear timers and ignore in-flight fetches so nothing leaks."
+    ],
+    [
+     "Why must hooks be called unconditionally at the top level?",
+     "React tracks hooks by call order between renders. A conditional hook would shift that order, so state would be matched to the wrong hook."
+    ],
+    [
+     "When is useContext the wrong choice for state?",
+     "When the value changes frequently, because every consumer re-renders on each change. Fast-changing state belongs in local state or a store with selective subscriptions."
+    ],
+    [
+     "What is the difference between useState and useRef?",
+     "useState triggers a re-render when it changes and is for values the UI displays. useRef persists a mutable value across renders without re-rendering, for DOM nodes, timers and previous values."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain the useEffect dependency array to a beginner.",
+     "It lists the values the effect depends on. React re-runs the effect only when one of them changes; an empty array means run once on mount. Every reactive value the effect reads should be listed, or the effect will use stale data."
+    ],
+    [
+     "How would you stop a fetch from updating state after the component unmounts?",
+     "Use a cancelled flag or an AbortController in the effect cleanup. The cleanup runs on unmount, sets the flag or aborts the request, and the response handler checks it before calling setState."
+    ]
+   ],
+   "cards": [
+    [
+     "useEffect",
+     "A hook that runs side effects after render, re-running when its dependency array values change, with an optional cleanup function."
+    ],
+    [
+     "Dependency array",
+     "The list of reactive values an effect depends on; React re-runs the effect when any of them changes."
+    ],
+    [
+     "Cleanup function",
+     "The function returned from useEffect, called before re-running the effect and on unmount — where timers and subscriptions are torn down."
+    ],
+    [
+     "useContext",
+     "A hook that reads a value from the nearest context provider, avoiding prop drilling for global, slowly-changing data."
+    ],
+    [
+     "useRef",
+     "A hook holding a mutable value that persists across renders without causing one — used for DOM nodes, timers and previous values."
+    ],
+    [
+     "Custom hook",
+     "A function starting with use that calls other hooks to package reusable stateful logic, like useFetch or useLocalStorage."
+    ]
+   ]
+  },
+  {
+   "id": "9.2",
+   "module": "M9",
+   "t": "TypeScript Intro — Types for JavaScript Developers",
+   "sub": "Catch the bug before it runs",
+   "mins": 35,
+   "goal": "By the end you can add types to JavaScript code, choose between interfaces and type aliases, write a simple generic function, configure tsconfig, and migrate one JavaScript file to TypeScript.",
+   "body": "<h4>1. Why TypeScript: errors at write time, not run time</h4><p>JavaScript only discovers type errors when the code runs — a misspelled property returns <code>undefined</code> silently, and passing a string where a number belongs produces <code>NaN</code> far from the cause. TypeScript adds a static type layer that is checked before the code ever runs, then compiles away to plain JavaScript. The editor underlines the mistake as you type, and renaming a field updates every use automatically.</p><p>Skillzify v2 is untyped vanilla JavaScript, so a renamed lesson field or a wrong argument shape is only found by clicking through pages. TypeScript would catch exactly that class of bug: a lesson object missing its <code>xp</code> field, or a function called with a string instead of a number, fails the build instead of failing silently in a learner's browser.</p><h4>2. The basic types and annotations</h4><p>You annotate variables, parameters and return values: <code>string</code>, <code>number</code>, <code>boolean</code>, arrays like <code>string[]</code>, and unions like <code>string | number</code> for values that can be either. TypeScript also infers types from initial values, so most variables need no annotation at all — annotate function boundaries and let inference handle the rest. The <code>any</code> type opts out of checking entirely and should be treated as a warning sign, not a convenience.</p><h4>3. Interfaces, type aliases and generics</h4><p>Both <code>interface</code> and <code>type</code> describe object shapes. Interfaces can be extended and merged, which suits public object contracts; type aliases can also name unions, tuples and primitives, which makes them more flexible. In practice: use interface for object shapes you expect to extend, type for everything else, and be consistent. Generics let a function or type work over many types while staying checked — a <code>first&lt;T&gt;</code> function returns whatever element type the array holds, instead of collapsing everything to <code>any</code>.</p><h4>4. tsconfig and migrating a file</h4><p>The <code>tsconfig.json</code> file controls strictness and output. The setting that matters most is <code>strict: true</code>, which turns on null checks and other safety rules; migrating a file means renaming it to <code>.ts</code>, fixing the errors the checker reports from the outside in, and adding types at the boundaries first. Migrate leaf files before central ones, keep <code>allowJs</code> on so untyped files still compile, and never migrate by sprinkling <code>any</code> — that keeps the cost of TypeScript and throws away the benefit.</p><pre>interface Lesson {\n  id: string;\n  title: string;\n  xp: number;\n}\n\nfunction totalXp(lessons: Lesson[]): number {\n  return lessons.reduce((sum, l) =&gt; sum + l.xp, 0);\n}\n\nfunction first&lt;T&gt;(items: T[]): T | undefined {\n  return items[0];\n}\n\nconst lessons: Lesson[] = [{ id: \"b-1\", title: \"Intro\", xp: 20 }];\nconsole.log(totalXp(lessons), first(lessons)?.title);</pre>",
+   "task": "Take a small JavaScript file with a lessons array and a totalXp function, rename it to .ts, and add a Lesson interface plus typed function signatures. Then deliberately pass a lesson missing its xp field and a string where a number belongs, and read the compiler errors. Finish by turning on strict mode in tsconfig and fixing what it reports.",
+   "checks": [
+    [
+     "What does TypeScript compile to, and when are types checked?",
+     "It compiles to plain JavaScript with all types erased. Types are checked at build time by the compiler, never at run time — there is no type information left in the output."
+    ],
+    [
+     "Why is any dangerous?",
+     "any disables type checking for that value, so errors pass silently and spread to everything the value touches. It removes the benefit of TypeScript while keeping its cost."
+    ],
+    [
+     "When do you choose an interface over a type alias?",
+     "For object shapes you expect to extend or merge, like component props or API models. Type aliases are better for unions, tuples and naming primitive combinations."
+    ],
+    [
+     "What does a generic type parameter buy you over any?",
+     "It preserves the relationship between input and output types: first of a string array returns a string, checked by the compiler, instead of an unchecked any."
+    ]
+   ],
+   "interview": [
+    [
+     "Your team says TypeScript slows them down. What is your honest answer?",
+     "It adds upfront annotation cost, repaid by catching contract errors at build time, safer refactors, and editor autocomplete across the codebase. The trade favours any project that will live longer than a prototype."
+    ],
+    [
+     "How do you migrate a large JavaScript codebase to TypeScript?",
+     "Incrementally: enable allowJs, rename leaf files first, type the boundaries, keep strict mode on for new files, and fix errors file by file rather than in one big-bang rewrite."
+    ]
+   ],
+   "cards": [
+    [
+     "Type annotation",
+     "A declared type on a variable, parameter or return value, checked by the compiler and erased from the output JavaScript."
+    ],
+    [
+     "Type inference",
+     "TypeScript deducing a type from the initial value, so most variables need no explicit annotation."
+    ],
+    [
+     "Union type",
+     "A type that allows one of several types, written with a pipe, like string | number."
+    ],
+    [
+     "Interface",
+     "A named object shape that can be extended and declaration-merged; the standard way to type objects and props."
+    ],
+    [
+     "Generic",
+     "A type parameter that lets code work over many types while keeping them checked, like a first&lt;T&gt; function."
+    ],
+    [
+     "strict mode",
+     "The tsconfig flag that enables the full set of safety checks, including strict null checking."
+    ]
+   ]
+  },
+  {
+   "id": "9.3",
+   "module": "M9",
+   "t": "SQL Deep — Indexes, Transactions & Window Functions",
+   "sub": "Make queries fast and writes safe",
+   "mins": 40,
+   "goal": "By the end you can explain how B-tree indexes speed up queries, read an EXPLAIN plan, wrap writes in ACID transactions, and use ROW_NUMBER and RANK window functions.",
+   "body": "<h4>1. Indexes: the sorted shortcut</h4><p>Without an index, finding rows means scanning the whole table — fine for a hundred rows, fatal for ten million. A B-tree index keeps a sorted copy of one or more columns in a balanced tree, so the database jumps straight to matching rows in logarithmic time instead of reading everything. The cost is paid on writes: every insert and update must also update every index on the table, and indexes consume disk. Index the columns you filter and join on; do not index everything.</p><p>Skillzify stores its data in Firestore, which builds single-field indexes automatically but has no joins and no multi-document transactions with the same guarantees as SQL. Knowing SQL indexes explains what Firestore is doing for you under the hood — and why a composite query there needs a composite index created by hand.</p><h4>2. EXPLAIN: read the plan before you guess</h4><p><code>EXPLAIN</code> shows the plan the database chose: which index it used, whether it scanned the whole table, and how many rows it expects to touch. A sequential scan on a large table where an index exists usually means the index does not match the query — wrong column order, a function wrapped around the column, or statistics the planner does not trust. The habit that separates good SQL developers is simple: never optimise by guessing; run EXPLAIN, find the expensive step, and fix that one thing.</p><h4>3. Transactions and ACID</h4><p>A transaction groups several writes so they succeed or fail together. ACID names the guarantees: Atomicity (all or nothing), Consistency (constraints always hold), Isolation (concurrent transactions do not see each other's half-finished work), and Durability (committed data survives a crash). Isolation levels trade safety for speed: read committed prevents dirty reads, repeatable read also prevents rows changing mid-transaction, and serializable makes concurrent transactions behave as if they ran one at a time. Awarding XP and updating a leaderboard in one transaction is exactly the shape of problem ACID solves.</p><h4>4. Window functions: rankings without self-joins</h4><p>Window functions compute over a set of rows related to the current row, without collapsing them into one. <code>ROW_NUMBER()</code> numbers rows within each group, <code>RANK()</code> gives ties the same rank and skips the next numbers, and <code>DENSE_RANK()</code> gives ties the same rank without skipping. The classic use is top-N per group: rank each learner's attempts per lesson, then keep rank 1. Before window functions this needed a self-join; now it is one readable query.</p><pre>SELECT lesson_id, user_id, score,\n       ROW_NUMBER() OVER (\n         PARTITION BY lesson_id ORDER BY score DESC\n       ) AS rn\nFROM attempts;\n\n-- Top attempt per lesson: wrap the above and filter rn = 1.\n-- Speed it up with a matching index:\nCREATE INDEX idx_attempts_lesson_score\n  ON attempts (lesson_id, score DESC);</pre>",
+   "task": "In any SQL database, create a small attempts table with a few hundred rows across several lessons. Run a query for the top score per lesson with EXPLAIN, then add a composite index on lesson_id and score, run EXPLAIN again, and compare the plans. Finish by writing the same top-per-lesson query with ROW_NUMBER and filtering to rank 1.",
+   "checks": [
+    [
+     "Why does adding an index slow down writes?",
+     "Every insert, update and delete must also maintain each index on the table, so more indexes mean more work per write and more disk used."
+    ],
+    [
+     "What does EXPLAIN tell you that timing the query does not?",
+     "It shows the plan — which index was used, whether a full scan happened, and estimated rows — so you can fix the cause instead of just observing the symptom."
+    ],
+    [
+     "What does the A in ACID guarantee in practice?",
+     "Atomicity: all writes in the transaction commit together or none do, so a crash midway cannot leave half-updated data behind."
+    ],
+    [
+     "How do RANK and DENSE_RANK differ on ties?",
+     "Both give tied rows the same rank. RANK then skips numbers (1, 1, 3), while DENSE_RANK does not (1, 1, 2)."
+    ]
+   ],
+   "interview": [
+    [
+     "A query is slow on a big table. Walk me through your first steps.",
+     "Run EXPLAIN to see the plan, look for a sequential scan or a huge row estimate, check whether an index matches the filter and join columns, add or fix the index, then re-run EXPLAIN to confirm the plan changed."
+    ],
+    [
+     "Explain isolation levels in one minute.",
+     "They control what concurrent transactions can see of each other. Read committed hides uncommitted data, repeatable read also freezes rows you have read, and serializable behaves as if transactions ran one by one — safer, but slower and more prone to conflicts."
+    ]
+   ],
+   "cards": [
+    [
+     "B-tree index",
+     "A balanced sorted tree over one or more columns that turns full-table scans into logarithmic lookups, at the cost of slower writes."
+    ],
+    [
+     "EXPLAIN",
+     "A command that shows the query plan the database chose — indexes used, scan types and row estimates — so you optimise from evidence."
+    ],
+    [
+     "ACID",
+     "Atomicity, Consistency, Isolation and Durability: the guarantees a transaction makes about grouped writes."
+    ],
+    [
+     "Isolation level",
+     "How much concurrent transactions can see of each other, from read committed up to serializable."
+    ],
+    [
+     "Window function",
+     "A function computing over a set of rows related to the current row without collapsing them, like ROW_NUMBER or RANK."
+    ],
+    [
+     "PARTITION BY",
+     "The clause that splits rows into groups inside a window function, restarting the calculation per group."
+    ]
+   ]
+  },
+  {
+   "id": "9.4",
+   "module": "M9",
+   "t": "Testing with Vitest & Jest — Unit and Integration Tests",
+   "sub": "Proof the code works, not hope",
+   "mins": 35,
+   "goal": "By the end you can write unit and integration tests with describe, it and expect, mock dependencies, test async code, and read a coverage report without worshipping it.",
+   "body": "<h4>1. The test pyramid: many small, few big</h4><p>Tests come in sizes. Unit tests check one function in isolation and run in milliseconds. Integration tests check several pieces together — a route handler plus its validation, for example. End-to-end tests drive the whole app through a browser and are slow and brittle. The pyramid says: many unit tests, fewer integration tests, very few end-to-end tests. Inverting it gives a suite that is slow, flaky and painful to maintain.</p><p>Skillzify's Node server currently has no test suite, so every change is verified by hand. The first tests worth writing are the pure, high-risk functions: the rate limiter, the input validation, and the XP and level calculations — the code where a silent bug hurts every learner at once.</p><h4>2. describe, it, expect: the shape of a test</h4><p>Vitest and Jest share the same vocabulary. <code>describe</code> groups related tests, <code>it</code> (or <code>test</code>) names one behaviour, and <code>expect</code> asserts an outcome with matchers like <code>toBe</code>, <code>toEqual</code> and <code>toThrow</code>. A good test name reads as a sentence about behaviour: returns 400 when the question is empty. Arrange the inputs, act by calling the code, assert the result — and keep each test about one behaviour so a failure points at one cause.</p><h4>3. Mocking and testing async code</h4><p>A mock replaces a real dependency with a controlled fake: a fake Gemini response instead of a live API call, a fixed clock instead of the real time. Mocking keeps tests fast, deterministic and free of network flakiness — but mock the boundaries, not the thing under test, or you end up testing your mocks. Async code is tested by awaiting it: mark the test <code>async</code> and <code>await</code> the promise, or assert with <code>resolves</code> and <code>rejects</code> matchers. A test that forgets to await passes vacuously while the real assertion never runs.</p><h4>4. Coverage: a map, not a target</h4><p>Coverage reports which lines and branches your tests executed. It is excellent for finding untested code and useless as a quality score: 100 percent coverage with weak assertions proves nothing, and chasing the last few percent usually means testing trivia. Use coverage to ask where are we blind, then write tests for the risky behaviour there — error paths, boundaries, and the branches a refactor is most likely to break.</p><pre>import { describe, it, expect, vi } from \"vitest\";\n\nfunction levelFor(xp) {\n  if (xp &lt; 100) return \"Beginner\";\n  if (xp &lt; 300) return \"Intermediate\";\n  return \"Advanced\";\n}\n\ndescribe(\"levelFor\", () =&gt; {\n  it(\"returns Beginner below 100 XP\", () =&gt; {\n    expect(levelFor(50)).toBe(\"Beginner\");\n  });\n  it(\"returns Advanced at 300 XP\", () =&gt; {\n    expect(levelFor(300)).toBe(\"Advanced\");\n  });\n});</pre>",
+   "task": "Set up Vitest in a small Node project and write tests for a levelFor function covering all three bands plus the exact boundary values 100 and 300. Then write one async test that mocks a fetch call with vi.fn and asserts the resolved value. Run the suite with coverage and note which lines, if any, are untested.",
+   "checks": [
+    [
+     "Why should most tests be unit tests rather than end-to-end tests?",
+     "Unit tests are fast, deterministic and pinpoint failures to one function. End-to-end tests are slow and brittle, so the pyramid keeps them few."
+    ],
+    [
+     "What is the danger of mocking too much?",
+     "You end up testing your mocks instead of the real behaviour, so tests pass while the integrated code is broken. Mock only external boundaries like network and time."
+    ],
+    [
+     "Why can an async test pass without testing anything?",
+     "If the test does not await the promise, the assertion runs after the test has already finished, so it never actually executes."
+    ],
+    [
+     "What does 100 percent coverage actually prove?",
+     "Only that every line ran during the tests — not that the assertions were meaningful. Coverage finds blind spots; it does not measure correctness."
+    ]
+   ],
+   "interview": [
+    [
+     "What would you test first in an untested codebase?",
+     "The pure, high-risk logic with wide blast radius: validation, calculations, rate limits and error paths — the code where one bug affects every user, and which is cheap to unit test."
+    ],
+    [
+     "How do you test code that calls an external API?",
+     "Mock the API boundary with a fake response so the test is fast and deterministic, test success and failure shapes, and keep one or two real integration tests separate from the unit suite."
+    ]
+   ],
+   "cards": [
+    [
+     "Test pyramid",
+     "Many unit tests, fewer integration tests, very few end-to-end tests — a shape that keeps suites fast and failures localised."
+    ],
+    [
+     "Unit test",
+     "A test of one function or module in isolation, with dependencies replaced by fakes."
+    ],
+    [
+     "Integration test",
+     "A test of several real pieces working together, like a route handler with its validation and database layer."
+    ],
+    [
+     "Mock",
+     "A controlled fake replacing a real dependency, used to keep tests fast, deterministic and offline."
+    ],
+    [
+     "Matcher",
+     "An assertion helper on expect, like toBe, toEqual or rejects, that states the expected outcome."
+    ],
+    [
+     "Coverage",
+     "A report of which lines and branches tests executed — a map of blind spots, not a quality score."
+    ]
+   ]
+  },
+  {
+   "id": "9.5",
+   "module": "M9",
+   "t": "System Design Basics for Interviews",
+   "sub": "Requirements first, boxes second",
+   "mins": 40,
+   "goal": "By the end you can walk through a system design interview in order — requirements, scale estimates, API, data model, caching and queues — and talk through trade-offs out loud.",
+   "body": "<h4>1. Start with requirements, not boxes</h4><p>Every design interview opens the same way: clarify what the system must do before drawing anything. Functional requirements are the features — shorten a URL, redirect to the original, count clicks. Non-functional requirements are the qualities — how many users, how fast, how available, how consistent. Skipping this step is the most common failure: candidates design for a scale and a feature set nobody asked for. Spend the first minutes asking questions and writing the requirements down where the interviewer can see them.</p><h4>2. Estimate the scale, then design the API and data</h4><p>Rough numbers drive every later decision. A URL shortener with 100 million new links a month writes about 40 per second but might read 4,000 per second — a read-heavy system, which immediately suggests caching. Then define the API: <code>POST /shorten</code> with a long URL returns a short code, <code>GET /{code}</code> redirects. Then the data model: one table mapping code to long URL, plus a clicks counter. The short code itself is usually a base-62 encoding of an auto-incrementing id, which guarantees uniqueness without checking.</p><h4>3. Caching, queues and the scaling levers</h4><p>Three levers solve most scaling questions. Caching stores hot data close to the reader: popular short links in Redis, so most redirects never touch the database — the trade-off is staleness when data changes. Queues move slow work off the request path: click analytics go onto a queue and are processed asynchronously, so the redirect stays fast. Horizontal scaling adds more stateless servers behind a load balancer, which works precisely because the servers hold no session state. Name the lever, then name its cost — that pairing is what interviewers listen for.</p><h4>4. Talking through trade-offs</h4><p>There is no single right answer in system design, only justified ones. For every choice, say what you gain and what you give up: a cache buys latency and costs freshness; a queue buys responsiveness and costs complexity; strong consistency buys correctness and costs availability under failure. Skillzify makes the same calls at small scale — Firebase for auth and data instead of running its own database, Render for hosting instead of managing servers. Being able to explain why those were reasonable choices at that scale is the whole skill, scaled up.</p><pre>POST /shorten        { \"url\": \"https://example.com/very/long\" }\n-&gt; 201 Created      { \"code\": \"aB3x9\", \"short\": \"https://sho.rt/aB3x9\" }\n\nGET /aB3x9\n-&gt; 302 Found        Location: https://example.com/very/long\n\n-- data model --\nlinks(code VARCHAR PRIMARY KEY, long_url TEXT, clicks BIGINT)\n-- code = base62(id); reads served from Redis cache, writes to SQL</pre>",
+   "task": "Design a URL shortener on paper in 30 minutes: write the functional and non-functional requirements, estimate reads and writes per second for 10 million users, define the two API endpoints, sketch the data model, and add one cache and one queue with a sentence on what each costs. Then explain the whole design out loud in five minutes as if to an interviewer.",
+   "checks": [
+    [
+     "Why clarify requirements before drawing any architecture?",
+     "Scale and feature decisions depend on them. Designing before knowing the read/write ratio or latency needs means optimising for a system nobody asked for."
+    ],
+    [
+     "Why is base-62 encoding of an id a good short-code strategy?",
+     "Ids are unique by construction, so encoding them gives unique codes with no collision checks, and base-62 keeps the codes short using letters and digits."
+    ],
+    [
+     "What does a cache cost you, in one word?",
+     "Freshness: cached data can be stale after the underlying value changes, so you trade correctness-at-this-instant for speed."
+    ],
+    [
+     "Why must servers be stateless to scale horizontally?",
+     "A load balancer can send any request to any server, so no server can hold session data another server would need. State moves to the database or cache."
+    ]
+   ],
+   "interview": [
+    [
+     "Design a URL shortener. Where do you start?",
+     "Requirements first: shorten, redirect, click counts, and the expected scale. Then estimate reads versus writes, define the API, choose the data model and code generation, and add caching for hot links with a stated staleness trade-off."
+    ],
+    [
+     "When would you add a queue to a design, and what does it cost?",
+     "When work is slow or bursty and does not need to finish inside the request — analytics, emails, image processing. It costs complexity: retries, ordering and failure handling become your problem."
+    ]
+   ],
+   "cards": [
+    [
+     "Functional requirements",
+     "What the system must do: the features and behaviours users can observe."
+    ],
+    [
+     "Non-functional requirements",
+     "How well it must do it: scale, latency, availability and consistency targets."
+    ],
+    [
+     "Scale estimate",
+     "Rough arithmetic — users, requests per second, storage — that decides which design levers are needed."
+    ],
+    [
+     "Cache",
+     "A fast store for hot data, like Redis, that trades freshness for latency on read-heavy paths."
+    ],
+    [
+     "Queue",
+     "A buffer that moves slow work off the request path for asynchronous processing, trading simplicity for responsiveness."
+    ],
+    [
+     "Horizontal scaling",
+     "Adding more stateless servers behind a load balancer instead of making one server bigger."
+    ]
+   ]
+  },
+  {
+   "id": "9.6",
+   "module": "M9",
+   "t": "AWS Basics — EC2, S3, Lambda & IAM",
+   "sub": "The four services everything else stands on",
+   "mins": 35,
+   "goal": "By the end you can explain what EC2, S3, Lambda and IAM each do, create a least-privilege IAM policy, and map each AWS service to the Render and Firebase equivalent Skillzify uses.",
+   "body": "<h4>1. IAM: who can do what</h4><p>IAM (Identity and Access Management) is AWS's permission system, and it comes first because everything else is gated by it. Users are people or applications with credentials; roles are identities that services assume temporarily, with no long-lived password; policies are JSON documents listing allowed actions on named resources. The governing principle is least privilege: grant exactly the actions needed, on exactly the resources needed, and nothing more. A policy that allows <code>s3:GetObject</code> on one bucket is safe; a policy that allows everything on everything is how breaches happen.</p><h4>2. S3: object storage for files</h4><p>S3 stores objects — files plus metadata — in buckets, addressed by a key like a path. It is not a filesystem and not a database: you put whole objects and get whole objects, and it scales to effectively unlimited size with very high durability. Static websites, uploaded images, backups and build artifacts all live in S3. Buckets are private by default, and making one public is a deliberate, per-object or per-policy decision. Skillzify's equivalent is Firebase Storage for user files and the GitHub repository itself for static assets.</p><h4>3. EC2: rented virtual servers</h4><p>EC2 gives you virtual machines — instances — in sizes from tiny to enormous, billed per second while they run. You choose the operating system image, the size, and the security group (a firewall rule set), then you own everything above the hypervisor: patching, scaling, backups. That control is the point and the cost. Skillzify runs on Render, which is the managed version of this idea: Render operates the machines and deploys your code, while EC2 hands you the machine and wishes you luck.</p><h4>4. Lambda: functions without servers</h4><p>Lambda runs a single function in response to an event — an HTTP request, a file landing in S3, a timer — and bills only for the milliseconds it runs. There is no server to patch or scale; AWS starts copies as needed and shuts them down when idle. The trade-offs are cold starts on the first invocation, a 15-minute maximum runtime, and statelessness between calls. Firebase Cloud Functions is the same model in Google's cloud. The mapping to remember: EC2 is a rented computer, Lambda is rented execution, S3 is rented storage, and IAM decides who may rent what.</p><pre>{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\"s3:GetObject\", \"s3:PutObject\"],\n      \"Resource\": \"arn:aws:s3:::skillzify-uploads/*\"\n    }\n  ]\n}</pre>",
+   "task": "Create a free AWS account or use the IAM policy simulator: write a policy that allows only GetObject and PutObject on one named bucket, and check that it denies DeleteObject. Then list the four services from this lesson and, next to each, write the Render or Firebase equivalent Skillzify actually uses.",
+   "checks": [
+    [
+     "What is the difference between an IAM user and an IAM role?",
+     "A user is a permanent identity with credentials. A role is a temporary identity that a person or service assumes, with credentials that expire — the safer choice for applications."
+    ],
+    [
+     "Why is S3 called object storage rather than a filesystem?",
+     "You store and retrieve whole objects by key; there are no folders, no partial edits and no file locking like a real filesystem."
+    ],
+    [
+     "When does Lambda beat EC2, and when does it lose?",
+     "Lambda wins for event-driven, spiky work with no idle cost. It loses for long-running processes, steady high load, and anything needing local state between calls."
+    ],
+    [
+     "What does least privilege mean in an IAM policy?",
+     "Grant only the specific actions on the specific resources that are needed, and nothing else — so a leaked credential can do minimal damage."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain the four core AWS services to a beginner in one minute.",
+     "IAM controls who can do what. S3 stores files as objects in buckets. EC2 rents virtual servers you manage. Lambda runs single functions on events with no server to manage. Everything else in AWS builds on these."
+    ],
+    [
+     "Your app stores user uploads and runs a small API. Which services do you pick?",
+     "S3 for the uploads with a least-privilege IAM role, and Lambda behind an API gateway for the API if traffic is spiky, or a small EC2 or managed container if it is steady — with the trade-off stated either way."
+    ]
+   ],
+   "cards": [
+    [
+     "IAM",
+     "AWS Identity and Access Management: users, roles and policies controlling who can do what to which resources."
+    ],
+    [
+     "Least privilege",
+     "Granting only the actions and resources actually needed, so compromised credentials can do minimal damage."
+    ],
+    [
+     "S3 bucket",
+     "A container for objects (files plus metadata) addressed by key, private by default, built for durability at any scale."
+    ],
+    [
+     "EC2 instance",
+     "A rented virtual machine whose size, image and firewall you choose and whose software you maintain."
+    ],
+    [
+     "Lambda",
+     "Serverless functions that run on events and bill per millisecond of execution, with no server to manage."
+    ],
+    [
+     "Security group",
+     "A virtual firewall attached to an instance, controlling which traffic may reach it."
+    ]
+   ]
+  },
+  {
+   "id": "9.7",
+   "module": "M9",
+   "t": "Docker Compose & Production Containers",
+   "sub": "One command, the whole stack",
+   "mins": 35,
+   "goal": "By the end you can define a multi-service app in Docker Compose, persist data with volumes, configure services with environment variables, and shrink images with multi-stage builds.",
+   "body": "<h4>1. Compose: many containers, one file</h4><p>A real app is rarely one container: a web server, a database, a cache, maybe a worker. Docker Compose describes all of them in one <code>docker-compose.yml</code> file — services, the image or build for each, ports to publish, and the network they share. One command, <code>docker compose up</code>, starts the whole stack in the right order, and service names double as hostnames, so the app reaches the database at <code>db:5432</code> without any IP addresses. This is the file that turns it works on my machine into it works everywhere.</p><h4>2. Volumes: data that outlives containers</h4><p>Containers are disposable: delete one and its filesystem goes with it. Volumes solve this by mounting storage that lives outside the container lifecycle. A named volume holds the database's data directory, so rebuilding the database container keeps every row. Bind mounts instead map a folder from your machine into the container, which is ideal in development for live code changes and risky in production, where the host layout should not leak into the app. Rule of thumb: named volumes for data, bind mounts for development code.</p><h4>3. Environment variables and configuration</h4><p>Configuration belongs outside the image: the same image should run in development, staging and production with only its environment changed. Compose sets variables per service with <code>environment</code> or an <code>env_file</code>, and secrets stay in a <code>.env</code> file that is never committed. Skillzify follows exactly this discipline on Render — its Gemini key lives in environment variables, not in the repository — and a containerised version would keep the same rule, just delivered through Compose instead of a dashboard.</p><h4>4. Multi-stage builds and image size</h4><p>Every layer in an image adds size and attack surface. A multi-stage Dockerfile builds in a fat stage with compilers and dev dependencies, then copies only the finished artifact into a slim runtime stage. A Node app that builds at 900 MB can ship at 150 MB, which deploys faster and exposes less. Pin base image versions, add a <code>.dockerignore</code> so <code>node_modules</code> and secrets never enter the build, and run as a non-root user. Skillzify currently deploys to Render from a Git repository; containers would make that deploy reproducible on any host, at the cost of owning the image pipeline.</p><pre>services:\n  web:\n    build: .\n    ports:\n      - \"3000:3000\"\n    environment:\n      - DATABASE_URL=postgres://app:secret@db:5432/skillzify\n      - GEMINI_API_KEY=${GEMINI_API_KEY}\n    depends_on:\n      - db\n  db:\n    image: postgres:16\n    environment:\n      - POSTGRES_PASSWORD=secret\n    volumes:\n      - db-data:/var/lib/postgresql/data\n\nvolumes:\n  db-data:</pre>",
+   "task": "Write a docker-compose.yml for a small Node app plus a Postgres database: the app built from a Dockerfile, the database with a named volume, and the API key passed through an env file that you add to .gitignore. Bring the stack up, insert a row, run docker compose down and up again, and confirm the row survived.",
+   "checks": [
+    [
+     "Why do services in Compose reach each other by name?",
+     "Compose creates a shared network where each service name resolves as a hostname, so the app connects to db:5432 without hardcoding addresses."
+    ],
+    [
+     "What happens to data written inside a container without a volume?",
+     "It disappears when the container is removed. Volumes keep data outside the container lifecycle so it survives rebuilds."
+    ],
+    [
+     "Why keep secrets in environment variables instead of the image?",
+     "Images get shared and cached; a secret baked in leaks to anyone with the image. Environment variables let the same image run everywhere with different secrets."
+    ],
+    [
+     "What does a multi-stage build achieve?",
+     "It builds with full tooling in one stage and copies only the artifact into a slim runtime image, shrinking size and attack surface."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain the difference between a named volume and a bind mount.",
+     "A named volume is Docker-managed storage that persists data across containers — right for databases. A bind mount maps a host folder into the container — right for live development, risky in production."
+    ],
+    [
+     "How do you make a Docker image production-ready?",
+     "Multi-stage build for a slim runtime, pinned base versions, a .dockerignore, non-root user, configuration via environment, and healthchecks so orchestrators know when it is actually ready."
+    ]
+   ],
+   "cards": [
+    [
+     "Docker Compose",
+     "A tool that defines and runs multi-container apps from one YAML file: services, networks, ports and volumes."
+    ],
+    [
+     "Service",
+     "One container definition in Compose — an image or build, plus its ports, environment and dependencies."
+    ],
+    [
+     "Named volume",
+     "Docker-managed persistent storage mounted into a container, surviving container deletion — where database data belongs."
+    ],
+    [
+     "Bind mount",
+     "A host folder mapped into a container; ideal for live development, a liability in production."
+    ],
+    [
+     "Multi-stage build",
+     "A Dockerfile with a build stage and a slim runtime stage, copying only the finished artifact across."
+    ],
+    [
+     ".dockerignore",
+     "A file listing paths excluded from the build context, keeping node_modules and secrets out of images."
+    ]
+   ]
+  },
+  {
+   "id": "9.8",
+   "module": "M9",
+   "t": "Next.js Intro — Full-Stack React",
+   "sub": "Frontend and backend in one project",
+   "mins": 35,
+   "goal": "By the end you can create routes with the file system, explain server versus client components, write a route handler, and judge when Next.js beats a separate Express backend.",
+   "body": "<h4>1. File-based routing: folders are URLs</h4><p>In Next.js the <code>app</code> folder is the route map. A <code>page.tsx</code> file inside <code>app/lessons</code> becomes the <code>/lessons</code> page, a nested folder becomes a nested path, and a folder named <code>[id]</code> becomes a dynamic segment that matches any lesson id. Layouts wrap their children, so the shared navigation is written once instead of pasted into every page. Skillzify achieves the same sharing by injecting its nav with JavaScript on each static page; Next.js makes it structural.</p><h4>2. Server components versus client components</h4><p>By default, components in the app router render on the server: they can read databases and secrets directly, ship no JavaScript to the browser, and stream HTML quickly. A component that needs interactivity — clicks, state, browser APIs — opts in with the <code>\"use client\"</code> directive and renders in the browser. The discipline is to keep client components small and leaf-like: a static lesson page rendered on the server, with one small client component for the interactive quiz. Every client component adds to the JavaScript bundle, so the split is also a performance decision.</p><h4>3. Route handlers and data fetching</h4><p>A <code>route.ts</code> file inside <code>app/api</code> is a backend endpoint: export a <code>GET</code> or <code>POST</code> function and Next.js serves it. Server components fetch data directly with <code>await</code> — no effect hooks, no loading spinners for the first paint — and can cache or revalidate that data declaratively. This collapses the classic two-project setup, a React frontend plus an Express API, into one codebase with one deploy.</p><h4>4. When Next beats a separate Express backend</h4><p>Next.js wins when the frontend and backend are built by the same team, deployed together, and the API mostly serves the pages — exactly the shape of most product sites, and the shape Skillzify would have if it were rebuilt in React. A separate Express backend still wins when the API serves many clients (web, Android, third parties), needs long-running processes or WebSockets, or must scale independently of page traffic. The honest test: if your API exists only to feed your own pages, one project is simpler; if it is a product in itself, keep it separate.</p><pre>// app/api/lessons/route.ts — a route handler\nimport { NextResponse } from \"next/server\";\n\nconst lessons = [{ id: \"b-1\", title: \"Intro\", xp: 20 }];\n\nexport async function GET() {\n  return NextResponse.json(lessons);\n}\n\nexport async function POST(req: Request) {\n  const body = await req.json();\n  if (!body.title) {\n    return NextResponse.json({ error: \"title required\" }, { status: 400 });\n  }\n  lessons.push({ id: \"b-\" + (lessons.length + 1), title: body.title, xp: 20 });\n  return NextResponse.json({ ok: true }, { status: 201 });\n}</pre>",
+   "task": "Create a small Next.js app with two pages: a server-rendered lesson list at /lessons and a dynamic /lessons/[id] page. Add a route handler at /api/lessons that returns the list as JSON, then add one client component — a button that marks a lesson complete — and confirm in the browser that only that component needed client JavaScript.",
+   "checks": [
+    [
+     "How does file-based routing map folders to URLs?",
+     "Each folder under app is a path segment and a page file inside it renders that route; a [id] folder matches any value as a dynamic parameter."
+    ],
+    [
+     "What can a server component do that a client component cannot?",
+     "It can access databases, files and secrets directly on the server and ships no JavaScript to the browser. Client components are for interactivity and browser APIs."
+    ],
+    [
+     "Why keep client components small and leaf-like?",
+     "Every client component adds JavaScript to the bundle. Small leaves keep pages fast while still allowing interaction where it is needed."
+    ],
+    [
+     "When is a separate Express backend still the better choice?",
+     "When the API serves multiple clients, needs long-running or WebSocket workloads, or must scale independently of the frontend."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain server versus client components in one minute.",
+     "Server components render on the server, can read data and secrets directly, and send no JavaScript to the browser. Client components, marked use client, run in the browser for state and events. You compose them: server pages with small client leaves."
+    ],
+    [
+     "How does data fetching differ in Next.js from plain React?",
+     "Server components fetch with plain await during rendering, so the first paint already has data — no effect hook, no client waterfall. Caching and revalidation are declared per fetch instead of hand-managed."
+    ]
+   ],
+   "cards": [
+    [
+     "File-based routing",
+     "Routes defined by folders and page files under app, instead of a central route configuration."
+    ],
+    [
+     "Dynamic segment",
+     "A folder like [id] that matches any value in that position and exposes it as a parameter."
+    ],
+    [
+     "Server component",
+     "A component rendered on the server that can access data and secrets directly and ships no client JavaScript."
+    ],
+    [
+     "Client component",
+     "A component marked use client that renders in the browser and can use state, effects and browser APIs."
+    ],
+    [
+     "Route handler",
+     "A route.ts file exporting GET, POST and similar functions — a backend endpoint inside the Next.js project."
+    ],
+    [
+     "Layout",
+     "A component wrapping a route segment and its children, so shared chrome like navigation is written once."
+    ]
+   ]
+  },
+  {
+   "id": "9.9",
+   "module": "M9",
+   "t": "WebSockets & Real-Time Apps",
+   "sub": "When the server needs to speak first",
+   "mins": 35,
+   "goal": "By the end you can explain when WebSockets beat HTTP polling, build events and rooms with Socket.io, handle heartbeat and reconnection, and describe the scaling limits of real-time connections.",
+   "body": "<h4>1. HTTP asks, WebSockets converse</h4><p>HTTP is request-response: the client asks, the server answers, the connection closes. Anything live — a leaderboard updating, a chat message arriving, a collaborator's cursor moving — forces the client to poll repeatedly, wasting requests and still feeling laggy. A WebSocket upgrades one HTTP connection into a persistent two-way channel: either side can send a message at any time, with tiny overhead per message. The rule: if the server needs to speak first, or updates are frequent and small, it is a WebSocket problem.</p><p>Skillzify's leaderboard and progress pages currently refresh on page load. A live leaderboard — ranks shuffling as learners earn XP — or a presence indicator showing who is studying now are exactly the features WebSockets exist for.</p><h4>2. Socket.io: events and rooms</h4><p>Raw WebSockets give you a pipe; Socket.io gives you a vocabulary. You emit named events with payloads — <code>socket.emit(\"xp:earned\", { xp: 20 })</code> — and listen with <code>socket.on</code>. Rooms group connections so a message goes only to the right audience: everyone in the <code>lesson:b-1</code> room hears that lesson's discussion, nobody else does. Socket.io also handles the fallback to long-polling on hostile networks and automatic reconnection, which is why most teams use it instead of the raw API.</p><h4>3. Heartbeat, reconnection and honest failure</h4><p>Persistent connections die quietly: laptops sleep, networks drop, proxies time out. A heartbeat — a tiny ping every few seconds, with a pong expected back — detects a dead connection within seconds instead of minutes. On disconnect, the client should reconnect with exponential backoff (wait 1s, then 2s, then 4s, with jitter) rather than hammering a recovering server, and rejoin its rooms and resync any missed state on reconnect. Design for the disconnect, because on real networks it is not an edge case; it is the weather.</p><h4>4. Scaling real-time: the sticky problem</h4><p>One server can hold tens of thousands of sockets, but beyond that you need several servers — and a message for a user connected to server B must reach them from server A. The standard answer is a pub/sub backbone like Redis: every server publishes events to shared channels and forwards what its own clients need. Load balancers also need sticky sessions so a client's reconnect lands sensibly. This is the honest cost of real-time: stateful connections are fundamentally harder to scale than stateless HTTP, so use them where liveness is the feature, not by default.</p><pre>import { Server } from \"socket.io\";\n\nconst io = new Server(3000, { cors: { origin: \"*\" } });\n\nio.on(\"connection\", (socket) =&gt; {\n  socket.on(\"lesson:join\", (lessonId) =&gt; {\n    socket.join(\"lesson:\" + lessonId);\n  });\n  socket.on(\"xp:earned\", ({ lessonId, xp }) =&gt; {\n    io.to(\"lesson:\" + lessonId).emit(\"xp:update\", { xp });\n  });\n  socket.on(\"disconnect\", () =&gt; {\n    console.log(\"client left\", socket.id);\n  });\n});</pre>",
+   "task": "Build a tiny Socket.io server and page: a client joins a room named after a lesson id, and clicking an Earn XP button emits an event that every client in that room receives and displays. Open two browser windows in the same room and one in a different room, and confirm only the same-room windows update. Then kill and restart the server and watch the clients reconnect.",
+   "checks": [
+    [
+     "When do WebSockets beat HTTP polling?",
+     "When the server must push updates promptly or messages are frequent and small. Polling wastes requests and still lags; a WebSocket keeps one open channel for instant two-way messages."
+    ],
+    [
+     "What is a Socket.io room for?",
+     "It groups connections so an event reaches only the relevant audience — everyone viewing one lesson, for example — instead of broadcasting to all clients."
+    ],
+    [
+     "Why use exponential backoff on reconnect?",
+     "It spaces retries out so thousands of clients do not hammer a recovering server at the same instant, while still reconnecting quickly after brief drops."
+    ],
+    [
+     "Why is scaling WebSockets harder than scaling HTTP?",
+     "Connections are stateful and long-lived, so messages must be routed to the specific server holding each client, usually via a pub/sub backbone like Redis and sticky sessions."
+    ]
+   ],
+   "interview": [
+    [
+     "Design a live leaderboard. How do updates reach every viewer?",
+     "Clients open WebSocket connections and join a leaderboard room. When XP changes, the server emits an update event to the room; at scale, servers relay through Redis pub/sub so every connected viewer hears it."
+    ],
+    [
+     "How do you detect a dead WebSocket connection?",
+     "With a heartbeat: periodic pings expecting pongs within a timeout. No pong means the connection is dead, so the server cleans it up and the client reconnects with backoff."
+    ]
+   ],
+   "cards": [
+    [
+     "WebSocket",
+     "A persistent two-way connection upgraded from HTTP, letting either side send messages at any time with low overhead."
+    ],
+    [
+     "Polling",
+     "Repeatedly asking the server for updates over HTTP — simple, but wasteful and laggy compared with a push channel."
+    ],
+    [
+     "Socket.io event",
+     "A named message with a payload, sent with emit and received with on, forming the vocabulary of a real-time app."
+    ],
+    [
+     "Room",
+     "A named group of connections that receive events together, like everyone viewing one lesson."
+    ],
+    [
+     "Heartbeat",
+     "Periodic ping/pong messages that detect dead connections quickly so they can be cleaned up and reconnected."
+    ],
+    [
+     "Pub/sub backbone",
+     "A shared message bus like Redis that relays events between multiple WebSocket servers so any client can be reached."
+    ]
+   ]
+  },
+  {
+   "id": "9.10",
+   "module": "M9",
+   "t": "Web Performance & Core Web Vitals",
+   "sub": "Fast is a feature users can feel",
+   "mins": 35,
+   "goal": "By the end you can explain LCP, CLS and INP, optimise images and JavaScript delivery, set caching headers correctly, and measure a page with Lighthouse before and after a fix.",
+   "body": "<h4>1. Core Web Vitals: three numbers that describe feel</h4><p>Google's Core Web Vitals measure how a page feels, not just how fast it loads. LCP (Largest Contentful Paint) is when the main content appears — aim under 2.5 seconds. CLS (Cumulative Layout Shift) measures how much the page jumps around as things load — aim under 0.1. INP (Interaction to Next Paint) measures how quickly the page responds to a tap or click — aim under 200 milliseconds. Together they cover loading, stability and responsiveness, and they feed directly into search ranking.</p><p>Skillzify's learners are largely on phones and modest connections, so these numbers are the difference between a lesson that opens and a lesson abandoned. Performance here is not polish; it is access.</p><h4>2. Images: usually the biggest win</h4><p>Images are typically the heaviest part of a page and the usual LCP element. The fixes are mechanical: serve modern formats like WebP or AVIF, size images to their display size instead of shipping a 4000px photo into a 400px slot, lazy-load images below the fold with <code>loading=\"lazy\"</code>, and always declare width and height so the browser reserves space and CLS stays near zero. Compressing Skillzify's logos from over 100 KB to under 20 KB each was this lesson in miniature: same picture, a fifth of the bytes.</p><h4>3. JavaScript: split it, defer it, shrink it</h4><p>JavaScript costs three times: download, parse, and execution blocking the main thread — which is what INP measures. Code splitting loads only the code a page needs, so the flowchart lab's heavy libraries do not tax the home page. Deferring scripts keeps them off the critical rendering path. And every dependency should justify its bytes: a 200 KB library for one date format is a performance bug wearing a convenience costume.</p><h4>4. Caching headers and measuring with Lighthouse</h4><p>The fastest request is the one never made. Versioned assets — Skillzify's <code>style.css?v=45</code> pattern — can carry an immutable one-year cache header, because a changed file gets a new URL; HTML, which points at those versions, gets a short cache so updates appear promptly. Then measure: run Lighthouse, note the LCP element and the top opportunities, fix the biggest one, and re-measure. Optimising without measuring is guessing, and the fix that feels right is regularly not the one the numbers wanted.</p><pre>&lt;!-- Sized, lazy, modern-format image: no layout shift --&gt;\n&lt;img src=\"lesson-hero.webp\" width=\"1200\" height=\"630\"\n     loading=\"lazy\" alt=\"Lesson overview\"&gt;\n\n# Versioned asset: cache forever, new version = new URL\nCache-Control: public, max-age=31536000, immutable\n# HTML: revalidate quickly so new versions are seen\nCache-Control: no-cache</pre>",
+   "task": "Run Lighthouse on any Skillzify page (or your profile page) and record LCP, CLS and INP. Identify the LCP element, then fix the single biggest opportunity it reports — usually an oversized image or a render-blocking script. Re-run Lighthouse and write down the before and after numbers side by side.",
+   "checks": [
+    [
+     "What do LCP, CLS and INP each measure?",
+     "LCP measures when the main content appears, CLS measures how much the layout shifts while loading, and INP measures how quickly the page responds to interactions."
+    ],
+    [
+     "Why declare width and height on images?",
+     "The browser reserves the right space before the image loads, so content does not jump when it arrives — keeping CLS near zero."
+    ],
+    [
+     "Why can a versioned asset be cached for a year?",
+     "Its URL changes whenever the file changes, so the old cached copy is simply never requested again. HTML pointing at it must revalidate quickly instead."
+    ],
+    [
+     "Why does JavaScript hurt INP more than its download size suggests?",
+     "It also costs parse and execution time on the main thread, and while it runs the page cannot respond to taps or clicks."
+    ]
+   ],
+   "interview": [
+    [
+     "A page has a 5-second LCP. Where do you look first?",
+     "Identify the LCP element in Lighthouse, then check its delivery: image size and format, server response time, and render-blocking CSS or scripts delaying it. Fix the biggest factor, re-measure, repeat."
+    ],
+    [
+     "How do you set cache headers for a site with versioned assets?",
+     "Versioned files get a long immutable cache because a change means a new URL. HTML gets no-cache or a short lifetime so browsers quickly discover the new versions."
+    ]
+   ],
+   "cards": [
+    [
+     "LCP",
+     "Largest Contentful Paint: when the main content renders. Good is under 2.5 seconds."
+    ],
+    [
+     "CLS",
+     "Cumulative Layout Shift: how much visible content jumps during load. Good is under 0.1."
+    ],
+    [
+     "INP",
+     "Interaction to Next Paint: how quickly the page visibly responds to a tap or click. Good is under 200ms."
+    ],
+    [
+     "Code splitting",
+     "Dividing JavaScript so each page loads only the code it needs, instead of one bundle for the whole site."
+    ],
+    [
+     "Lazy loading",
+     "Deferring off-screen resources like images until they are near the viewport, saving initial load time."
+    ],
+    [
+     "Immutable cache",
+     "A Cache-Control setting telling browsers a versioned file will never change at that URL, so it can be cached for a year."
+    ]
+   ]
+  },
+  {
+   "id": "D.13",
+   "module": "D",
+   "t": "Sliding Window Pattern",
+   "sub": "Expand, shrink, never look back",
+   "mins": 40,
+   "goal": "By the end you can tell fixed from variable windows, expand and shrink a window by the right rule, and write the sliding-window template from memory in Python.",
+   "body": "<h4>1. What a window is</h4><p>A sliding window is a contiguous subarray or substring defined by two pointers, left and right, that only ever move forward. Instead of recomputing everything for each subarray — the O(n²) brute force — you maintain a running value as elements enter at the right and leave at the left. Each element enters once and leaves once, so the whole scan is O(n). The pattern fits any problem asking for the longest, shortest, or count of contiguous segments satisfying a condition.</p><h4>2. Fixed windows: size k never changes</h4><p>In a fixed window the size is given: maximum sum of any k consecutive elements, or the average of every window of size k. The template is mechanical — build the first window's sum, record the answer, then slide: add the entering element, subtract the leaving one, record again. The classic bug is an off-by-one in the first window, so build it in its own loop before sliding, and test with k equal to the array length and k equal to 1.</p><h4>3. Variable windows: grow until it breaks, then shrink</h4><p>In a variable window the size is the answer, not the input. The right pointer expands one step at a time, adding the new element to the window's state; while the condition is violated — a duplicate character, a sum too large, too many distinct values — the left pointer shrinks, removing elements until the condition holds again. Record the answer at the moment the window is valid: after shrinking for longest problems, and while valid for shortest ones. Stating exactly when you record is half the correctness argument.</p><h4>4. The template and its limits</h4><p>Memorise the skeleton below: expand, update state, shrink while invalid, record. The state is usually a sum, a frequency map, or a count of distinct values. The pattern needs the condition to be monotonic — shrinking must reliably restore validity — which is why it fails on arrays with negative numbers for sum conditions: removing an element might increase the sum, so the window logic breaks and prefix sums with a map take over instead. Recognising that boundary is as important as knowing the template.</p><pre>def longest_at_most_k_distinct(s, k):\n    counts = {}\n    left = best = 0\n    for right, ch in enumerate(s):\n        counts[ch] = counts.get(ch, 0) + 1\n        while len(counts) &gt; k:\n            old = s[left]\n            counts[old] -= 1\n            if counts[old] == 0:\n                del counts[old]\n            left += 1\n        best = max(best, right - left + 1)\n    return best\n\n# Expand right, shrink left while invalid: each index moves once, O(n).</pre>",
+   "task": "Solve Maximum Average Subarray I, Longest Substring Without Repeating Characters, Minimum Size Subarray Sum, Longest Repeating Character Replacement and Sliding Window Maximum. For each, write the window invariant — what the window contains and when you record the answer — as a comment before coding, and log any attempt where the shrink condition was wrong.",
+   "checks": [
+    [
+     "Why is the sliding window O(n) rather than O(n²)?",
+     "Each element enters the window once and leaves once, because both pointers only move forward. Total pointer movement is 2n, not n²."
+    ],
+    [
+     "How do fixed and variable windows differ in structure?",
+     "A fixed window has a given size k and slides by adding one element and removing one. A variable window grows and shrinks by a condition, and its size is part of the answer."
+    ],
+    [
+     "In a longest-window problem, when do you record the answer?",
+     "After shrinking, when the window is valid again — recording while invalid would count windows that break the condition."
+    ],
+    [
+     "Why does the window fail for subarray-sum problems with negative numbers?",
+     "Shrinking no longer reliably restores validity, because removing a negative element increases the sum. The monotonicity the pattern needs is gone; use prefix sums with a map."
+    ]
+   ],
+   "interview": [
+    [
+     "How do you recognise a sliding-window problem?",
+     "It asks for the longest, shortest or count of contiguous subarrays or substrings satisfying a condition, and the condition is monotonic — shrinking the window can only help restore it."
+    ],
+    [
+     "Walk me through Minimum Window Substring at a high level.",
+     "Expand right until the window contains all required characters with enough counts, then shrink left as far as possible while it stays valid, recording the smallest valid window. Two frequency maps track need versus have."
+    ]
+   ],
+   "cards": [
+    [
+     "Sliding window",
+     "Two forward-only pointers defining a contiguous segment, maintained with running state so each element is processed once — O(n)."
+    ],
+    [
+     "Fixed window",
+     "A window of given size k that slides by adding the entering element and removing the leaving one."
+    ],
+    [
+     "Variable window",
+     "A window that expands and shrinks by a validity condition; its size is part of the answer."
+    ],
+    [
+     "Window invariant",
+     "A statement of what the window contains and when the answer is recorded — the key to writing the shrink loop correctly."
+    ],
+    [
+     "Monotonic condition",
+     "A condition where shrinking always moves toward validity; required for the window pattern to work."
+    ],
+    [
+     "Frequency map state",
+     "A count map of what is inside the window, the usual state for distinct-count and anagram window problems."
+    ]
+   ],
+   "striver": {
+    "section": "Sliding Window & Two Pointer Combined Problems",
+    "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+   },
+   "leetcode": [
+    {
+     "title": "Maximum Average Subarray I",
+     "url": "https://leetcode.com/problems/maximum-average-subarray-i/"
+    },
+    {
+     "title": "Longest Substring Without Repeating Characters",
+     "url": "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
+    },
+    {
+     "title": "Minimum Size Subarray Sum",
+     "url": "https://leetcode.com/problems/minimum-size-subarray-sum/"
+    },
+    {
+     "title": "Longest Repeating Character Replacement",
+     "url": "https://leetcode.com/problems/longest-repeating-character-replacement/"
+    },
+    {
+     "title": "Sliding Window Maximum",
+     "url": "https://leetcode.com/problems/sliding-window-maximum/"
+    }
+   ]
+  },
+  {
+   "id": "D.14",
+   "module": "D",
+   "t": "Two Pointers Deep — Fast & Slow, Three Sum",
+   "sub": "Opposite ends, different speeds, triplets without duplicates",
+   "mins": 40,
+   "goal": "By the end you can apply opposite-end pointers on sorted input, detect cycles and middles with fast and slow pointers, and solve 3Sum with sorting plus deduplication.",
+   "body": "<h4>1. Opposite ends: the sorted-array workhorse</h4><p>With sorted input, two pointers at opposite ends turn pair problems linear. If the current pair sums too small, the left pointer must move right — nothing smaller can work with this right element; if too large, the right pointer moves left. Every step eliminates one candidate permanently, which is why the scan is O(n) after the O(n log n) sort. Container With Most Water uses the same skeleton with a different rule: always move the shorter wall, because the taller one cannot increase the area with any partner closer in.</p><h4>2. Fast and slow: cycles and middles</h4><p>Fast and slow pointers move in the same direction at different speeds — usually two steps versus one. On a linked list, if a cycle exists the fast pointer laps the slow one and they meet; if not, fast reaches the end. When fast finishes, slow sits at the middle, which is how you split a list in half without knowing its length. The same idea finds the start of a cycle: after the meeting point, restart one pointer at the head and move both one step at a time — they meet exactly at the cycle entrance, a fact worth proving to yourself once with distances.</p><h4>3. 3Sum: sort, fix one, two-pointer the rest</h4><p>3Sum asks for all unique triplets summing to zero. Sort the array, fix each element in turn as the first of the triplet, then run the opposite-ends two-pointer scan on the remainder looking for pairs that sum to the negation of the fixed element. Sorting does double duty: it enables the two-pointer scan and groups duplicates together so they can be skipped. Total cost is O(n²) — n fixed choices times a linear scan — against O(n³) brute force.</p><h4>4. Deduplication: where 3Sum solutions actually fail</h4><p>The algorithm is easy; the duplicates are the exam. Skip a fixed element if it equals the previous one. After finding a valid triplet, advance both pointers and skip over any values equal to the ones just used. Miss any of the three skip rules and the answer contains duplicate triplets. The discipline generalises: whenever sorting is used to enable a pointer pattern, decide the duplicate policy explicitly before coding, and test on inputs like all zeros, where duplicates dominate.</p><pre>def three_sum(nums):\n    nums.sort()\n    result = []\n    n = len(nums)\n    for i in range(n - 2):\n        if i &gt; 0 and nums[i] == nums[i - 1]:\n            continue\n        left, right = i + 1, n - 1\n        while left &lt; right:\n            total = nums[i] + nums[left] + nums[right]\n            if total == 0:\n                result.append([nums[i], nums[left], nums[right]])\n                left += 1\n                right -= 1\n                while left &lt; right and nums[left] == nums[left - 1]:\n                    left += 1\n                while left &lt; right and nums[right] == nums[right + 1]:\n                    right -= 1\n            elif total &lt; 0:\n                left += 1\n            else:\n                right -= 1\n    return result\n\n# Sort O(n log n), then n linear scans: O(n^2) time, O(1) extra space.</pre>",
+   "task": "Solve Two Sum II - Input Array Is Sorted, Container With Most Water, 3Sum, 3Sum Closest and Linked List Cycle II. For 3Sum, test your solution on all-zeros input and on input with repeated values, and log which duplicate-skip rule you forgot if duplicates appear.",
+   "checks": [
+    [
+     "In Container With Most Water, why always move the shorter wall?",
+     "The area is limited by the shorter wall and the width only shrinks as pointers move in, so keeping the shorter wall can never beat the current area. Moving it is the only chance to improve."
+    ],
+    [
+     "How do fast and slow pointers find the middle of a list in one pass?",
+     "Fast moves two steps per slow step, so when fast reaches the end, slow has covered half the distance and sits at the middle."
+    ],
+    [
+     "After fast and slow meet inside a cycle, how do you find the cycle entrance?",
+     "Restart one pointer at the head and move both one step at a time; they meet at the entrance, because the distance from head to entrance equals the distance from the meeting point to entrance."
+    ],
+    [
+     "What are the three duplicate-skip rules in 3Sum?",
+     "Skip a fixed element equal to the previous one, and after recording a triplet skip repeated values at both the left and right pointers."
+    ]
+   ],
+   "interview": [
+    [
+     "Why does sorting make 3Sum O(n²) instead of O(n³)?",
+     "Fixing one element leaves a pair-sum problem on sorted input, which two pointers solve in O(n). Doing that for each of n elements gives O(n²), and sorting also makes deduplication trivial."
+    ],
+    [
+     "Prove that fast and slow pointers must meet inside a cycle.",
+     "Once both are in the cycle, fast gains one step on slow per iteration, so the gap shrinks by one each time and must reach zero — they cannot jump over each other."
+    ]
+   ],
+   "cards": [
+    [
+     "Opposite ends",
+     "Pointers starting at both ends of a sorted array, moving inward by a comparison rule — the classic pair pattern."
+    ],
+    [
+     "Fast and slow pointers",
+     "Two pointers at different speeds, usually 2:1, used for cycle detection, middles and cycle entrances."
+    ],
+    [
+     "Floyd's cycle detection",
+     "Fast laps slow inside a cycle, proving one exists in O(n) time and O(1) space."
+    ],
+    [
+     "3Sum pattern",
+     "Sort, fix one element, then two-pointer the remainder for pairs summing to its negation — O(n²)."
+    ],
+    [
+     "Deduplication",
+     "Skipping equal values after sorting so each unique answer is produced exactly once."
+    ],
+    [
+     "Cycle entrance",
+     "Found by restarting one pointer at the head after a meeting and advancing both one step at a time."
+    ]
+   ],
+   "striver": {
+    "section": "Sliding Window & Two Pointer Combined Problems",
+    "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+   },
+   "leetcode": [
+    {
+     "title": "Two Sum II - Input Array Is Sorted",
+     "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+    },
+    {
+     "title": "Container With Most Water",
+     "url": "https://leetcode.com/problems/container-with-most-water/"
+    },
+    {
+     "title": "3Sum",
+     "url": "https://leetcode.com/problems/3sum/"
+    },
+    {
+     "title": "3Sum Closest",
+     "url": "https://leetcode.com/problems/3sum-closest/"
+    },
+    {
+     "title": "Linked List Cycle II",
+     "url": "https://leetcode.com/problems/linked-list-cycle-ii/"
+    }
+   ]
+  },
+  {
+   "id": "D.15",
+   "module": "D",
+   "t": "Greedy Algorithms",
+   "sub": "Take the best now — when now is enough",
+   "mins": 35,
+   "goal": "By the end you can recognise when a greedy choice is safe, justify it with an exchange argument, solve interval scheduling, and produce a counterexample when greedy fails.",
+   "body": "<h4>1. The greedy idea: local best, global best</h4><p>A greedy algorithm makes the choice that looks best right now and never revisits it. When it works, it is unbeatable: simple, fast, usually O(n log n) for the sort plus a linear scan. Assign Cookies is the purest form — sort children by greed and cookies by size, then give each child the smallest cookie that satisfies them. The whole risk of greedy is in one question: does the locally best choice ever ruin the global answer? If you cannot argue why it does not, you do not have a solution yet — you have a hope.</p><h4>2. The exchange argument: how greedy is proven</h4><p>The standard proof is the exchange argument. Take an optimal solution that differs from the greedy one at the first choice, and show you can swap the optimal choice for the greedy choice without making the solution worse. If the swap always works, greedy is optimal. For interval scheduling — maximum number of non-overlapping meetings — the greedy choice is the interval that ends earliest: swapping any optimal first interval for the earliest-ending one leaves at least as much room for everything after, so the swap never hurts. That one sentence is the entire proof, and being able to say it is what separates greedy from guessing.</p><h4>3. Interval scheduling and its family</h4><p>Sort intervals by end time, take the first, then repeatedly take the next interval that starts at or after the last taken one ends. The same skeleton solves Minimum Number of Arrows to Burst Balloons (sort by end, shoot at the end, skip everything the arrow bursts) and Non-overlapping Intervals (count removals instead of keeps). Jump Game is greedy in another costume: track the farthest reachable index, and if the current index ever exceeds it, the end is unreachable. In every case the pattern is sort or scan, one pass, one irrevocable choice at a time.</p><h4>4. When greedy fails: the coin-change counterexample</h4><p>Greedy fails when a locally best choice blocks a better global combination. Coin change with denominations 1, 3 and 4 and a target of 6 is the classic trap: greedy takes 4, then needs two 1s — three coins — while 3 plus 3 uses two. Real currency systems are designed so greedy works; arbitrary denominations are not, and the correct tool becomes dynamic programming. The interview habit is to hunt for a small counterexample before committing to greedy: try to break your own algorithm with tiny inputs, and only trust it when you cannot.</p><pre>def max_meetings(intervals):\n    intervals.sort(key=lambda x: x[1])\n    count = 0\n    last_end = float(\"-inf\")\n    for start, end in intervals:\n        if start &gt;= last_end:\n            count += 1\n            last_end = end\n    return count\n\n# Earliest end first: each pick leaves maximal room. O(n log n) for the sort.</pre>",
+   "task": "Solve Assign Cookies, Jump Game, Jump Game II, Non-overlapping Intervals and Gas Station. For each solution, write one sentence in your log giving the exchange argument — why the greedy choice can replace any optimal choice without making things worse. Then construct a coin set where greedy coin change fails and verify it by hand.",
+   "checks": [
+    [
+     "Why does earliest-end-first work for interval scheduling?",
+     "The interval ending earliest leaves at least as much room for all later intervals as any other first choice, so swapping it into an optimal solution never makes that solution worse."
+    ],
+    [
+     "What is an exchange argument?",
+     "A proof that an optimal solution can be transformed into the greedy one, choice by choice, without getting worse — establishing that greedy is optimal."
+    ],
+    [
+     "Give a counterexample where greedy coin change fails.",
+     "Denominations 1, 3, 4 with target 6: greedy uses 4+1+1 (three coins) while 3+3 uses two. Arbitrary coin systems need dynamic programming instead."
+    ],
+    [
+     "How does Jump Game use a greedy invariant?",
+     "It tracks the farthest index reachable so far; if the scan ever reaches an index beyond that, the end is unreachable, otherwise it is reachable."
+    ]
+   ],
+   "interview": [
+    [
+     "How do you decide whether a problem is greedy or DP?",
+     "Try to prove the greedy choice safe with an exchange argument, and hunt for a small counterexample. If a counterexample exists or the proof will not close, the problem needs DP."
+    ],
+    [
+     "Explain why sorting by end time, not start time, is right for interval scheduling.",
+     "Earliest start can be a long interval that blocks many others. Earliest end guarantees the most remaining room, which is exactly what the exchange argument needs."
+    ]
+   ],
+   "cards": [
+    [
+     "Greedy algorithm",
+     "An algorithm that makes the locally best choice at each step and never revisits it — optimal only when the choice is provably safe."
+    ],
+    [
+     "Exchange argument",
+     "The standard greedy proof: swap the greedy choice into an optimal solution without making it worse, repeatedly, until they match."
+    ],
+    [
+     "Interval scheduling",
+     "Selecting the maximum set of non-overlapping intervals by always taking the one that ends earliest."
+    ],
+    [
+     "Greedy choice property",
+     "The property that a locally optimal choice belongs to some globally optimal solution — the precondition for greedy to work."
+    ],
+    [
+     "Counterexample",
+     "A small input that breaks an algorithm; hunting for one is how you test a greedy idea before trusting it."
+    ],
+    [
+     "Farthest-reach invariant",
+     "The Jump Game greedy state: the maximum index reachable so far, updated in one pass."
+    ]
+   ],
+   "striver": {
+    "section": "Greedy Algorithms",
+    "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+   },
+   "leetcode": [
+    {
+     "title": "Assign Cookies",
+     "url": "https://leetcode.com/problems/assign-cookies/"
+    },
+    {
+     "title": "Jump Game",
+     "url": "https://leetcode.com/problems/jump-game/"
+    },
+    {
+     "title": "Jump Game II",
+     "url": "https://leetcode.com/problems/jump-game-ii/"
+    },
+    {
+     "title": "Non-overlapping Intervals",
+     "url": "https://leetcode.com/problems/non-overlapping-intervals/"
+    },
+    {
+     "title": "Gas Station",
+     "url": "https://leetcode.com/problems/gas-station/"
+    }
+   ]
+  },
+  {
+   "id": "D.16",
+   "module": "D",
+   "t": "Bit Manipulation",
+   "sub": "Think in ones and zeros",
+   "mins": 35,
+   "goal": "By the end you can use AND, OR, XOR and shifts fluently, apply the classic tricks — n & (n-1), XOR cancellation, bit counting — and explain why each works.",
+   "body": "<h4>1. The four operations and what they mean</h4><p>Bitwise operators work on each bit independently. AND keeps a 1 only where both bits are 1 — used for masking, as in <code>n &amp; 1</code> to test oddness. OR sets a bit where either is 1 — used to turn flags on. XOR is 1 where the bits differ — the workhorse of this lesson. Shifts move bits left or right: <code>n &lt;&lt; 1</code> doubles n, <code>n &gt;&gt; 1</code> halves it. The mental shift is to stop seeing numbers and start seeing rows of switches: every trick below is just a statement about those switches.</p><h4>2. XOR cancellation: pairs disappear</h4><p>XOR has three properties that do all the work: <code>x ^ x = 0</code>, <code>x ^ 0 = x</code>, and it is commutative and associative, so order does not matter. XOR every element of an array where all values appear twice except one, and the pairs cancel to zero, leaving the single element — Single Number in one pass, O(n) time, O(1) space. The same idea finds the missing number in 0..n by XORing the range with the array. Whenever a problem says everything appears twice except, think XOR before reaching for a hash map.</p><h4>3. n & (n-1): erasing the lowest set bit</h4><p>Subtracting 1 from n flips its lowest set bit to 0 and every bit below it to 1. ANDing n with n−1 therefore clears exactly the lowest set bit and leaves the rest untouched. That gives the fastest way to count set bits — loop while n is non-zero, clear one bit per iteration, count iterations — which runs in time proportional to the number of set bits, not the number of bits. It also tests powers of two in one line: a positive n is a power of two exactly when <code>n &amp; (n-1)</code> is zero, because powers of two have a single set bit.</p><h4>4. Counting bits and building intuition</h4><p>Counting Bits asks for the popcount of every number up to n, and the DP relation falls out of the bit view: <code>bits[i] = bits[i &gt;&gt; 1] + (i &amp; 1)</code> — the count for i is the count for i halved, plus its lowest bit. To build fluency, practise the small moves until they are reflexes: test bit k with <code>n &amp; (1 &lt;&lt; k)</code>, set it with OR, clear it with AND against the complement, toggle it with XOR. Interview bit questions are rarely deep; they reward exactly this fluency plus the two big tricks above.</p><pre>def single_number(nums):\n    result = 0\n    for x in nums:\n        result ^= x\n    return result\n\ndef count_bits(n):\n    count = 0\n    while n:\n        n &amp;= n - 1\n        count += 1\n    return count\n\n# XOR cancels pairs; n &amp; (n-1) clears the lowest set bit each round.</pre>",
+   "task": "Solve Single Number, Single Number II, Number of 1 Bits, Counting Bits and Missing Number. For each, write the bit-level reason the trick works in your log — not just the code. Then, on paper, compute n & (n-1) for n = 12 (1100) and n = 10 (1010) and confirm which bit disappears.",
+   "checks": [
+    [
+     "Why does XORing the whole array find the single unpaired element?",
+     "Pairs cancel because x ^ x = 0, and x ^ 0 = x, so after all cancellations only the unpaired element remains. Order does not matter because XOR is commutative and associative."
+    ],
+    [
+     "What does n & (n-1) do, exactly?",
+     "It clears the lowest set bit of n and leaves all higher bits unchanged, because subtracting 1 flips that bit off and turns the bits below it on."
+    ],
+    [
+     "How do you test whether n is a power of two in one expression?",
+     "n &gt; 0 and n &amp; (n - 1) == 0: a power of two has exactly one set bit, and clearing it leaves zero."
+    ],
+    [
+     "What is the DP relation for counting bits up to n?",
+     "bits[i] = bits[i &gt;&gt; 1] + (i &amp; 1): the popcount of i is the popcount of i halved plus its lowest bit."
+    ]
+   ],
+   "interview": [
+    [
+     "Find the element that appears once when all others appear twice, in O(1) space.",
+     "XOR all elements. Pairs cancel to zero and the single element survives, giving O(n) time and O(1) space."
+    ],
+    [
+     "How do you count set bits faster than checking all 32 positions?",
+     "Repeatedly clear the lowest set bit with n &amp;= n - 1 and count the iterations. The loop runs once per set bit, not once per bit position."
+    ]
+   ],
+   "cards": [
+    [
+     "XOR",
+     "Bitwise exclusive-or: 1 where bits differ. x ^ x = 0 and x ^ 0 = x, so pairs cancel — the basis of Single Number."
+    ],
+    [
+     "Mask",
+     "A bit pattern used with AND to isolate specific bits, like n &amp; 1 to test oddness."
+    ],
+    [
+     "n & (n-1)",
+     "Clears the lowest set bit of n; the engine behind fast bit counting and the power-of-two test."
+    ],
+    [
+     "Popcount",
+     "The number of set bits in a number, computed by clearing bits one at a time or with a DP relation."
+    ],
+    [
+     "Shift",
+     "Moving bits left or right: left shift by 1 doubles, right shift by 1 halves (for non-negative numbers)."
+    ],
+    [
+     "Set / clear / toggle bit k",
+     "OR with (1 &lt;&lt; k) sets it, AND with the complement clears it, XOR with (1 &lt;&lt; k) toggles it."
+    ]
+   ],
+   "striver": {
+    "section": "Bit Manipulation",
+    "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+   },
+   "leetcode": [
+    {
+     "title": "Single Number",
+     "url": "https://leetcode.com/problems/single-number/"
+    },
+    {
+     "title": "Single Number II",
+     "url": "https://leetcode.com/problems/single-number-ii/"
+    },
+    {
+     "title": "Number of 1 Bits",
+     "url": "https://leetcode.com/problems/number-of-1-bits/"
+    },
+    {
+     "title": "Counting Bits",
+     "url": "https://leetcode.com/problems/counting-bits/"
+    },
+    {
+     "title": "Missing Number",
+     "url": "https://leetcode.com/problems/missing-number/"
+    }
+   ]
+  },
+  {
+   "id": "D.17",
+   "module": "D",
+   "t": "Tries & Prefix Trees",
+   "sub": "A tree where the path is the word",
+   "mins": 35,
+   "goal": "By the end you can implement a trie with insert, search and prefix queries, explain how autocomplete falls out of the structure, and compare its costs with a hash map.",
+   "body": "<h4>1. The node structure: characters on edges, words on paths</h4><p>A trie (pronounced try, from retrieval) stores strings as paths through a tree. Each node holds a map from character to child node, plus a flag marking whether a complete word ends here. The root represents the empty prefix; following edges spells a string one character at a time. Words sharing a prefix share the path for that prefix, so storing cat, car and card costs one shared ca branch, not three separate strings. That sharing is the entire point of the structure.</p><h4>2. Insert, search and prefix: three walks</h4><p>All three operations are the same walk with different endings. Insert follows or creates a node per character, then sets the end-of-word flag. Search follows existing nodes and checks the flag at the end — a path that exists without the flag is a prefix, not a word. Prefix search (startsWith) follows the nodes and returns true if the path exists at all. Each costs O(L) for a word of length L, independent of how many words the trie holds — the property that makes tries shine as dictionaries grow.</p><h4>3. Autocomplete: the killer application</h4><p>Autocomplete is a prefix walk followed by a subtree harvest: walk to the node for the typed prefix, then depth-first collect every word in its subtree, stopping at the end-of-word flags. Search engines, IDEs and phone keyboards all run this exact algorithm. The same structure powers spell-checking, IP routing tables and word-game solvers: Word Search II builds a trie of the dictionary words and prunes the board search the moment the current path is not a prefix of any word, which is what makes it tractable.</p><h4>4. Trie versus hash map: the honest trade-off</h4><p>A hash set answers exact membership in average O(L) too — hashing the whole string — and uses less memory per word. The trie wins wherever prefixes matter: autocomplete, prefix counts, longest-common-prefix queries, and sorted iteration, none of which a hash map can do without scanning everything. The trie loses on memory, because each node carries a child map, and on cache behaviour. The interview answer names the question type: exact lookup only, use a hash set; anything about prefixes, use a trie.</p><pre>class TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n\nclass Trie:\n    def __init__(self):\n        self.root = TrieNode()\n\n    def insert(self, word):\n        node = self.root\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = TrieNode()\n            node = node.children[ch]\n        node.is_end = True\n\n    def _walk(self, prefix):\n        node = self.root\n        for ch in prefix:\n            if ch not in node.children:\n                return None\n            node = node.children[ch]\n        return node\n\n    def search(self, word):\n        node = self._walk(word)\n        return node is not None and node.is_end\n\n    def starts_with(self, prefix):\n        return self._walk(prefix) is not None</pre>",
+   "task": "Solve Implement Trie (Prefix Tree), Design Add and Search Words Data Structure, Replace Words, Longest Word in Dictionary and Word Search II. Implement the trie from scratch for the first one without looking at the lesson code, then draw the trie for the words cat, car, card and dog on paper and mark the end-of-word flags.",
+   "checks": [
+    [
+     "Why does search need the end-of-word flag if the path exists?",
+     "A path can exist as a prefix of longer words without being a word itself. The flag distinguishes a stored word from a mere prefix."
+    ],
+    [
+     "What is the time complexity of trie search, and what does it depend on?",
+     "O(L) where L is the length of the word — it depends only on the word, not on how many words the trie contains."
+    ],
+    [
+     "How does autocomplete work on a trie?",
+     "Walk to the node for the typed prefix, then depth-first collect every complete word in that subtree, using the end-of-word flags."
+    ],
+    [
+     "When is a hash set better than a trie?",
+     "For exact membership only: it uses less memory and hashes the whole string in one step. A trie earns its cost when prefixes, ordering or prefix counts matter."
+    ]
+   ],
+   "interview": [
+    [
+     "Design autocomplete for a search box. What structure and why?",
+     "A trie: insert all terms, then for each typed prefix walk to its node and collect the words in its subtree. Lookup cost depends on prefix length, not dictionary size."
+    ],
+    [
+     "How does a trie make Word Search II tractable?",
+     "Build a trie of all dictionary words, then DFS the board following trie edges — any path that is not a prefix of some word is pruned immediately instead of explored."
+    ]
+   ],
+   "cards": [
+    [
+     "Trie",
+     "A tree storing strings as character paths, where words sharing a prefix share nodes — built for prefix queries."
+    ],
+    [
+     "Trie node",
+     "A node holding a map from character to child node plus an end-of-word flag."
+    ],
+    [
+     "End-of-word flag",
+     "Marks that a complete stored word ends at this node, distinguishing words from mere prefixes."
+    ],
+    [
+     "Prefix query",
+     "Checking whether any stored word starts with a given string — a single walk down the trie."
+    ],
+    [
+     "Autocomplete",
+     "Walking to a prefix node and collecting all complete words in its subtree."
+    ],
+    [
+     "Trie vs hash set",
+     "Hash sets win exact lookup on memory; tries win anything involving prefixes, ordering or prefix counts."
+    ]
+   ],
+   "striver": {
+    "section": "Tries",
+    "url": "https://takeuforward.org/strivers-a2z-dsa-course/strivers-a2z-dsa-course-sheet-2/"
+   },
+   "leetcode": [
+    {
+     "title": "Implement Trie (Prefix Tree)",
+     "url": "https://leetcode.com/problems/implement-trie-prefix-tree/"
+    },
+    {
+     "title": "Design Add and Search Words Data Structure",
+     "url": "https://leetcode.com/problems/design-add-and-search-words-data-structure/"
+    },
+    {
+     "title": "Replace Words",
+     "url": "https://leetcode.com/problems/replace-words/"
+    },
+    {
+     "title": "Longest Word in Dictionary",
+     "url": "https://leetcode.com/problems/longest-word-in-dictionary/"
+    },
+    {
+     "title": "Word Search II",
+     "url": "https://leetcode.com/problems/word-search-ii/"
+    }
+   ]
+  },
+  {
+   "id": "0.11",
+   "module": "M0",
+   "t": "CSS Grid & Flexbox Deep — Layout Like a Professional",
+   "sub": "Two layout systems, one decision",
+   "mins": 35,
+   "goal": "By the end you can build two-dimensional layouts with grid-template-areas and fr units, make grids responsive with auto-fit and minmax, align precisely with Flexbox, and choose between Grid and Flexbox with reasons.",
+   "body": "<h4>1. Grid areas: draw the layout in text</h4><p><code>grid-template-areas</code> lets you sketch a layout as ASCII art: each quoted string is a row, each name is a region, and repeating a name spans it across cells. Assign children with <code>grid-area</code> and the page skeleton — header, sidebar, main, footer — is readable at a glance. Rearranging for mobile becomes rewriting the sketch inside a media query instead of touching the HTML. It is the most maintainable way to build app shells and dashboards, where the layout itself is the design.</p><h4>2. fr units, auto-fit and minmax: grids that size themselves</h4><p>The <code>fr</code> unit divides leftover space proportionally: <code>1fr 2fr</code> gives the second column twice the first, after fixed sizes and gaps are subtracted. Combined with <code>repeat(auto-fit, minmax(240px, 1fr))</code>, a grid fits as many columns of at least 240px as the container allows and stretches them to fill — a fully responsive card grid with zero media queries. Skillzify's lesson cards use exactly this thinking: equal-height rows where every card in a row matches, whatever the screen width.</p><h4>3. Flexbox alignment, properly understood</h4><p>Flexbox confusion almost always comes from forgetting that the axes swap with <code>flex-direction</code>. In a row, <code>justify-content</code> works horizontally and <code>align-items</code> vertically; in a column they trade places. <code>flex-grow</code> distributes leftover space to items that ask for it, <code>flex-shrink</code> decides who gives space back, and <code>flex-basis</code> sets the starting size. The professional habit: use <code>gap</code> for spacing instead of margins on children, and let <code>margin-left: auto</code> push one item to the far end of a nav bar — the two tricks that replace most alignment hacks.</p><h4>4. Grid or Flexbox: the decision rule</h4><p>Grid is for layout in two dimensions where rows and columns must align with each other: page skeletons, card grids, dashboards. Flexbox is for one dimension where items flow and wrap: nav bars, button rows, chip lists, centring a single element. The test is whether the items need to line up across rows. If a card in row two must align with the card above it, that is Grid; if items can be different widths and simply flow, that is Flexbox. Real pages use both — Grid for the page, Flexbox inside each region — and knowing which layer you are in is most of professional layout.</p><pre>.layout {\n  display: grid;\n  grid-template-columns: 240px 1fr;\n  grid-template-areas:\n    \"nav nav\"\n    \"side main\"\n    \"side foot\";\n  gap: 16px;\n}\n.nav { grid-area: nav; }\n.side { grid-area: side; }\n.main { grid-area: main; }\n.cards {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: 14px;\n}</pre>",
+   "task": "Rebuild a page layout twice: first with grid-template-areas for a nav, sidebar, main and footer skeleton that rearranges to a single column under 700px by rewriting only the areas. Then build a card grid with repeat(auto-fit, minmax(240px, 1fr)) and resize the browser to watch columns appear and disappear with no media queries at all.",
+   "checks": [
+    [
+     "What does 1fr 2fr mean in grid-template-columns?",
+     "After fixed sizes and gaps are subtracted, the leftover space is split into three parts: the first column gets one part, the second gets two."
+    ],
+    [
+     "How does repeat(auto-fit, minmax(240px, 1fr)) make a grid responsive without media queries?",
+     "The browser fits as many columns of at least 240px as the container allows and stretches them equally to fill the row, adding or removing columns as the width changes."
+    ],
+    [
+     "Why do justify-content and align-items seem to swap in a column flex container?",
+     "They are defined relative to the main and cross axes, and flex-direction: column makes the main axis vertical — so justify works vertically and align horizontally."
+    ],
+    [
+     "When must a layout be Grid rather than Flexbox?",
+     "When items must align across both rows and columns — page skeletons and card grids. Flexbox flows items in one dimension without cross-row alignment."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain the difference between Grid and Flexbox in one minute.",
+     "Grid lays out in two dimensions with rows and columns that align; Flexbox lays out in one dimension along a single axis. Use Grid for page structure and card grids, Flexbox for nav bars, rows and centring."
+    ],
+    [
+     "How do you make equal-height cards in a row?",
+     "With Grid's default stretch alignment and grid-auto-rows: 1fr, every card fills its row height; inside the card, a flex column with the footer pushed down by margin-top: auto keeps actions aligned."
+    ]
+   ],
+   "cards": [
+    [
+     "grid-template-areas",
+     "A way to define a grid layout as named text rows, so the page skeleton reads like a sketch and rearranges by rewriting the sketch."
+    ],
+    [
+     "fr unit",
+     "A fraction of the leftover space in a grid container, after fixed tracks and gaps are subtracted."
+    ],
+    [
+     "auto-fit + minmax",
+     "A responsive grid recipe: fit as many columns of at least a minimum size as possible, stretching them to fill."
+    ],
+    [
+     "Main axis",
+     "The direction Flexbox lays items out — horizontal for row, vertical for column; justify-content works along it."
+    ],
+    [
+     "flex-grow / shrink / basis",
+     "How a flex item claims leftover space, gives space back under pressure, and its starting size before either happens."
+    ],
+    [
+     "Grid vs Flexbox rule",
+     "Two dimensions with cross-row alignment: Grid. One dimension with flowing items: Flexbox."
+    ]
+   ]
+  },
+  {
+   "id": "1.10",
+   "module": "M1",
+   "t": "DOM Deep — Building & Updating UI Without a Framework",
+   "sub": "The manual rendering React automates",
+   "mins": 35,
+   "goal": "By the end you can build elements with createElement and templates, attach one delegated listener for a whole list, re-render efficiently without wiping state, and carry data on elements with dataset.",
+   "body": "<h4>1. Building elements: createElement versus innerHTML</h4><p>There are two ways to put markup on a page. <code>innerHTML</code> parses a string of HTML — fast to write, but dangerous with untrusted data because injected markup runs as real HTML, which is the classic cross-site scripting hole. <code>createElement</code> builds nodes one by one and sets text with <code>textContent</code>, which can never be interpreted as markup. The professional rule: use template strings with innerHTML only for markup you fully control, and textContent for anything a user typed. Skillzify renders lesson titles and user content through safe paths for exactly this reason.</p><h4>2. Templates and fragments: build once, insert once</h4><p>Appending elements to the live DOM one at a time forces the browser to recalculate layout repeatedly. A <code>DocumentFragment</code> is an off-screen container: build the whole list inside it, then append the fragment once, and the browser does a single layout pass. The <code>template</code> element goes further — its content is inert markup you clone per item with <code>cloneNode(true)</code>, fill in, and append. Together they are how vanilla code renders a 250-lesson list smoothly without a framework.</p><h4>3. Event delegation: one listener, whole list</h4><p>Attaching a click handler to every card in a list wastes memory and breaks the moment items are re-rendered. Delegation attaches one listener to the parent instead: clicks bubble up, and <code>event.target.closest(\"[data-lesson-id]\")</code> finds which card was clicked. Items added later work automatically, because the listener lives on the parent that never changes. This is the pattern Skillzify's pages use for lesson lists, exercise cards and reference entries — one listener per list, whatever its size.</p><h4>4. Re-rendering without destroying state</h4><p>The naive re-render — wipe the container and rebuild everything — loses scroll position, focus, and any text typed into inputs. Efficient vanilla rendering updates surgically: change only the text or class that changed, reuse existing nodes keyed by id, and rebuild only the section whose data actually changed. <code>dataset</code> supports this by carrying ids and state on the elements themselves, readable in handlers without a parallel lookup table. Mastering this is understanding, by hand, the exact problem React's virtual DOM automates — which is why it makes framework behaviour predictable later.</p><pre>const list = document.querySelector(\"#lessons\");\nconst frag = document.createDocumentFragment();\n\nfor (const lesson of lessons) {\n  const card = document.createElement(\"article\");\n  card.className = \"card\";\n  card.dataset.lessonId = lesson.id;\n  const title = document.createElement(\"h3\");\n  title.textContent = lesson.title;\n  card.appendChild(title);\n  frag.appendChild(card);\n}\nlist.appendChild(frag);\n\nlist.addEventListener(\"click\", (e) =&gt; {\n  const card = e.target.closest(\"[data-lesson-id]\");\n  if (card) openLesson(card.dataset.lessonId);\n});</pre>",
+   "task": "Build a lesson list page in vanilla JavaScript: render 20 lesson cards from an array using a DocumentFragment and textContent, handle clicks with one delegated listener on the parent that reads data-lesson-id, and add a button that updates only the XP text of one card without re-rendering the list. Verify in DevTools that only one listener exists on the parent.",
+   "checks": [
+    [
+     "Why is textContent safer than innerHTML for user data?",
+     "textContent inserts the value as pure text that is never parsed as markup, so injected tags cannot execute. innerHTML parses the string as HTML, which is the XSS hole."
+    ],
+    [
+     "What does a DocumentFragment buy you?",
+     "You build many nodes off-screen and insert them in one append, so the browser runs one layout pass instead of one per element."
+    ],
+    [
+     "Why does delegation keep working for items added later?",
+     "The listener is on the parent, and clicks bubble up from any child — including children created after the listener was attached."
+    ],
+    [
+     "What does a full wipe-and-rebuild re-render destroy?",
+     "Scroll position, focus, text typed into inputs, and any transient element state — which is why surgical updates are preferred."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain event delegation and when you would use it.",
+     "Attach one listener to a parent and use event bubbling plus closest() to identify the clicked child. Use it for lists and grids: fewer listeners, and dynamically added items work without rebinding."
+    ],
+    [
+     "How do you render a large list efficiently without a framework?",
+     "Build nodes in a DocumentFragment with createElement and textContent, insert once, delegate events on the parent, and update surgically by id instead of rebuilding everything."
+    ]
+   ],
+   "cards": [
+    [
+     "createElement",
+     "Building a DOM node programmatically, with textContent for safe text — the XSS-proof way to render user data."
+    ],
+    [
+     "DocumentFragment",
+     "An off-screen container for building many nodes before a single insertion, avoiding repeated layout work."
+    ],
+    [
+     "template element",
+     "Inert markup in the page that you clone per item, fill in, and append — a reusable node blueprint."
+    ],
+    [
+     "Event delegation",
+     "One listener on a parent handling events from all children via bubbling and closest()."
+    ],
+    [
+     "dataset",
+     "The data-* attributes on an element, readable and writable in JavaScript — a place to carry ids and state on the node itself."
+    ],
+    [
+     "Surgical update",
+     "Changing only the nodes whose data changed, preserving scroll, focus and input state instead of rebuilding the whole list."
+    ]
+   ]
+  },
+  {
+   "id": "2.11",
+   "module": "M2",
+   "t": "Python OOP Deep — Dunder Methods, Dataclasses & Protocols",
+   "sub": "Classes that behave like built-ins",
+   "mins": 35,
+   "goal": "By the end you can implement dunder methods like __repr__, __eq__ and __len__, replace boilerplate classes with @dataclass, type duck-typed interfaces with typing.Protocol, and expose controlled attributes with properties.",
+   "body": "<h4>1. Dunder methods: the protocol behind the syntax</h4><p>Python's operators are method calls in disguise. <code>len(obj)</code> calls <code>__len__</code>, <code>obj == other</code> calls <code>__eq__</code>, printing calls <code>__repr__</code> or <code>__str__</code>, and <code>for x in obj</code> calls <code>__iter__</code>. Implementing these double-underscore methods makes your classes behave like built-in types everywhere — in f-strings, in sets, in sorted(). Two rules matter most: <code>__repr__</code> should be an unambiguous developer representation (ideally valid Python that recreates the object), and defining <code>__eq__</code> without <code>__hash__</code> makes instances unhashable, which surprises everyone exactly once.</p><h4>2. Dataclasses: kill the boilerplate</h4><p>Most classes exist to hold data, and hand-writing <code>__init__</code>, <code>__repr__</code> and <code>__eq__</code> for each is pure boilerplate. The <code>@dataclass</code> decorator generates all three from annotated fields, with options like <code>frozen=True</code> for immutability (which also restores hashability) and <code>field(default_factory=list)</code> for mutable defaults — never use a bare list as a default, or every instance shares it. A dataclass is still a normal class: add methods freely, and reach for <code>__post_init__</code> when fields need validation or derivation at construction.</p><h4>3. Protocols: duck typing, checked</h4><p>Python has always allowed duck typing: if it has the right methods, it fits, whatever its class. <code>typing.Protocol</code> makes that contract explicit and checkable: declare a protocol with the methods you need, and any class with those methods satisfies it — no inheritance required. A type checker then verifies callers only pass objects with the right shape. This is structural typing, and it is how you write flexible code (anything drawable, anything with a read method) without a tangle of abstract base classes.</p><h4>4. Properties: attributes with a gatekeeper</h4><p>A property looks like a plain attribute from outside but runs code on access: the getter computes or validates, the setter rejects bad values. The pattern is a private <code>_xp</code> field behind a public <code>xp</code> property that refuses negatives. Properties let you start with a plain attribute and add validation later without changing any calling code — the Pythonic answer to the getter/setter ceremony other languages force from day one. Use them when an invariant must hold; do not wrap every attribute by reflex.</p><pre>from dataclasses import dataclass, field\n\n@dataclass(frozen=True)\nclass Lesson:\n    id: str\n    title: str\n    xp: int = 20\n    tags: tuple = ()\n\nclass Progress:\n    def __init__(self):\n        self._xp = 0\n\n    @property\n    def xp(self):\n        return self._xp\n\n    @xp.setter\n    def xp(self, value):\n        if value &lt; 0:\n            raise ValueError(\"xp cannot be negative\")\n        self._xp = value\n\n    def __repr__(self):\n        return f\"Progress(xp={self._xp})\"</pre>",
+   "task": "Write a Lesson dataclass with frozen=True and confirm two equal lessons compare equal and can live in a set. Then write a Progress class with an xp property that rejects negatives and a __repr__, and try assigning a negative value to see the error. Finish by defining a small Protocol for anything with a render method and passing two unrelated classes through it.",
+   "checks": [
+    [
+     "What happens when you define __eq__ but not __hash__?",
+     "Instances become unhashable, so they cannot be used in sets or as dict keys. Defining __eq__ sets __hash__ to None unless you also define it (or use a frozen dataclass)."
+    ],
+    [
+     "Why must mutable dataclass defaults use default_factory?",
+     "A bare list default would be shared by every instance, so appending to one object's list would change them all. default_factory creates a fresh value per instance."
+    ],
+    [
+     "How does a Protocol differ from an abstract base class?",
+     "A protocol is structural: any class with the right methods satisfies it without inheriting anything. An ABC requires explicit subclassing. Protocols formalise duck typing."
+    ],
+    [
+     "When is a property worth adding over a plain attribute?",
+     "When an invariant must hold — validation, clamping, or a computed value — or when you need to add that logic later without changing callers."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain __repr__ versus __str__.",
+     "__repr__ is the unambiguous developer representation, ideally recreating the object; __str__ is the friendly user-facing text. If only one is defined, define __repr__ — Python falls back to it for str."
+    ],
+    [
+     "Why choose a dataclass over a hand-written class?",
+     "It generates __init__, __repr__ and __eq__ from the field declarations, removing boilerplate and its bugs, with options for immutability and ordering when needed."
+    ]
+   ],
+   "cards": [
+    [
+     "Dunder method",
+     "A double-underscore method like __len__ or __eq__ that Python calls for operators and built-ins, letting classes behave like built-in types."
+    ],
+    [
+     "__repr__",
+     "The unambiguous developer representation of an object, ideally valid Python that recreates it."
+    ],
+    [
+     "Dataclass",
+     "A class decorated with @dataclass that generates __init__, __repr__ and __eq__ from annotated fields."
+    ],
+    [
+     "frozen dataclass",
+     "An immutable dataclass whose instances are hashable and cannot be modified after creation."
+    ],
+    [
+     "Protocol",
+     "A structural interface from typing: any class with the declared methods satisfies it, with no inheritance required."
+    ],
+    [
+     "Property",
+     "An attribute that runs getter and setter code on access, enforcing invariants behind plain attribute syntax."
+    ]
+   ]
+  },
+  {
+   "id": "3.10",
+   "module": "M3",
+   "t": "Node Testing Deep — node:test, Supertest & Coverage",
+   "sub": "Test the API without a browser",
+   "mins": 35,
+   "goal": "By the end you can write tests with the built-in node:test runner, exercise Express routes with Supertest, mock external calls, and generate and read a coverage report.",
+   "body": "<h4>1. node:test: the runner you already have</h4><p>Since Node 18, a test runner ships with Node itself: <code>node --test</code> discovers files matching the test patterns, runs them, and reports pass or fail with no dependencies to install. Tests are plain functions using <code>test()</code> and <code>describe()</code> from <code>node:test</code>, with assertions from <code>node:assert/strict</code>. For a small service this is often all you need — no framework weight, no version churn — and it runs identically in CI because it is part of the runtime you already deploy.</p><h4>2. Supertest: HTTP calls without a network</h4><p>Testing an Express route by starting a real server and curling it is slow and flaky. Supertest instead hands your app object a fake HTTP layer: you write <code>request(app).post(\"/api/tutor\").send({...})</code> and assert on the status and JSON body, all in-process. The app never binds a port, tests run in parallel safely, and a failure shows the exact response. The one structural requirement: export the app separately from the code that listens, so tests can import the app without starting a server — a refactor Skillzify's server would need before its first route test.</p><h4>3. Mocking the outside world</h4><p>A route that calls Gemini must not call the real Gemini in tests: it is slow, costs quota, and returns different text every time. Mock at the boundary — replace the API client with a stub that returns a fixed reply, and assert your route handles success, empty input and upstream failure. <code>node:test</code> includes <code>mock.fn()</code> for this. The discipline from unit testing applies unchanged: mock external services, never the code under test, and keep one clearly-labelled live smoke test separate if you need end-to-end confidence.</p><h4>4. Coverage: finding the untested branches</h4><p>Node's built-in coverage (<code>node --experimental-test-coverage</code>, or c8 for richer reports) shows which lines and branches your tests executed. Read it as a map of blind spots: the error branch of the rate limiter, the 400 path of a validator — the code most likely to break in production and least likely to be exercised by hand. As with any coverage tool, the number itself is not the goal; the goal is that every risky behaviour has a test that would fail if it broke.</p><pre>import { test } from \"node:test\";\nimport assert from \"node:assert/strict\";\nimport request from \"supertest\";\nimport app from \"../app.js\";\n\ntest(\"POST /api/tutor rejects an empty question\", async () =&gt; {\n  const res = await request(app)\n    .post(\"/api/tutor\")\n    .send({ question: \"\" });\n  assert.equal(res.status, 400);\n});\n\ntest(\"POST /api/tutor answers a valid question\", async () =&gt; {\n  const res = await request(app)\n    .post(\"/api/tutor\")\n    .send({ question: \"What is a closure?\" });\n  assert.equal(res.status, 200);\n  assert.ok(res.body.reply.length &gt; 0);\n});</pre>",
+   "task": "Take a small Express app, refactor it so the app is exported separately from the listen call, and write Supertest tests for one route: the success case, the empty-input 400 case, and one mocked upstream-failure case. Run them with node --test, then run with coverage and identify one untested branch worth covering.",
+   "checks": [
+    [
+     "Why must the app be exported separately from listen for Supertest?",
+     "Supertest imports the app and drives it in-process without binding a port. If importing the file also starts a server, tests collide on ports and cannot run in parallel."
+    ],
+    [
+     "What does node:test give you that needs no installation?",
+     "A built-in runner with test(), describe() and mocking, discovered by node --test — part of the runtime since Node 18, so CI needs no extra dependencies."
+    ],
+    [
+     "Why mock the Gemini call in route tests?",
+     "The real call is slow, costs quota and returns varying text, making tests flaky. A stub returns a fixed reply so the test checks your route's behaviour deterministically."
+    ],
+    [
+     "How should a coverage report be read?",
+     "As a map of blind spots — untested error branches and edge cases — not as a score to maximise. The goal is tests that fail when risky behaviour breaks."
+    ]
+   ],
+   "interview": [
+    [
+     "How do you test an Express API without starting a server?",
+     "Export the app separately from listen, then use Supertest to send in-process requests and assert on status and body. No ports, no network, parallel-safe."
+    ],
+    [
+     "node:test versus Jest or Vitest — how do you choose?",
+     "node:test is zero-dependency and part of the runtime, ideal for backend services. Jest and Vitest add richer matchers, snapshots and frontend tooling, worth it when the project needs them."
+    ]
+   ],
+   "cards": [
+    [
+     "node:test",
+     "Node's built-in test runner (since Node 18): test(), describe() and mocking with no dependencies, run via node --test."
+    ],
+    [
+     "Supertest",
+     "A library that drives an Express app in-process with fake HTTP requests, asserting on status and body without a real server."
+    ],
+    [
+     "App/listen split",
+     "Exporting the Express app separately from the listen call so tests can import it without binding a port."
+    ],
+    [
+     "Stub",
+     "A fake implementation of an external dependency returning fixed results, used to keep tests deterministic."
+    ],
+    [
+     "mock.fn()",
+     "node:test's built-in mock function for replacing dependencies and asserting how they were called."
+    ],
+    [
+     "Coverage report",
+     "A listing of which lines and branches tests executed — used to find untested risky code, not as a target."
+    ]
+   ]
+  },
+  {
+   "id": "5.11",
+   "module": "M5",
+   "t": "AI Agents & Tool Use — Beyond Single Prompts",
+   "sub": "From answering to doing",
+   "mins": 40,
+   "goal": "By the end you can explain the agent loop of plan, act and observe, define tool schemas an AI model can call, apply guardrails to agent behaviour, and design for multi-step reliability.",
+   "body": "<h4>1. From single prompt to agent loop</h4><p>A single prompt is one round trip: question in, answer out. An agent is a loop: the model plans a next step, acts by calling a tool, observes the result, and repeats until the goal is met or a limit stops it. That loop is what lets a model do multi-step work — search, read, compute, write — instead of only describing it. Skillzify's AI modes are single-shot by design: one question, one Gemini call, one reply. An agent version of its tutor could look up the learner's progress, fetch the relevant lesson, run their code, and then answer with all of that in hand.</p><h4>2. Tools: giving the model hands</h4><p>A tool is a function the model may request, described by a schema: a name, a plain-language description of when to use it, and typed parameters. The model never executes anything itself — it emits a structured request, your code validates and runs the function, and the result goes back into the conversation as an observation. Good tool design is narrow and boring: one clear job per tool, strict parameter types, and errors returned as readable text the model can react to, not stack traces.</p><h4>3. Guardrails: the loop needs a fence</h4><p>An agent that can act can also act wrongly, repeatedly. Guardrails bound the damage: a maximum number of steps and tokens per run, an allowlist of tools per task, human approval before irreversible actions like sending messages or spending money, and validation of every tool argument server-side — the model's output is untrusted input, exactly like a form submission. Sandboxing matters too: code execution happens in an isolated environment with no access to secrets, the same discipline Skillzify applies to running learner code.</p><h4>4. Multi-step reliability: errors compound</h4><p>Each step in a loop can fail, and failures compound: a 95 percent reliable step repeated 20 times succeeds only about a third of the time. Reliable agents are designed for this — small verifiable steps, checkpoints where state is saved, retries with the error fed back to the model, and a final verification step that checks the goal was actually met. Keep the loop observable: log every plan, tool call and observation, because when an agent goes wrong, the trace is the only way to see where. The honest summary: agents trade the predictability of one prompt for capability across many steps, and the engineering is all in the guardrails.</p><pre>const tools = [{\n  name: \"get_progress\",\n  description: \"Get a learner's XP and completed lessons by user id.\",\n  parameters: {\n    type: \"object\",\n    properties: { userId: { type: \"string\" } },\n    required: [\"userId\"]\n  }\n}];\n\nasync function runAgent(goal, maxSteps = 8) {\n  const history = [{ role: \"user\", content: goal }];\n  for (let step = 0; step &lt; maxSteps; step++) {\n    const reply = await callModel(history, tools);\n    if (!reply.toolCall) return reply.text;\n    const result = await executeTool(reply.toolCall);\n    history.push({ role: \"tool\", content: String(result) });\n  }\n  return \"Stopped: step limit reached.\";\n}</pre>",
+   "task": "Design an agent version of one Skillzify AI mode on paper: list the tools it would need with their parameter schemas, draw the plan-act-observe loop for a sample request, and write down three guardrails — a step limit, one action needing human approval, and one argument your server must validate. Then trace what happens when the second tool call fails.",
+   "checks": [
+    [
+     "What are the three phases of the agent loop?",
+     "Plan: the model decides the next step. Act: it requests a tool call, which your code executes. Observe: the result returns to the model, which plans again until the goal is met or a limit stops it."
+    ],
+    [
+     "Who actually executes a tool the model requests?",
+     "Your code does. The model only emits a structured request; your server validates the arguments, runs the function, and returns the result as an observation."
+    ],
+    [
+     "Why does reliability drop so fast in long agent loops?",
+     "Step failures compound multiplicatively: even at 95 percent per step, a 20-step run succeeds only about a third of the time. Small verifiable steps and retries are the countermeasure."
+    ],
+    [
+     "Name three guardrails every production agent needs.",
+     "A step and token budget per run, an allowlist of tools per task, and human approval before irreversible actions — plus server-side validation of every tool argument."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain the difference between a chatbot and an agent.",
+     "A chatbot answers in one round trip. An agent loops — plan, call tools, observe results — to complete multi-step goals, which adds capability and demands guardrails, budgets and observability."
+    ],
+    [
+     "How do you make a multi-step agent reliable?",
+     "Keep steps small and verifiable, checkpoint state, feed errors back for retry, cap steps and tokens, verify the final goal explicitly, and log the full trace so failures are debuggable."
+    ]
+   ],
+   "cards": [
+    [
+     "Agent loop",
+     "The plan-act-observe cycle a model repeats — deciding a step, calling a tool, reading the result — until the goal is met or a limit stops it."
+    ],
+    [
+     "Tool schema",
+     "The name, description and typed parameters describing a function the model may request; your code executes it."
+    ],
+    [
+     "Observation",
+     "A tool's result fed back into the conversation for the model to plan its next step from."
+    ],
+    [
+     "Guardrail",
+     "A bound on agent behaviour: step and token budgets, tool allowlists, approval gates and argument validation."
+    ],
+    [
+     "Step limit",
+     "A hard cap on loop iterations per run, preventing runaway agents from looping or spending forever."
+    ],
+    [
+     "Trace",
+     "The logged record of every plan, tool call and observation in a run — the primary debugging tool for agents."
+    ]
+   ]
+  },
+  {
+   "id": "6.9",
+   "module": "M6",
+   "t": "Monaco Editor — The VS Code Engine in the Browser",
+   "sub": "A full IDE, embedded in a web page",
+   "mins": 30,
+   "goal": "By the end you can compare Monaco with CodeMirror, explain how language services and web workers power its intelligence, configure themes, and judge the trade-offs for an embedded code editor.",
+   "body": "<h4>1. Monaco versus CodeMirror: IDE versus component</h4><p>Monaco is the editor extracted from VS Code itself: the same text model, the same IntelliSense popups, the same minimap and command palette, running in a browser tab. CodeMirror is a lighter, modular editor component designed to be embedded and extended piece by piece. The trade-off is weight versus power: Monaco ships megabytes of JavaScript and feels like an IDE out of the box; CodeMirror ships a fraction of that and lets you add exactly the features you need. Skillzify's editor is CodeMirror — a deliberate choice for a learning platform where the editor must load fast on modest phones and the lessons, not the tooling, are the product.</p><h4>2. Language services: where the intelligence lives</h4><p>Monaco's smarts come from language services: workers that tokenise code for syntax highlighting, validate it for error squiggles, and compute completions and hover information. For TypeScript and JavaScript these services are built in and run in web workers, so typing never blocks on analysis. For other languages, including Python, you register your own providers — a completion provider, a hover provider — or connect a language server over a socket. The architecture is the lesson: the editor renders, the services think, and the two communicate by message passing.</p><h4>3. Themes, models and the editor API</h4><p>Monaco separates the model (the text document) from the editor (the view), so one file can appear in two editors, or many files can live in models behind one editor with tabs. Themes are JSON rule sets mapping token types to colours, and the built-in dark and light themes match VS Code exactly — which is why learners feel at home instantly. The API surface is large: commands, decorations for highlighting ranges, diff editors, and markers for errors. That depth is Monaco's real advantage over lighter editors, and also its learning curve.</p><h4>4. Workers, loading cost and the honest verdict</h4><p>Monaco needs its web workers configured correctly or language features silently degrade, and its bundle must be lazy-loaded so it never taxes pages that do not show an editor. Mobile behaviour needs care: touch selection and on-screen keyboards were never its home turf. The verdict for Skillzify-style products: CodeMirror wins on load time, mobile fit and embedding simplicity; Monaco wins when the editor is the product — a full IDE experience, VS Code familiarity, and built-in TypeScript intelligence. Choosing between them is choosing what your page is for.</p><pre>import * as monaco from \"monaco-editor\";\n\nconst editor = monaco.editor.create(document.getElementById(\"editor\"), {\n  value: \"print('Hello, Skillzify')\",\n  language: \"python\",\n  theme: \"vs-dark\",\n  automaticLayout: true,\n  minimap: { enabled: false }\n});\n\neditor.onDidChangeModelContent(() =&gt; {\n  console.log(editor.getValue());\n});</pre>",
+   "task": "Embed Monaco in a test page with Python syntax highlighting and the vs-dark theme, then disable the minimap and confirm the editor resizes with its container. Write a short comparison table against CodeMirror covering bundle size, mobile behaviour, built-in language intelligence and embedding effort, and state which you would pick for Skillzify and why.",
+   "checks": [
+    [
+     "Where does Monaco's IntelliSense actually run?",
+     "In web workers hosting language services, separate from the rendering thread — so analysis never blocks typing. Built-in services cover TypeScript and JavaScript; other languages need custom providers."
+    ],
+    [
+     "What is the difference between a Monaco model and an editor?",
+     "The model is the text document; the editor is the view onto it. One model can show in several editors, and many models can sit behind one editor as tabs."
+    ],
+    [
+     "Why does Skillzify use CodeMirror instead of Monaco?",
+     "It is far lighter, loads fast on modest phones, embeds simply, and the lessons are the product — Monaco's IDE weight would tax every page for features learners do not need."
+    ],
+    [
+     "What silently breaks if Monaco's workers are misconfigured?",
+     "Language features degrade — highlighting, validation and completions stop working while basic editing continues, which makes the failure easy to miss."
+    ]
+   ],
+   "interview": [
+    [
+     "Monaco or CodeMirror for a coding-learning platform?",
+     "CodeMirror: small bundle, fast load on low-end devices, simple embedding, and only the features the lessons need. Monaco when the editor itself is the product and VS Code-grade intelligence matters more than weight."
+    ],
+    [
+     "How does Monaco keep typing smooth while analysing code?",
+     "Language services run in web workers off the main thread; the editor sends model changes by message and renders results when they return, so keystrokes are never blocked."
+    ]
+   ],
+   "cards": [
+    [
+     "Monaco",
+     "The VS Code editor engine running in the browser: full IDE features, themes and IntelliSense, at the cost of a large bundle."
+    ],
+    [
+     "Language service",
+     "A worker-hosted analyser providing highlighting, validation, completions and hover info for a language."
+    ],
+    [
+     "Web worker",
+     "A background thread running JavaScript off the main thread; Monaco runs its language services there."
+    ],
+    [
+     "Editor model",
+     "Monaco's text document object, separate from the editor view — one model, many views, or many models behind tabs."
+    ],
+    [
+     "Theme",
+     "A JSON rule set mapping token types to colours; Monaco's built-ins match VS Code's dark and light themes."
+    ],
+    [
+     "CodeMirror",
+     "A lightweight, modular embeddable editor — the choice when load time and simplicity beat IDE depth."
+    ]
+   ]
+  },
+  {
+   "id": "7.10",
+   "module": "M7",
+   "t": "Room Deep — Migrations, Relations & Offline-First Android",
+   "sub": "Local data that survives upgrades and no signal",
+   "mins": 40,
+   "goal": "By the end you can model related tables with @Relation, write a Room migration that preserves user data, observe queries as Flow, and design an offline-first sync pattern.",
+   "body": "<h4>1. Relations: modelling joined data without SQL strings</h4><p>Room entities are tables; relations connect them. A learner has many progress rows, a lesson has many exercises — and <code>@Relation</code> lets Room fetch a parent with its children in one query, generating the join for you. You declare a data class pairing the parent entity with a list of children, annotate it with <code>@Embedded</code> and <code>@Relation</code>, and mark the DAO method <code>@Transaction</code> so both queries run atomically. Foreign keys with cascade deletes keep the data honest: delete a lesson and its progress rows go with it, enforced by the database rather than by hopeful code.</p><h4>2. Migrations: upgrading without wiping the user</h4><p>When your schema changes between app versions — a new column, a new table — Room refuses to open the old database unless you provide a migration: a <code>Migration(1, 2)</code> object whose <code>migrate</code> function runs the SQL that transforms version 1 into version 2, such as <code>ALTER TABLE lessons ADD COLUMN difficulty TEXT</code>. The alternative, destructive fallback, deletes the user's data on upgrade — acceptable in a prototype, unforgivable in production. Every schema change gets a migration, and every migration gets a test that opens a version-1 database and verifies the data survives. Skillzify's Android app stores lessons and progress locally, so its migrations are what stand between an update and a learner losing their streak.</p><h4>3. Flow from Room: the UI that updates itself</h4><p>A DAO method returning <code>Flow&lt;List&lt;Lesson&gt;&gt;</code> re-emits automatically whenever the underlying table changes. The UI collects the flow and re-renders; no manual refresh, no polling, no stale screens. Combined with a ViewModel exposing that flow as state, the data layer becomes reactive end to end: write progress once, and every screen observing it updates. This is the Android counterpart of the web's re-render problem — solved by the database pushing changes instead of the UI pulling them.</p><h4>4. Offline-first: local truth, synced when possible</h4><p>Offline-first design treats the local database as the single source of truth: the UI always reads from Room, writes go to Room immediately, and a sync layer reconciles with the server when connectivity returns. The pattern needs three decisions: how changes are queued (an outbox table of pending operations), how conflicts resolve (last-write-wins, or server-wins for shared data), and how deletions propagate (tombstones, not hard deletes, so other devices learn). For a learning app used on buses and in dead zones, offline-first is not an optimisation — it is the difference between an app that works and one that spins.</p><pre>val MIGRATION_1_2 = object : Migration(1, 2) {\n    override fun migrate(db: SupportSQLiteDatabase) {\n        db.execSQL(\n            \"ALTER TABLE lessons ADD COLUMN difficulty TEXT NOT NULL DEFAULT 'easy'\"\n        )\n    }\n}\n\n@Dao\ninterface LessonDao {\n    @Query(\"SELECT * FROM lessons ORDER BY id\")\n    fun observeLessons(): Flow&lt;List&lt;Lesson&gt;&gt;\n\n    @Transaction\n    @Query(\"SELECT * FROM lessons WHERE id = :id\")\n    suspend fun lessonWithProgress(id: String): LessonWithProgress?\n}</pre>",
+   "task": "In an Android project, add a difficulty column to an existing lessons table: write MIGRATION_1_2 with the ALTER TABLE statement, register it in the database builder, and write a migration test that creates a version-1 database with a row, migrates it, and asserts the row survives with the default difficulty. Then change one DAO query to return Flow and observe it updating when a row is inserted.",
+   "checks": [
+    [
+     "What does @Relation do, and why does its DAO method need @Transaction?",
+     "@Relation fetches a parent entity together with its children, generating the join. @Transaction ensures the parent and child queries run atomically, so the pair is consistent."
+    ],
+    [
+     "What happens if you ship a schema change without a migration?",
+     "Room throws an IllegalStateException when opening the database — or, with destructive fallback, silently deletes all user data. Both are production failures."
+    ],
+    [
+     "How does returning Flow from a DAO change the UI's job?",
+     "Room re-emits the query result whenever the table changes, so the UI just collects and renders. No manual refresh or polling is needed."
+    ],
+    [
+     "What is an outbox table in offline-first sync?",
+     "A local table recording pending write operations made offline, which the sync layer drains to the server when connectivity returns."
+    ]
+   ],
+   "interview": [
+    [
+     "Explain offline-first architecture in one minute.",
+     "The local database is the single source of truth: UI reads and writes locally, always works offline, and a sync layer reconciles with the server later using an outbox queue and a stated conflict policy."
+    ],
+    [
+     "How do you test a Room migration?",
+     "Create a database at the old version with representative rows, run the migration, then open it at the new version and assert the schema matches and the data survived intact."
+    ]
+   ],
+   "cards": [
+    [
+     "@Relation",
+     "A Room annotation fetching a parent entity with its children in one generated join query."
+    ],
+    [
+     "Migration",
+     "A Migration(from, to) object with the SQL transforming one schema version into the next, preserving user data across upgrades."
+    ],
+    [
+     "Destructive fallback",
+     "Room's option to delete and recreate the database on schema mismatch — fine for prototypes, data loss in production."
+    ],
+    [
+     "Flow from Room",
+     "A DAO returning Flow re-emits results automatically when the table changes, making the UI reactive."
+    ],
+    [
+     "Offline-first",
+     "Architecture where the local database is the source of truth and the server is reconciled later, so the app works without connectivity."
+    ],
+    [
+     "Outbox pattern",
+     "Queueing offline writes in a local table for later sync, with tombstones propagating deletions."
+    ]
+   ]
+  }
+ ],
+ "mastery": {
+  "M9": [
+   "I can build a React feature with hooks — effects with cleanup, context for shared state, and custom hooks for reusable logic — and explain what the framework automates.",
+   "I can type JavaScript with TypeScript, write indexed and transactional SQL with window functions, and test frontend and backend code with Vitest, Jest and node:test.",
+   "I can sketch a system design from requirements to caching and queues, map AWS services to managed equivalents, containerise an app with Docker Compose, and judge when Next.js or WebSockets earn their cost."
+  ]
+ }
+}

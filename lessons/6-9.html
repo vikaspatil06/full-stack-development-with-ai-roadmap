@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 6.9 — Monaco Editor — The VS Code Engine in the Browser — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="6.9">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m6.html">Product Tools — Editor, In-Browser Runtime &amp; Diagrams</a> &nbsp;›&nbsp; Lesson 6.9</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 6.9 • Product Tools — Editor, In-Browser Runtime &amp; Diagrams • 30 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>Monaco Editor — The VS Code Engine in the Browser</h2>
+<p class="goal">A full IDE, embedded in a web page</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=OZ0rioZ4yl4" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>JavaScript - 3 Ways to Build Your Own Code Editor</b><span>Azul Coding</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Monaco versus CodeMirror: IDE versus component</a></li>
+<li><a href="#sub-2">2. Language services: where the intelligence lives</a></li>
+<li><a href="#sub-3">3. Themes, models and the editor API</a></li>
+<li><a href="#sub-4">4. Workers, loading cost and the honest verdict</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can compare Monaco with CodeMirror, explain how language services and web workers power its intelligence, configure themes, and judge the trade-offs for an embedded code editor.</div>
+<h4 id="sub-1">1. Monaco versus CodeMirror: IDE versus component</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=OZ0rioZ4yl4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Monaco is the editor extracted from VS Code itself: the same text model, the same IntelliSense popups, the same minimap and command palette, running in a browser tab. CodeMirror is a lighter, modular editor component designed to be embedded and extended piece by piece. The trade-off is weight versus power: Monaco ships megabytes of JavaScript and feels like an IDE out of the box; CodeMirror ships a fraction of that and lets you add exactly the features you need. Skillzify's editor is CodeMirror — a deliberate choice for a learning platform where the editor must load fast on modest phones and the lessons, not the tooling, are the product.</p><h4 id="sub-2">2. Language services: where the intelligence lives</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=OZ0rioZ4yl4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Monaco's smarts come from language services: workers that tokenise code for syntax highlighting, validate it for error squiggles, and compute completions and hover information. For TypeScript and JavaScript these services are built in and run in web workers, so typing never blocks on analysis. For other languages, including Python, you register your own providers — a completion provider, a hover provider — or connect a language server over a socket. The architecture is the lesson: the editor renders, the services think, and the two communicate by message passing.</p><h4 id="sub-3">3. Themes, models and the editor API</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=OZ0rioZ4yl4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Monaco separates the model (the text document) from the editor (the view), so one file can appear in two editors, or many files can live in models behind one editor with tabs. Themes are JSON rule sets mapping token types to colours, and the built-in dark and light themes match VS Code exactly — which is why learners feel at home instantly. The API surface is large: commands, decorations for highlighting ranges, diff editors, and markers for errors. That depth is Monaco's real advantage over lighter editors, and also its learning curve.</p><h4 id="sub-4">4. Workers, loading cost and the honest verdict</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=OZ0rioZ4yl4" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Monaco needs its web workers configured correctly or language features silently degrade, and its bundle must be lazy-loaded so it never taxes pages that do not show an editor. Mobile behaviour needs care: touch selection and on-screen keyboards were never its home turf. The verdict for Skillzify-style products: CodeMirror wins on load time, mobile fit and embedding simplicity; Monaco wins when the editor is the product — a full IDE experience, VS Code familiarity, and built-in TypeScript intelligence. Choosing between them is choosing what your page is for.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>import * as monaco from "monaco-editor";
+
+const editor = monaco.editor.create(document.getElementById("editor"), {
+  value: "print('Hello, Skillzify')",
+  language: "python",
+  theme: "vs-dark",
+  automaticLayout: true,
+  minimap: { enabled: false }
+});
+
+editor.onDidChangeModelContent(() =&gt; {
+  console.log(editor.getValue());
+});</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>Embed Monaco in a test page with Python syntax highlighting and the vs-dark theme, then disable the minimap and confirm the editor resizes with its container. Write a short comparison table against CodeMirror covering bundle size, mobile behaviour, built-in language intelligence and embedding effort, and state which you would pick for Skillzify and why.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Where does Monaco's IntelliSense actually run?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">In web workers hosting language services, separate from the rendering thread — so analysis never blocks typing. Built-in services cover TypeScript and JavaScript; other languages need custom providers.</p></div>
+<div class="quiz-q"><p class="qq">What is the difference between a Monaco model and an editor?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">The model is the text document; the editor is the view onto it. One model can show in several editors, and many models can sit behind one editor as tabs.</p></div>
+<div class="quiz-q"><p class="qq">Why does Skillzify use CodeMirror instead of Monaco?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">It is far lighter, loads fast on modest phones, embeds simply, and the lessons are the product — Monaco's IDE weight would tax every page for features learners do not need.</p></div>
+<div class="quiz-q"><p class="qq">What silently breaks if Monaco's workers are misconfigured?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">Language features degrade — highlighting, validation and completions stop working while basic editing continues, which makes the failure easy to miss.</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “Monaco”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">The VS Code editor engine running in the browser: full IDE features, themes and IntelliSense, at the cost of a large bundle.</p></div>
+<div class="quiz-q"><p class="qq">What is “Language service”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">A worker-hosted analyser providing highlighting, validation, completions and hover info for a language.</p></div>
+<div class="quiz-q"><p class="qq">What is “Web worker”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">A background thread running JavaScript off the main thread; Monaco runs its language services there.</p></div>
+<div class="quiz-q"><p class="qq">What is “Editor model”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">Monaco's text document object, separate from the editor view — one model, many views, or many models behind tabs.</p></div>
+<div class="quiz-q"><p class="qq">What is “Theme”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">A JSON rule set mapping token types to colours; Monaco's built-ins match VS Code's dark and light themes.</p></div>
+<div class="quiz-q"><p class="qq">What is “CodeMirror”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">A lightweight, modular embeddable editor — the choice when load time and simplicity beat IDE depth.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">Monaco or CodeMirror for a coding-learning platform?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">CodeMirror: small bundle, fast load on low-end devices, simple embedding, and only the features the lessons need. Monaco when the editor itself is the product and VS Code-grade intelligence matters more than weight.</p></div>
+<div class="interview-q"><p class="iq">How does Monaco keep typing smooth while analysing code?</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Language services run in web workers off the main thread; the editor sends model changes by message and renders results when they return, so keystrokes are never blocked.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="6-8.html">← Lesson 6.8</a>
+<a class="nav-btn next" href="7-1.html">Lesson 7.1 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>

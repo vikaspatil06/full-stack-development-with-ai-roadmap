@@ -3,31 +3,32 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-<meta name="color-scheme" content="dark"/>
+<meta name="color-scheme" content="dark light"/>
 <link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
 <title>Product Tools — Editor, In-Browser Runtime &amp; Diagrams — Full Stack + AI Study Lessons</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/style.css?v=3"/>
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
 </head>
 <body data-page="module" data-module="M6">
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
 <nav class="nav" id="siteNav" aria-label="Site sections">
-<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a></div></div>
-</nav><div class="topbar-right"><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
 <main class="wrap">
 <p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; Product Tools — Editor, In-Browser Runtime &amp; Diagrams</p>
 <section class="section"><div class="module module-page">
 <div class="module-head"><span class="phase-badge">M6</span><div>
 <h1>Product Tools — Editor, In-Browser Runtime &amp; Diagrams</h1>
 <p>The 'how does the compiler run Python with no server?' module. Short, fascinating, and what makes Skillzify different from a tutorial site.</p>
-<div class="meta"><span>Week 18 • 26 Mar – 1 Apr</span><span>Files: compiler.html • Pyodide • CodeMirror • Mermaid</span><span>8 lessons</span></div>
+<div class="meta"><span>Week 18 • 26 Mar – 1 Apr</span><span>Files: compiler.html • Pyodide • CodeMirror • Mermaid</span><span>9 lessons</span></div>
 </div></div>
-<div class="mod-progress"><div class="progress-bar"><div class="progress-fill" id="modProgFill"></div></div><span id="modProgText">0 / 8 lessons done</span></div>
+<div class="mod-progress"><div class="progress-bar"><div class="progress-fill" id="modProgFill"></div></div><span id="modProgText">0 / 9 lessons done</span></div>
 <div style="padding:0 20px 18px"><a class="btn btn-primary" id="startNextBtn" href="../lessons/6-1.html">Start Lesson 6.1 →</a></div>
-<div class="jump-row"><label for="jumpSelect">Jump to lesson:</label><select id="jumpSelect"><option value="">Choose a lesson…</option><option value="../lessons/6-1.html">Lesson 6.1 — WebAssembly &amp; Pyodide</option><option value="../lessons/6-2.html">Lesson 6.2 — Pyodide Deep</option><option value="../lessons/6-3.html">Lesson 6.3 — CodeMirror: Building a Real Code Editor</option><option value="../lessons/6-4.html">Lesson 6.4 — CodeMirror Extensions</option><option value="../lessons/6-5.html">Lesson 6.5 — Mermaid: Diagrams as Data</option><option value="../lessons/6-6.html">Lesson 6.6 — Mermaid Advanced</option><option value="../lessons/6-7.html">Lesson 6.7 — Debugging in the Browser</option><option value="../lessons/6-8.html">Lesson 6.8 — Performance Profiling</option></select></div>
+<div class="jump-row"><label for="jumpSelect">Jump to lesson:</label><select id="jumpSelect"><option value="">Choose a lesson…</option><option value="../lessons/6-1.html">Lesson 6.1 — WebAssembly &amp; Pyodide</option><option value="../lessons/6-2.html">Lesson 6.2 — Pyodide Deep</option><option value="../lessons/6-3.html">Lesson 6.3 — CodeMirror: Building a Real Code Editor</option><option value="../lessons/6-4.html">Lesson 6.4 — CodeMirror Extensions</option><option value="../lessons/6-5.html">Lesson 6.5 — Mermaid: Diagrams as Data</option><option value="../lessons/6-6.html">Lesson 6.6 — Mermaid Advanced</option><option value="../lessons/6-7.html">Lesson 6.7 — Debugging in the Browser</option><option value="../lessons/6-8.html">Lesson 6.8 — Performance Profiling</option><option value="../lessons/6-9.html">Lesson 6.9 — Monaco Editor — The VS Code Engine in the Browser</option></select></div>
 <div class="lesson-list">
 <div class="lesson-row">
 <span class="lnum">6.1</span>
@@ -39,14 +40,14 @@
 <div class="lesson-row">
 <span class="lnum">6.2</span>
 <a class="ltitle" href="../lessons/6-2.html">Pyodide Deep<span class="lsub">Real Python in the browser: workers, packages, and the JS bridge</span></a>
-<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=eYekV2Do0YU" target="_blank" rel="noopener" title="Master WebAssembly: The Complete Course from Beginner to Advanced — KubeSimplify"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
+<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=vxqBm6_0vyk" target="_blank" rel="noopener" title="Python In The Browser! PyScript First Look — Traversy Media"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
 <span class="lmins">35 min</span>
 <span class="lstatus" data-lesson-status="6.2">Not started</span>
 </div>
 <div class="lesson-row">
 <span class="lnum">6.3</span>
 <a class="ltitle" href="../lessons/6-3.html">CodeMirror: Building a Real Code Editor<span class="lsub">Tokenising, highlighting and editor state</span></a>
-<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=Rt7xwb1SOcY" target="_blank" rel="noopener" title="How to build a self-typing editor demo with Waku + CodeMirror — craftzdog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
+<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=Xf9rHPNBMyQ" target="_blank" rel="noopener" title="Build a Cursor Clone from Scratch (AI IDE) | Next.js 16 &amp; Convex — Code With Antonio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
 <span class="lmins">35 min</span>
 <span class="lstatus" data-lesson-status="6.3">Not started</span>
 </div>
@@ -67,7 +68,7 @@
 <div class="lesson-row">
 <span class="lnum">6.6</span>
 <a class="ltitle" href="../lessons/6-6.html">Mermaid Advanced<span class="lsub">Subgraphs, styling, interaction — diagrams that behave like UI</span></a>
-<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=nLqfCN0KoXw" target="_blank" rel="noopener" title="How Do Robots Make Decisions? Programming 101 with Mermaid — GriebZ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
+<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=Wi1DBSJmRB4" target="_blank" rel="noopener" title="Mermaid: Turn Words into Beautiful Diagrams Instantly + Bonus (Inkscape) — Augmented Scholars"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
 <span class="lmins">25 min</span>
 <span class="lstatus" data-lesson-status="6.6">Not started</span>
 </div>
@@ -81,9 +82,16 @@
 <div class="lesson-row">
 <span class="lnum">6.8</span>
 <a class="ltitle" href="../lessons/6-8.html">Performance Profiling<span class="lsub">Measure first: long tasks, layout thrash, and the bundle that ate the page</span></a>
-<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=Y3u2groOG-A" target="_blank" rel="noopener" title="Chrome DevTools Complete Course - Learn to debug your frontend code — YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
+<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=5fLW5Q5ODiE" target="_blank" rel="noopener" title="Improving Load Performance - Chrome DevTools 101 — Chrome for Developers"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
 <span class="lmins">30 min</span>
 <span class="lstatus" data-lesson-status="6.8">Not started</span>
+</div>
+<div class="lesson-row">
+<span class="lnum">6.9</span>
+<a class="ltitle" href="../lessons/6-9.html">Monaco Editor — The VS Code Engine in the Browser<span class="lsub">A full IDE, embedded in a web page</span></a>
+<a class="yt-btn yt-btn-sm" href="https://www.youtube.com/watch?v=OZ0rioZ4yl4" target="_blank" rel="noopener" title="JavaScript - 3 Ways to Build Your Own Code Editor — Azul Coding"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch</a>
+<span class="lmins">30 min</span>
+<span class="lstatus" data-lesson-status="6.9">Not started</span>
 </div>
 </div>
 <div class="mastery-box"><h4>Mastery self-check — <span id="masteryCount">0 / 3 ticked</span></h4>
@@ -95,8 +103,8 @@
 <p style="margin-top:16px"><a href="../index.html">← Back to dashboard</a></p>
 </section>
 </main>
-<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 105 lessons • 11 modules • Starts 27 Nov 2026, after exams end 26 Nov • 28-week plan to 9 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
-<script src="../assets/js/data.js?v=3"></script>
-<script src="../assets/js/app.js?v=3"></script>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
 </body>
 </html>

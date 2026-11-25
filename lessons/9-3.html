@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="dark light"/>
+<link rel="icon" href="data:,"/>
+<script>try{if(localStorage.getItem("fsai_theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}</script>
+<title>Lesson 9.3 — SQL Deep — Indexes, Transactions &amp; Window Functions — Full Stack + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css?v=4"/>
+</head>
+<body data-page="lesson" data-lesson="9.3">
+<header class="topbar"><div class="topbar-inner">
+<a class="brand" href="../index.html"><span class="brand-dot">&lt;/&gt;</span><span class="brand-text">Full Stack + AI — Study Lessons</span><span class="brand-text-short">Full Stack + AI</span></a>
+<nav class="nav" id="siteNav" aria-label="Site sections">
+<a href="../index.html#dashboard">Dashboard</a><a href="../index.html#lessons">Lessons</a><a href="../practice.html">Practice</a><div class="nav-drop"><button class="nav-drop-btn" id="modDropBtn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="modDropMenu">Modules ▾</button><div class="nav-drop-menu" id="modDropMenu" role="menu"><a href="../modules/b.html" role="menuitem">Basics — Start From Zero</a><a href="../modules/d.html" role="menuitem">DSA — Data Structures &amp; Algorithms</a><a href="../modules/m0.html" role="menuitem">M0 — Foundations</a><a href="../modules/m1.html" role="menuitem">M1 — JavaScript Deep</a><a href="../modules/m2.html" role="menuitem">M2 — Python Fluency</a><a href="../modules/m3.html" role="menuitem">M3 — Node &amp; Express</a><a href="../modules/m4.html" role="menuitem">M4 — Firebase + SQL</a><a href="../modules/m5.html" role="menuitem">M5 — AI Engineering ★</a><a href="../modules/m6.html" role="menuitem">M6 — Editor &amp; Runtime</a><a href="../modules/m7.html" role="menuitem">M7 — Android</a><a href="../modules/m8.html" role="menuitem">M8 — DevOps &amp; Shipping</a><a href="../modules/m9.html" role="menuitem">M9 — Industry Add-Ons</a></div></div>
+</nav><div class="topbar-right"><button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Toggle light / dark theme">☀️</button><button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">☰</button><span class="xp-badge" data-xp-badge title="Total XP — +20 per completed lesson, +5 per self-check you mark “I knew it”">⚡ 0 XP</span></div></div></header>
+<main class="wrap">
+<p class="crumb"><a href="../index.html">Home</a> &nbsp;›&nbsp; <a href="../modules/m9.html">M9 — Industry Add-Ons</a> &nbsp;›&nbsp; Lesson 9.3</p>
+<article class="reader lesson-page">
+<div class="reader-top"><span class="reader-crumb">Lesson 9.3 • M9 — Industry Add-Ons • 40 min</span><button class="review-star" id="reviewStar" type="button" aria-pressed="false">☆ Mark for review</button></div>
+<div class="reader-body">
+<h2>SQL Deep — Indexes, Transactions &amp; Window Functions</h2>
+<p class="goal">Make queries fast and writes safe</p>
+<h3 class="lesson-sec" id="watch" data-acc="watch">1 · Watch <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="watch-box">
+<a class="yt-btn" href="https://www.youtube.com/watch?v=dUzivpyLK1s" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Watch on YouTube</a>
+<p class="watch-meta"><b>SQL Window Functions Explained: ROW_NUMBER, RANK, LAG, LEAD</b><span>DataBite</span></p>
+</div></div>
+<h3 class="lesson-sec" id="read" data-acc="read">2 · Read <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<ol class="sub-index">
+<li><a href="#sub-1">1. Indexes: the sorted shortcut</a></li>
+<li><a href="#sub-2">2. EXPLAIN: read the plan before you guess</a></li>
+<li><a href="#sub-3">3. Transactions and ACID</a></li>
+<li><a href="#sub-4">4. Window functions: rankings without self-joins</a></li>
+</ol>
+<div class="callout why"><b>Goal — by the end of this lesson</b>By the end you can explain how B-tree indexes speed up queries, read an EXPLAIN plan, wrap writes in ACID transactions, and use ROW_NUMBER and RANK window functions.</div>
+<h4 id="sub-1">1. Indexes: the sorted shortcut</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=dUzivpyLK1s" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Without an index, finding rows means scanning the whole table — fine for a hundred rows, fatal for ten million. A B-tree index keeps a sorted copy of one or more columns in a balanced tree, so the database jumps straight to matching rows in logarithmic time instead of reading everything. The cost is paid on writes: every insert and update must also update every index on the table, and indexes consume disk. Index the columns you filter and join on; do not index everything.</p><p>Skillzify stores its data in Firestore, which builds single-field indexes automatically but has no joins and no multi-document transactions with the same guarantees as SQL. Knowing SQL indexes explains what Firestore is doing for you under the hood — and why a composite query there needs a composite index created by hand.</p><h4 id="sub-2">2. EXPLAIN: read the plan before you guess</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=dUzivpyLK1s" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p><code>EXPLAIN</code> shows the plan the database chose: which index it used, whether it scanned the whole table, and how many rows it expects to touch. A sequential scan on a large table where an index exists usually means the index does not match the query — wrong column order, a function wrapped around the column, or statistics the planner does not trust. The habit that separates good SQL developers is simple: never optimise by guessing; run EXPLAIN, find the expensive step, and fix that one thing.</p><h4 id="sub-3">3. Transactions and ACID</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=dUzivpyLK1s" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>A transaction groups several writes so they succeed or fail together. ACID names the guarantees: Atomicity (all or nothing), Consistency (constraints always hold), Isolation (concurrent transactions do not see each other's half-finished work), and Durability (committed data survives a crash). Isolation levels trade safety for speed: read committed prevents dirty reads, repeatable read also prevents rows changing mid-transaction, and serializable makes concurrent transactions behave as if they ran one at a time. Awarding XP and updating a leaderboard in one transaction is exactly the shape of problem ACID solves.</p><h4 id="sub-4">4. Window functions: rankings without self-joins</h4><p class="sub-yt"><a href="https://www.youtube.com/watch?v=dUzivpyLK1s" target="_blank" rel="noopener">▶ YouTube reference — the video for this lesson</a></p><p>Window functions compute over a set of rows related to the current row, without collapsing them into one. <code>ROW_NUMBER()</code> numbers rows within each group, <code>RANK()</code> gives ties the same rank and skips the next numbers, and <code>DENSE_RANK()</code> gives ties the same rank without skipping. The classic use is top-N per group: rank each learner's attempts per lesson, then keep rank 1. Before window functions this needed a self-join; now it is one readable query.</p><p class="code-ref">▸ Code example — see the <a href="#code">Code section</a> below.</p>
+</div>
+<h3 class="lesson-sec" id="flashcards-sec" data-acc="flashcards">3 · Flashcards <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Tap a card to flip it. Shuffle when you want a fresh order — say the answer before you flip.</p><div id="flashcards"></div></div>
+<h3 class="lesson-sec" id="code" data-acc="code">4 · Code <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<p class="muted-note">▶ Run works for JavaScript snippets below — it runs in a sandboxed worker with a 2-second timeout. Python, HTML and CSS snippets are read-only here.</p>
+<div class="code-block"><button class="copy-btn" data-copy>Copy</button><pre>SELECT lesson_id, user_id, score,
+       ROW_NUMBER() OVER (
+         PARTITION BY lesson_id ORDER BY score DESC
+       ) AS rn
+FROM attempts;
+
+-- Top attempt per lesson: wrap the above and filter rn = 1.
+-- Speed it up with a matching index:
+CREATE INDEX idx_attempts_lesson_score
+  ON attempts (lesson_id, score DESC);</pre></div>
+</div>
+<h3 class="lesson-sec" id="practice" data-acc="practice">5 · Practice <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><div class="callout build"><b>Your task</b>In any SQL database, create a small attempts table with a few hundred rows across several lessons. Run a query for the top score per lesson with EXPLAIN, then add a composite index on lesson_id and score, run EXPLAIN again, and compare the plans. Finish by writing the same top-per-lesson query with ROW_NUMBER and filtering to rank 1.</div>
+</div>
+<h3 class="lesson-sec" id="check" data-acc="check">6 · Check <span class="acc-chev">▾</span></h3>
+<div class="acc-body"><p class="muted-note">Say your answer out loud first, then reveal. Mark “I knew it” for +5 XP each — or “Didn’t know it” to count it as a miss. Your score shows below.</p>
+<div class="quiz-q"><p class="qq">Why does adding an index slow down writes?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="0">Didn't know it</button>
+<p class="quiz-answer">Every insert, update and delete must also maintain each index on the table, so more indexes mean more work per write and more disk used.</p></div>
+<div class="quiz-q"><p class="qq">What does EXPLAIN tell you that timing the query does not?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="1">Didn't know it</button>
+<p class="quiz-answer">It shows the plan — which index was used, whether a full scan happened, and estimated rows — so you can fix the cause instead of just observing the symptom.</p></div>
+<div class="quiz-q"><p class="qq">What does the A in ACID guarantee in practice?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="2">Didn't know it</button>
+<p class="quiz-answer">Atomicity: all writes in the transaction commit together or none do, so a crash midway cannot leave half-updated data behind.</p></div>
+<div class="quiz-q"><p class="qq">How do RANK and DENSE_RANK differ on ties?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="3">Didn't know it</button>
+<p class="quiz-answer">Both give tied rows the same rank. RANK then skips numbers (1, 1, 3), while DENSE_RANK does not (1, 1, 2).</p></div>
+<h4 class="bonus-head">Bonus round — flashcards (+5 XP each)</h4>
+<p class="muted-note">Define each term out loud before revealing. These count toward your score below.</p>
+<div class="quiz-q"><p class="qq">What is “B-tree index”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f0">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f0">Didn't know it</button>
+<p class="quiz-answer">A balanced sorted tree over one or more columns that turns full-table scans into logarithmic lookups, at the cost of slower writes.</p></div>
+<div class="quiz-q"><p class="qq">What is “EXPLAIN”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f1">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f1">Didn't know it</button>
+<p class="quiz-answer">A command that shows the query plan the database chose — indexes used, scan types and row estimates — so you optimise from evidence.</p></div>
+<div class="quiz-q"><p class="qq">What is “ACID”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f2">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f2">Didn't know it</button>
+<p class="quiz-answer">Atomicity, Consistency, Isolation and Durability: the guarantees a transaction makes about grouped writes.</p></div>
+<div class="quiz-q"><p class="qq">What is “Isolation level”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f3">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f3">Didn't know it</button>
+<p class="quiz-answer">How much concurrent transactions can see of each other, from read committed up to serializable.</p></div>
+<div class="quiz-q"><p class="qq">What is “Window function”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f4">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f4">Didn't know it</button>
+<p class="quiz-answer">A function computing over a set of rows related to the current row without collapsing them, like ROW_NUMBER or RANK.</p></div>
+<div class="quiz-q"><p class="qq">What is “PARTITION BY”?</p>
+<button class="quiz-reveal qbtn">Reveal answer</button><button class="quiz-knew qbtn" data-qi="f5">I knew it (+5 XP)</button><button class="quiz-missed qbtn" data-qi="f5">Didn't know it</button>
+<p class="quiz-answer">The clause that splits rows into groups inside a window function, restarting the calculation per group.</p></div>
+<p class="quiz-score" id="quizScore"></p>
+<button class="qbtn quiz-retry" id="quizRetry" type="button" style="display:none">↻ Retry quiz</button></div>
+<h3 class="lesson-sec" id="interview" data-acc="interview">7 · Interview <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<div class="interview-q"><p class="iq">A query is slow on a big table. Walk me through your first steps.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">Run EXPLAIN to see the plan, look for a sequential scan or a huge row estimate, check whether an index matches the filter and join columns, add or fix the index, then re-run EXPLAIN to confirm the plan changed.</p></div>
+<div class="interview-q"><p class="iq">Explain isolation levels in one minute.</p>
+<button class="interview-reveal qbtn">Reveal model answer</button>
+<p class="interview-answer">They control what concurrent transactions can see of each other. Read committed hides uncommitted data, repeatable read also freezes rows you have read, and serializable behaves as if transactions ran one by one — safer, but slower and more prone to conflicts.</p></div>
+</div>
+<h3 class="lesson-sec" id="notes" data-acc="notes">8 · Notes <span class="acc-chev">▾</span></h3>
+<div class="acc-body">
+<textarea class="notes-area" id="lessonNotes" placeholder="Your own words: what did this lesson teach you? What will you try next?"></textarea>
+<p><span class="saved-note" id="notesSaved"></span></p></div>
+</div>
+<div class="reader-foot">
+<button class="mark-btn" id="completeBtn">Mark lesson complete (+20 XP)</button>
+<a class="nav-btn prev" href="9-2.html">← Lesson 9.2</a>
+<a class="nav-btn next" href="9-4.html">Lesson 9.4 →</a>
+</div>
+</article>
+</main>
+<footer><div class="wrap">Study lessons for Vikas Patil • Skillzify v2 stack verified against the codebase (Nov 2026) • 127 lessons • 12 modules • Starts 27 Nov 2026, after exams end 26 Nov • 31-week plan to 30 Jun 2027 • Full-stack + DSA together — daily DSA block, Sunday LeetCode contest, mistake log with 3- and 7-day re-solves.</div></footer>
+<script src="../assets/js/data.js?v=4"></script>
+<script src="../assets/js/app.js?v=4"></script>
+</body>
+</html>
